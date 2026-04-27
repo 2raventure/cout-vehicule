@@ -1,261 +1,147 @@
 
-<h2 class="sr-only">Calculateur de coût de mobilité domicile-travail : comparaison voiture thermique, covoiturage, transport en commun, véhicule électrique partagé et vélos</h2>
-
-<style>
-  .calc-wrap { padding: 1.5rem 0; font-family: var(--font-sans); }
-  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 0.75rem; }
-  .input-row { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; }
-  .input-row label { font-size: 14px; color: var(--color-text-secondary); white-space: nowrap; }
-  .input-row input[type=range] { flex: 1; }
-  .input-row .val { font-size: 14px; font-weight: 500; min-width: 60px; text-align: right; color: var(--color-text-primary); }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
-  .card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem 1rem; border: 0.5px solid var(--color-border-tertiary); cursor: pointer; transition: border-color 0.15s; }
-  .card:hover { border-color: var(--color-border-secondary); }
-  .card.active { border: 1.5px solid #185FA5; background: #E6F1FB; }
-  .card-icon { font-size: 18px; margin-bottom: 6px; }
-  .card-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
-  .card-sub { font-size: 11px; color: var(--color-text-secondary); }
-  .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
-  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem 1rem; }
-  .metric-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
-  .metric-val { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
-  .metric-unit { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
-  .bar-section { margin-bottom: 1rem; }
-  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .bar-name { font-size: 12px; color: var(--color-text-secondary); width: 140px; flex-shrink: 0; }
-  .bar-outer { flex: 1; height: 20px; background: var(--color-background-secondary); border-radius: 4px; overflow: hidden; }
-  .bar-inner { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
-  .bar-amt { font-size: 12px; font-weight: 500; color: var(--color-text-primary); width: 72px; text-align: right; }
-  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.25rem 0; }
-  .avantage-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: var(--border-radius-md); margin-bottom: 1rem; }
-  .avantage-positive { background: #EAF3DE; color: #3B6D11; }
-  .avantage-neutral { background: var(--color-background-secondary); color: var(--color-text-secondary); }
-  .avantage-zero { background: #E6F1FB; color: #185FA5; }
-  .toggle-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
-  .toggle-btn { font-size: 12px; padding: 5px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; }
-  .toggle-btn.active { background: #185FA5; color: #E6F1FB; border-color: #185FA5; }
-  .note { font-size: 12px; color: var(--color-text-tertiary); line-height: 1.5; }
-  .zero-tag { display: inline-block; font-size: 10px; font-weight: 500; background: #EAF3DE; color: #3B6D11; padding: 2px 6px; border-radius: 4px; margin-left: 4px; vertical-align: middle; }
-</style>
-
-<div class="calc-wrap">
-
-  <div class="section-label">Distance domicile — travail</div>
-  <div class="input-row">
-    <label>Aller simple</label>
-    <input type="range" id="dist" min="1" max="60" value="18" step="1" oninput="update()">
-    <span class="val" id="dist-out">18 km</span>
-  </div>
-
-  <div class="section-label">Jours travaillés par an</div>
-  <div class="input-row">
-    <label>Jours/an</label>
-    <input type="range" id="days" min="100" max="230" value="210" step="5" oninput="update()">
-    <span class="val" id="days-out">210 j</span>
-  </div>
-
-  <hr class="divider">
-  <div class="section-label">Mode de déplacement</div>
-  <div class="cards">
-    <div class="card active" id="card-therm" onclick="setMode('therm')">
-      <div class="card-icon">🚗</div>
-      <div class="card-name">Voiture solo</div>
-      <div class="card-sub">Thermique — 0,33 €/km</div>
-    </div>
-    <div class="card" id="card-covoit" onclick="setMode('covoit')">
-      <div class="card-icon">🚘</div>
-      <div class="card-name">Covoiturage</div>
-      <div class="card-sub">Passager — coût partagé</div>
-    </div>
-    <div class="card" id="card-tc" onclick="setMode('tc')">
-      <div class="card-icon">🚌</div>
-      <div class="card-name">Transport en commun</div>
-      <div class="card-sub">Gratuit sur l'agglo <span class="zero-tag">0 €</span></div>
-    </div>
-    <div class="card" id="card-elec" onclick="setMode('elec')">
-      <div class="card-icon">⚡</div>
-      <div class="card-name">VE partagé</div>
-      <div class="card-sub">Dacia Spring entreprise <span class="zero-tag">0 €</span></div>
-    </div>
-    <div class="card" id="card-velo" onclick="setMode('velo')">
-      <div class="card-icon">🚲</div>
-      <div class="card-name">Vélo classique</div>
-      <div class="card-sub">193,75 €/an</div>
-    </div>
-    <div class="card" id="card-veloe" onclick="setMode('veloe')">
-      <div class="card-icon">⚡🚲</div>
-      <div class="card-name">VAE</div>
-      <div class="card-sub">532,50 €/an</div>
-    </div>
-    <div class="card" id="card-cargo" onclick="setMode('cargo')">
-      <div class="card-icon">📦</div>
-      <div class="card-name">Vélo cargo</div>
-      <div class="card-sub">907,50 €/an</div>
-    </div>
-  </div>
-
-  <div id="covoit-options" style="display:none; margin-bottom:1.25rem;">
-    <div class="section-label">Nombre de personnes dans le véhicule (vous inclus)</div>
-    <div class="toggle-row">
-      <button class="toggle-btn" id="pax2" onclick="setPax(2)">2 personnes</button>
-      <button class="toggle-btn active" id="pax3" onclick="setPax(3)">3 personnes</button>
-      <button class="toggle-btn" id="pax4" onclick="setPax(4)">4 personnes</button>
-    </div>
-  </div>
-
-  <hr class="divider">
-  <div class="section-label">Coût annuel estimé</div>
-  <div class="results">
-    <div class="metric">
-      <div class="metric-label">Coût total / an</div>
-      <div class="metric-val" id="r-total">—</div>
-      <div class="metric-unit">€ TTC</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Coût / mois</div>
-      <div class="metric-val" id="r-month">—</div>
-      <div class="metric-unit">€/mois</div>
-    </div>
-    <div class="metric" id="metric-km" style="">
-      <div class="metric-label">Coût / km</div>
-      <div class="metric-val" id="r-km">—</div>
-      <div class="metric-unit">€/km (indicatif)</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">km / an</div>
-      <div class="metric-val" id="r-kman">—</div>
-      <div class="metric-unit">km parcourus</div>
-    </div>
-  </div>
-
-  <div id="eco-badge"></div>
-
-  <hr class="divider">
-  <div class="section-label">Comparatif tous modes — coût annuel</div>
-  <div class="bar-section" id="bars"></div>
-
-  <p class="note">Voiture solo : coût de revient complet (carburant, entretien, assurance, amortissement) à 0,33 €/km. Covoiturage : le coût total du véhicule (0,33 €/km × km totaux) est divisé entre tous les occupants. Transport en commun : gratuit sur l'agglomération. VE partagé : mis à disposition par l'entreprise, sans charge pour le salarié. Vélos : coûts annuels amortis sur 8 ans, entretien et accessoires inclus (vélo classique 193,75 €/an, VAE 532,50 €/an, cargo élec. 907,50 €/an).</p>
-</div>
+<div id="app" style="max-width:660px; margin:0 auto; padding:24px 0; font-family: system-ui, -apple-system, sans-serif; font-size:14px; color:#1a1a1a;"></div>
 
 <script>
-  let mode = 'therm';
-  let pax = 3;
+var mode = 'therm';
+var pax = 3;
 
-  const ANNUAL_FIXED = {
-    velo:  193.75,
-    veloe: 532.5,
-    cargo: 907.5,
-  };
+var MODES = [
+  { id:'therm',  label:'Voiture solo',        sub:'0,33 €/km',            color:'#c0392b' },
+  { id:'covoit', label:'Covoiturage',          sub:'Coût partagé',         color:'#d35400' },
+  { id:'tc',     label:'Transport en commun', sub:'Gratuit sur l\'agglo', color:'#2980b9' },
+  { id:'elec',   label:'VE partagé',          sub:'Dacia Spring — 0 €',   color:'#27ae60' },
+  { id:'velo',   label:'Vélo classique',      sub:'193,75 €/an',          color:'#16a085' },
+  { id:'veloe',  label:'VAE',                 sub:'532,50 €/an',          color:'#8e44ad' },
+  { id:'cargo',  label:'Vélo cargo élec.',    sub:'907,50 €/an',          color:'#e67e22' }
+];
 
-  const LABELS = {
-    therm:  'Voiture solo',
-    covoit: 'Covoiturage',
-    tc:     'Transport en commun',
-    elec:   'VE partagé',
-    velo:   'Vélo classique',
-    veloe:  'VAE',
-    cargo:  'Vélo cargo',
-  };
+function getCost(id, kmAn) {
+  if (id==='therm')  return 0.33*kmAn;
+  if (id==='covoit') return (0.33*kmAn)/pax;
+  if (id==='tc')     return 0;
+  if (id==='elec')   return 0;
+  if (id==='velo')   return 193.75;
+  if (id==='veloe')  return 532.5;
+  if (id==='cargo')  return 907.5;
+  return 0;
+}
 
-  const COLORS = {
-    therm:  '#E24B4A',
-    covoit: '#EF9F27',
-    tc:     '#378ADD',
-    elec:   '#1D9E75',
-    velo:   '#639922',
-    veloe:  '#3B6D11',
-    cargo:  '#7F77DD',
-  };
+function fmt(n){ return Math.round(n).toLocaleString('fr-FR'); }
 
-  function setCovoit(show) {
-    document.getElementById('covoit-options').style.display = show ? 'block' : 'none';
-  }
+function render() {
+  var dist = parseInt(document.getElementById('dist') ? document.getElementById('dist').value : 18);
+  var days = parseInt(document.getElementById('days') ? document.getElementById('days').value : 210);
+  var kmAn = dist*2*days;
+  var cost = getCost(mode, kmAn);
+  var ref  = 0.33*kmAn;
+  var saving = Math.round(ref - cost);
 
-  function setMode(m) {
-    mode = m;
-    ['therm','covoit','tc','elec','velo','veloe','cargo'].forEach(k => {
-      document.getElementById('card-'+k).classList.toggle('active', k === m);
+  var costs = MODES.map(function(m){ return getCost(m.id, kmAn); });
+  var maxCost = Math.max.apply(null, costs);
+
+  var modeObj = MODES.find(function(m){ return m.id===mode; });
+
+  var cardsHtml = '<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; margin-bottom:20px;">';
+  MODES.forEach(function(m){
+    var active = m.id===mode;
+    cardsHtml += '<div onclick="setMode(\''+m.id+'\')" style="'
+      +'background:'+(active ? m.color : '#f5f5f5')+';'
+      +'color:'+(active ? '#fff' : '#333')+';'
+      +'border-radius:8px; padding:12px; cursor:pointer;'
+      +'border:2px solid '+(active ? m.color : '#e0e0e0')+';'
+      +'">'
+      +'<div style="font-weight:600; font-size:13px; margin-bottom:3px;">'+m.label+'</div>'
+      +'<div style="font-size:11px; opacity:0.85;">'+m.sub+'</div>'
+      +'</div>';
+  });
+  cardsHtml += '</div>';
+
+  var paxHtml = '';
+  if (mode==='covoit') {
+    paxHtml = '<div style="margin-bottom:20px;">'
+      +'<div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#888; margin-bottom:8px;">Personnes dans le véhicule</div>'
+      +'<div style="display:flex; gap:8px;">';
+    [2,3,4].forEach(function(n){
+      var a = n===pax;
+      paxHtml += '<div onclick="setPax('+n+')" style="padding:6px 16px; border-radius:20px; cursor:pointer; font-size:13px; font-weight:'+(a?'600':'400')+'; background:'+(a?'#2980b9':'#f0f0f0')+'; color:'+(a?'#fff':'#555')+'; border:1px solid '+(a?'#2980b9':'#ddd')+';">'+n+' pers.</div>';
     });
-    setCovoit(m === 'covoit');
-    update();
+    paxHtml += '</div></div>';
   }
 
-  function setPax(n) {
-    pax = n;
-    [2,3,4].forEach(k => {
-      document.getElementById('pax'+k).classList.toggle('active', k === n);
-    });
-    update();
+  var metricsHtml = '<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; margin-bottom:20px;">';
+  var metrics = [
+    { label:'Coût / an', val: fmt(cost)+' €' },
+    { label:'Coût / mois', val: fmt(cost/12)+' €' },
+    { label:'Coût / km', val: kmAn>0&&cost>0 ? (cost/kmAn).toFixed(2)+' €' : '0,00 €' },
+    { label:'km / an', val: fmt(kmAn)+' km' }
+  ];
+  metrics.forEach(function(m){
+    metricsHtml += '<div style="background:#f5f5f5; border-radius:8px; padding:12px 14px;">'
+      +'<div style="font-size:11px; color:#888; margin-bottom:4px;">'+m.label+'</div>'
+      +'<div style="font-size:20px; font-weight:600; color:#1a1a1a;">'+m.val+'</div>'
+      +'</div>';
+  });
+  metricsHtml += '</div>';
+
+  var badgeColor = (mode==='tc'||mode==='elec') ? '#1a6e35' : (saving>0 ? '#1a6e35' : '#888');
+  var badgeBg    = (mode==='tc'||mode==='elec') ? '#d4edda' : (saving>0 ? '#d4edda' : '#f0f0f0');
+  var badgeTxt;
+  if (mode==='therm') {
+    badgeTxt = 'Mode de référence';
+  } else if (mode==='tc'||mode==='elec') {
+    badgeTxt = 'Économie vs voiture solo : '+fmt(ref)+' €/an — coût nul pour le salarié';
+  } else if (saving>0) {
+    badgeTxt = 'Économie vs voiture solo : '+fmt(saving)+' €/an';
+  } else {
+    badgeTxt = 'Coût supérieur à la voiture solo pour cette distance';
   }
+  var badgeHtml = '<div style="display:inline-block; background:'+badgeBg+'; color:'+badgeColor+'; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; margin-bottom:20px;">'+badgeTxt+'</div>';
 
-  function getCostAnnual(m, kmAn) {
-    if (m === 'therm')  return 0.33 * kmAn;
-    if (m === 'covoit') return (0.33 * kmAn) / pax;
-    if (m === 'tc')     return 0;
-    if (m === 'elec')   return 0;
-    if (m === 'velo')   return ANNUAL_FIXED.velo;
-    if (m === 'veloe')  return ANNUAL_FIXED.veloe;
-    if (m === 'cargo')  return ANNUAL_FIXED.cargo;
-    return 0;
-  }
+  var barsHtml = '<div style="margin-bottom:20px;">';
+  MODES.forEach(function(m,i){
+    var pct = maxCost>0 ? (costs[i]/maxCost*100) : 0;
+    var isCur = m.id===mode;
+    barsHtml += '<div style="display:flex; align-items:center; gap:10px; margin-bottom:7px;">'
+      +'<span style="font-size:12px; font-weight:'+(isCur?'600':'400')+'; color:'+(isCur?'#1a1a1a':'#555')+'; width:150px; flex-shrink:0;">'+m.label+'</span>'
+      +'<div style="flex:1; height:16px; background:#ebebeb; border-radius:4px; overflow:hidden;">'
+      +'<div style="width:'+Math.max(pct,costs[i]===0?0:0.5).toFixed(1)+'%; height:100%; background:'+m.color+'; border-radius:4px;"></div>'
+      +'</div>'
+      +'<span style="font-size:12px; font-weight:'+(isCur?'600':'400')+'; color:#1a1a1a; width:72px; text-align:right;">'+fmt(costs[i])+' €</span>'
+      +'</div>';
+  });
+  barsHtml += '</div>';
 
-  function update() {
-    const dist = parseInt(document.getElementById('dist').value);
-    const days = parseInt(document.getElementById('days').value);
-    document.getElementById('dist-out').textContent = dist + ' km';
-    document.getElementById('days-out').textContent = days + ' j';
+  var html = ''
+    +'<div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#888; margin-bottom:8px;">Distance domicile — travail (aller simple)</div>'
+    +'<div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">'
+    +'<span style="font-size:13px; color:#555; white-space:nowrap;">Aller simple</span>'
+    +'<input id="dist" type="range" min="1" max="60" value="'+dist+'" step="1" oninput="render()" style="flex:1;">'
+    +'<span style="font-size:14px; font-weight:600; min-width:48px; text-align:right;">'+dist+' km</span>'
+    +'</div>'
+    +'<div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#888; margin-bottom:8px;">Jours travaillés par an</div>'
+    +'<div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">'
+    +'<span style="font-size:13px; color:#555; white-space:nowrap;">Jours/an</span>'
+    +'<input id="days" type="range" min="100" max="230" value="'+days+'" step="5" oninput="render()" style="flex:1;">'
+    +'<span style="font-size:14px; font-weight:600; min-width:48px; text-align:right;">'+days+' j</span>'
+    +'</div>'
+    +'<hr style="border:none; border-top:1px solid #e8e8e8; margin:0 0 18px;">'
+    +'<div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#888; margin-bottom:8px;">Mode de déplacement</div>'
+    + cardsHtml
+    + paxHtml
+    +'<hr style="border:none; border-top:1px solid #e8e8e8; margin:0 0 18px;">'
+    +'<div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#888; margin-bottom:8px;">Résultats</div>'
+    + metricsHtml
+    + badgeHtml
+    +'<hr style="border:none; border-top:1px solid #e8e8e8; margin:0 0 18px;">'
+    +'<div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#888; margin-bottom:10px;">Comparatif tous modes</div>'
+    + barsHtml
+    +'<div style="font-size:11px; color:#aaa; line-height:1.6;">Voiture solo : coût de revient complet à 0,33 €/km. Covoiturage : coût divisé entre les occupants. TC : gratuit sur l\'agglomération. VE partagé : mis à disposition par l\'entreprise. Vélos amortis sur 8 ans, entretien inclus.</div>';
 
-    const kmAn = dist * 2 * days;
-    const cost = getCostAnnual(mode, kmAn);
+  document.getElementById('app').innerHTML = html;
+}
 
-    document.getElementById('r-total').textContent = cost === 0 ? '0' : Math.round(cost).toLocaleString('fr-FR');
-    document.getElementById('r-month').textContent = cost === 0 ? '0' : Math.round(cost / 12).toLocaleString('fr-FR');
-    document.getElementById('r-kman').textContent = kmAn.toLocaleString('fr-FR');
+function setMode(m){ mode=m; render(); }
+function setPax(n){ pax=n; render(); }
 
-    const kmMetric = document.getElementById('r-km');
-    const metricKm = document.getElementById('metric-km');
-    if (mode === 'tc' || mode === 'elec') {
-      kmMetric.textContent = '0,00';
-    } else if (mode === 'velo' || mode === 'veloe' || mode === 'cargo') {
-      const kmRate = kmAn > 0 ? cost / kmAn : 0;
-      kmMetric.textContent = kmRate.toFixed(2);
-    } else {
-      const kmRate = kmAn > 0 ? cost / kmAn : 0;
-      kmMetric.textContent = kmRate.toFixed(2);
-    }
-
-    const ref = 0.33 * kmAn;
-    const saving = Math.round(ref - cost);
-    const badge = document.getElementById('eco-badge');
-    if (mode === 'tc' || mode === 'elec') {
-      badge.innerHTML = '<span class="avantage-badge avantage-zero">Économie vs voiture solo : ' + Math.round(ref).toLocaleString('fr-FR') + ' €/an — coût nul pour le salarié</span>';
-    } else if (mode !== 'therm' && saving > 0) {
-      badge.innerHTML = '<span class="avantage-badge avantage-positive">Économie vs voiture solo : ' + saving.toLocaleString('fr-FR') + ' €/an</span>';
-    } else if (mode === 'therm') {
-      badge.innerHTML = '<span class="avantage-badge avantage-neutral">Mode de référence</span>';
-    } else {
-      badge.innerHTML = '';
-    }
-
-    drawBars(dist, days, kmAn);
-  }
-
-  function drawBars(dist, days, kmAn) {
-    const modes = ['therm','covoit','tc','elec','velo','veloe','cargo'];
-    const costs = modes.map(m => getCostAnnual(m, kmAn));
-    const max = Math.max(...costs);
-    const html = modes.map((m, i) => {
-      const pct = max > 0 ? (costs[i] / max * 100).toFixed(1) : 0;
-      const isCurrent = m === mode;
-      const amtTxt = costs[i] === 0 ? '0 €' : Math.round(costs[i]).toLocaleString('fr-FR') + ' €';
-      return `<div class="bar-row">
-        <span class="bar-name" style="${isCurrent ? 'font-weight:500; color: var(--color-text-primary);' : ''}">${LABELS[m]}</span>
-        <div class="bar-outer"><div class="bar-inner" style="width:${Math.max(pct, costs[i] === 0 ? 0 : 1)}%; background:${COLORS[m]};"></div></div>
-        <span class="bar-amt">${amtTxt}</span>
-      </div>`;
-    }).join('');
-    document.getElementById('bars').innerHTML = html;
-  }
-
-  update();
+render();
 </script>
