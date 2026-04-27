@@ -1,0 +1,180 @@
+
+<h2 class="sr-only">Calculateur de coût de mobilité domicile-travail — comparaison voiture solo, covoiturage, transport en commun, VE partagé et vélos</h2>
+
+<div style="padding: 1.5rem 0; font-family: var(--font-sans);">
+
+  <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin: 0 0 0.75rem;">Distance domicile — travail (aller simple)</p>
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 1.25rem;">
+    <label style="font-size: 14px; color: var(--color-text-secondary); white-space: nowrap;">Distance</label>
+    <input type="range" id="dist" min="1" max="60" value="18" step="1" style="flex:1;" oninput="calc()">
+    <span style="font-size: 14px; font-weight: 500; min-width: 50px; text-align: right;" id="dist-out">18 km</span>
+  </div>
+
+  <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin: 0 0 0.75rem;">Jours travaillés par an</p>
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem;">
+    <label style="font-size: 14px; color: var(--color-text-secondary); white-space: nowrap;">Jours/an</label>
+    <input type="range" id="days" min="100" max="230" value="210" step="5" style="flex:1;" oninput="calc()">
+    <span style="font-size: 14px; font-weight: 500; min-width: 50px; text-align: right;" id="days-out">210 j</span>
+  </div>
+
+  <hr style="border:none; border-top: 0.5px solid var(--color-border-tertiary); margin: 0 0 1.25rem;">
+
+  <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin: 0 0 0.75rem;">Mode de déplacement</p>
+  <div id="cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.25rem;"></div>
+
+  <div id="pax-block" style="display:none; margin-bottom: 1.25rem;">
+    <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin: 0 0 0.75rem;">Personnes dans le véhicule (vous inclus)</p>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button id="pax2" onclick="setPax(2)" style="font-size: 12px; padding: 5px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer;">2 personnes</button>
+      <button id="pax3" onclick="setPax(3)" style="font-size: 12px; padding: 5px 14px; border-radius: 20px; border: 0.5px solid #185FA5; background: #E6F1FB; color: #0C447C; cursor: pointer;">3 personnes</button>
+      <button id="pax4" onclick="setPax(4)" style="font-size: 12px; padding: 5px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer;">4 personnes</button>
+    </div>
+  </div>
+
+  <hr style="border:none; border-top: 0.5px solid var(--color-border-tertiary); margin: 0 0 1.25rem;">
+
+  <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin: 0 0 0.75rem;">Coût annuel estimé</p>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1rem;">
+    <div style="background: var(--color-background-secondary); border-radius: 8px; padding: 0.875rem 1rem;">
+      <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">Coût total / an</div>
+      <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);" id="r-total">—</div>
+      <div style="font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px;">€ TTC</div>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: 8px; padding: 0.875rem 1rem;">
+      <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">Coût / mois</div>
+      <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);" id="r-month">—</div>
+      <div style="font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px;">€/mois</div>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: 8px; padding: 0.875rem 1rem;">
+      <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">Coût / km</div>
+      <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);" id="r-km">—</div>
+      <div style="font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px;">€/km (indicatif)</div>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: 8px; padding: 0.875rem 1rem;">
+      <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">km / an</div>
+      <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);" id="r-kman">—</div>
+      <div style="font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px;">km parcourus</div>
+    </div>
+  </div>
+
+  <div id="badge" style="margin-bottom: 1rem;"></div>
+
+  <hr style="border:none; border-top: 0.5px solid var(--color-border-tertiary); margin: 0 0 1.25rem;">
+
+  <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin: 0 0 0.75rem;">Comparatif tous modes — coût annuel</p>
+  <div id="bars" style="margin-bottom: 1.25rem;"></div>
+
+  <p style="font-size: 12px; color: var(--color-text-tertiary); line-height: 1.6; margin: 0;">Voiture solo : coût de revient complet à 0,33 €/km. Covoiturage : coût du véhicule divisé entre les occupants. Transport en commun : gratuit sur l'agglomération. VE partagé : mis à disposition par l'entreprise, sans charge pour le salarié. Vélos amortis sur 8 ans, entretien inclus (vélo 193,75 €/an · VAE 532,50 €/an · cargo 907,50 €/an).</p>
+</div>
+
+<script>
+var mode = 'therm';
+var pax = 3;
+
+var MODES = [
+  { id: 'therm',  label: 'Voiture solo',        sub: '0,33 €/km',            color: '#A32D2D' },
+  { id: 'covoit', label: 'Covoiturage',          sub: 'coût partagé',         color: '#BA7517' },
+  { id: 'tc',     label: 'Transport en commun',  sub: 'Gratuit sur l\'agglo', color: '#185FA5' },
+  { id: 'elec',   label: 'VE partagé',           sub: 'Dacia Spring — 0 €',   color: '#0F6E56' },
+  { id: 'velo',   label: 'Vélo classique',       sub: '193,75 €/an',          color: '#3B6D11' },
+  { id: 'veloe',  label: 'VAE',                  sub: '532,50 €/an',          color: '#534AB7' },
+  { id: 'cargo',  label: 'Vélo cargo',           sub: '907,50 €/an',          color: '#854F0B' }
+];
+
+function buildCards() {
+  var html = '';
+  MODES.forEach(function(m) {
+    var active = m.id === mode;
+    var border = active ? ('2px solid ' + m.color) : '0.5px solid var(--color-border-tertiary)';
+    var bg = active ? 'var(--color-background-secondary)' : 'var(--color-background-primary)';
+    html += '<div onclick="setMode(\'' + m.id + '\')" style="background:' + bg + '; border-radius: 8px; padding: 0.75rem 0.875rem; border: ' + border + '; cursor: pointer;">'
+      + '<div style="font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px;">' + m.label + '</div>'
+      + '<div style="font-size: 11px; color: var(--color-text-secondary);">' + m.sub + '</div>'
+      + '</div>';
+  });
+  document.getElementById('cards').innerHTML = html;
+}
+
+function getCost(m, kmAn) {
+  if (m === 'therm')  return 0.33 * kmAn;
+  if (m === 'covoit') return (0.33 * kmAn) / pax;
+  if (m === 'tc')     return 0;
+  if (m === 'elec')   return 0;
+  if (m === 'velo')   return 193.75;
+  if (m === 'veloe')  return 532.5;
+  if (m === 'cargo')  return 907.5;
+  return 0;
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('pax-block').style.display = m === 'covoit' ? 'block' : 'none';
+  buildCards();
+  calc();
+}
+
+function setPax(n) {
+  pax = n;
+  [2,3,4].forEach(function(k) {
+    var btn = document.getElementById('pax'+k);
+    if (k === n) {
+      btn.style.border = '0.5px solid #185FA5';
+      btn.style.background = '#E6F1FB';
+      btn.style.color = '#0C447C';
+    } else {
+      btn.style.border = '0.5px solid var(--color-border-secondary)';
+      btn.style.background = 'transparent';
+      btn.style.color = 'var(--color-text-secondary)';
+    }
+  });
+  calc();
+}
+
+function calc() {
+  var dist = parseInt(document.getElementById('dist').value);
+  var days = parseInt(document.getElementById('days').value);
+  document.getElementById('dist-out').textContent = dist + ' km';
+  document.getElementById('days-out').textContent = days + ' j';
+
+  var kmAn = dist * 2 * days;
+  var cost = getCost(mode, kmAn);
+
+  document.getElementById('r-total').textContent = Math.round(cost).toLocaleString('fr-FR');
+  document.getElementById('r-month').textContent = Math.round(cost / 12).toLocaleString('fr-FR');
+  document.getElementById('r-kman').textContent = kmAn.toLocaleString('fr-FR');
+  document.getElementById('r-km').textContent = (kmAn > 0 && cost > 0) ? (cost / kmAn).toFixed(2) : '0,00';
+
+  var ref = 0.33 * kmAn;
+  var saving = Math.round(ref - cost);
+  var badge = document.getElementById('badge');
+  if (mode === 'tc' || mode === 'elec') {
+    badge.innerHTML = '<span style="display:inline-block; font-size:11px; font-weight:500; padding:3px 10px; border-radius:8px; background:#E6F1FB; color:#0C447C;">Économie vs voiture solo : ' + Math.round(ref).toLocaleString('fr-FR') + ' €/an — coût nul pour le salarié</span>';
+  } else if (mode !== 'therm' && saving > 0) {
+    badge.innerHTML = '<span style="display:inline-block; font-size:11px; font-weight:500; padding:3px 10px; border-radius:8px; background:#EAF3DE; color:#3B6D11;">Économie vs voiture solo : ' + saving.toLocaleString('fr-FR') + ' €/an</span>';
+  } else if (mode === 'therm') {
+    badge.innerHTML = '<span style="display:inline-block; font-size:11px; font-weight:500; padding:3px 10px; border-radius:8px; background:var(--color-background-secondary); color:var(--color-text-secondary);">Mode de référence</span>';
+  } else {
+    badge.innerHTML = '';
+  }
+
+  var costs = MODES.map(function(m) { return getCost(m.id, kmAn); });
+  var maxCost = Math.max.apply(null, costs);
+  var barsHtml = '';
+  MODES.forEach(function(m, i) {
+    var pct = maxCost > 0 ? (costs[i] / maxCost * 100) : 0;
+    var isCur = m.id === mode;
+    var amtTxt = Math.round(costs[i]).toLocaleString('fr-FR') + ' €';
+    barsHtml += '<div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">'
+      + '<span style="font-size:12px; color:var(--color-text-' + (isCur ? 'primary' : 'secondary') + '); font-weight:' + (isCur ? '500' : '400') + '; width:145px; flex-shrink:0;">' + m.label + '</span>'
+      + '<div style="flex:1; height:18px; background:var(--color-background-secondary); border-radius:4px; overflow:hidden;">'
+      + '<div style="width:' + Math.max(pct, costs[i] === 0 ? 0 : 1).toFixed(1) + '%; height:100%; background:' + m.color + '; border-radius:4px; transition: width 0.35s ease;"></div>'
+      + '</div>'
+      + '<span style="font-size:12px; font-weight:500; color:var(--color-text-primary); width:72px; text-align:right;">' + amtTxt + '</span>'
+      + '</div>';
+  });
+  document.getElementById('bars').innerHTML = barsHtml;
+}
+
+buildCards();
+calc();
+</script>
