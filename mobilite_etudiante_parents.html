@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Asap', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; color: #4D4D4D; background: transparent; }
+:root {
+  --dark: #004A4F; --teal: #3ECDC5; --cream: #FBF7F3;
+  --text: #4D4D4D; --line: rgba(0,74,79,0.13);
+  --teal-lt: #e4faf9; --warn: #b84c00;
+}
+.hband { background: var(--dark); color: #fff; padding: 16px 22px 13px; border-radius: 12px 12px 0 0; }
+.hband h2 { font-size: 17px; font-weight: 700; margin: 0 0 3px; }
+.hband p  { font-size: 12px; opacity: .8; margin: 0; }
+/* Accordéons */
+.acc-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 22px; cursor: pointer; background: #fff; user-select: none; border-bottom: 1px solid var(--line); transition: background .15s; }
+.acc-head:hover { background: #f5f2ee; }
+.acc-head.cream { background: var(--cream); }
+.acc-head.cream:hover { background: #f0ebe4; }
+.acc-title { font-size: 13px; font-weight: 600; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+.acc-ic { font-size: 17px; }
+.acc-sum { font-size: 12px; color: #888; margin-left: 6px; font-weight: 400; }
+.acc-chev { font-size: 11px; color: #aaa; transition: transform .2s; flex-shrink: 0; }
+.acc-head.open .acc-chev { transform: rotate(90deg); }
+.acc-body { max-height: 0; overflow: hidden; transition: max-height .28s ease; }
+.acc-body.open { max-height: 5000px; }
+.acc-inner { padding: 16px 22px 20px; }
+.acc-inner.cream { background: var(--cream); }
+/* Sliders */
+.sr { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+.sr label { font-size: 13px; color: #666; min-width: 160px; flex-shrink: 0; }
+.sr input[type=range] { flex: 1; accent-color: var(--teal); cursor: pointer; }
+.sv { font-size: 13px; font-weight: 600; min-width: 90px; text-align: right; color: var(--dark); white-space: nowrap; }
+/* Boutons */
+.tog-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.tgl { flex: 1; padding: 8px 6px; background: #fff; border: 2px solid #ccc; border-radius: 8px; font-size: 12px; cursor: pointer; color: #777; font-family: 'Asap', sans-serif; transition: background-color .15s, color .15s, border-color .15s; }
+.tgl.on { background: var(--dark) !important; color: #fff !important; border-color: var(--dark) !important; font-weight: 700; }
+/* Métriques */
+.mg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.mc { background: var(--cream); border-radius: 8px; padding: 10px 12px; text-align: center; }
+.mv { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.ml { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.3; }
+.mc.hi .mv { color: var(--teal); }
+.mc.hi2 .mv { color: var(--dark); }
+.mc.warn .mv { color: var(--warn); }
+/* Barres */
+.prog-bg { background: #ddd; border-radius: 5px; height: 9px; overflow: hidden; margin-bottom: 4px; }
+.prog-fill { height: 100%; border-radius: 5px; background: var(--teal); transition: width .4s; }
+.prog-label { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-bottom: 14px; }
+/* Encadrés */
+.info-box  { background: var(--teal-lt); border-left: 3px solid var(--teal); border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: var(--text); line-height: 1.5; }
+.air-box   { background: #fef9e7; border-left: 3px solid #e6a700; border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: #6b4f00; line-height: 1.5; }
+.cash-box  { background: #fff7e6; border-left: 3px solid #e6a700; border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: #6b4f00; line-height: 1.5; display: none; }
+.time-box  { background: #edf4ff; border-left: 3px solid #4a7fcb; border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: #1a3a5c; line-height: 1.6; }
+.green-box { background: var(--teal-lt); border-left: 3px solid var(--teal); border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: var(--dark); line-height: 1.5; }
+.mel-box   { background: #f0fdf9; border-left: 3px solid var(--teal); border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: var(--text); line-height: 1.5; }
+/* Tables */
+table.bt { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.bt td { padding: 5px 0; border-bottom: 1px solid var(--line); color: var(--text); }
+table.bt tr:last-child td { border-bottom: none; font-weight: 600; }
+table.bt .tr { text-align: right; }
+.sec-t { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+/* Tabs */
+.tbr { display: flex; gap: 5px; margin-bottom: 14px; flex-wrap: wrap; }
+.tb { flex: 1; min-width: 80px; padding: 8px 4px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-size: 11.5px; cursor: pointer; color: #777; font-family: 'Asap', sans-serif; transition: background-color .15s, color .15s, border-color .15s; text-align: center; }
+.tb.on { background: var(--teal); color: #fff; border-color: var(--teal); font-weight: 600; }
+.tp { display: none; }
+.tp.on { display: block; }
+/* Cartes */
+.acard { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+.acard:last-child { margin-bottom: 0; }
+.ah { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; flex-wrap: wrap; }
+.ai { font-size: 18px; color: var(--teal); flex-shrink: 0; }
+.at { font-size: 14px; font-weight: 600; color: var(--dark); }
+.as { margin-left: auto; background: var(--teal-lt); color: var(--dark); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 12px; margin-right: 4px; vertical-align: middle; }
+.badge-cond  { background: #fde68a; color: #78350f; }
+.badge-all   { background: #d1fae5; color: #065f46; }
+.badge-free  { background: #dcfce7; color: #166534; }
+.badge-ville { background: #e0e7ff; color: #3730a3; }
+.ab { font-size: 12.5px; color: #666; line-height: 1.7; }
+.ab ul { padding-left: 16px; margin-top: 4px; }
+.ab li { margin-bottom: 3px; }
+.rl { color: var(--dark); text-decoration: none; border-bottom: 1px dashed var(--teal); }
+strong { font-weight: 600; }
+/* Tarif tableau */
+.tarif-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 8px; }
+.tarif-table th { background: var(--teal-lt); color: var(--dark); font-weight: 700; padding: 6px 8px; text-align: left; font-size: 11px; border-bottom: 2px solid var(--teal); }
+.tarif-table td { padding: 5px 8px; border-bottom: 1px solid var(--line); color: var(--text); font-size: 12px; }
+.tarif-table tr:last-child td { border-bottom: none; }
+.tarif-table .price { font-weight: 700; color: var(--dark); text-align: right; white-space: nowrap; }
+/* Comparatif */
+.cmp-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.cmp-table th { background: var(--cream); color: #888; font-weight: 700; padding: 8px 10px; text-align: left; font-size: 11px; border-bottom: 2px solid #ccc; }
+.cmp-table th.num { text-align: right; }
+.cmp-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); color: var(--text); }
+.cmp-table td.num { text-align: right; font-weight: 600; }
+.cmp-table tr.car-row { background: #fdf2f2; }
+.cmp-table tr.best td.num { color: var(--dark); font-weight: 700; }
+.cmp-table tr:last-child td { border-bottom: none; }
+.mode-name { display: flex; align-items: center; gap: 6px; }
+/* Tooltip */
+.tip-wrap { position: relative; display: inline-flex; }
+.tip-btn { width: 16px; height: 16px; border-radius: 50%; background: #bbb; color: #fff; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-family: inherit; flex-shrink: 0; }
+.tip-btn:hover, .tip-btn.open { background: var(--teal); }
+.tip-pop { display: none; position: absolute; top: 22px; left: 0; z-index: 20; width: 280px; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #666; line-height: 1.5; box-shadow: 0 4px 14px rgba(0,0,0,.12); }
+.tip-pop.open { display: block; }
+/* Carousel santé */
+.hc { overflow: hidden; border-radius: 10px; margin-bottom: 8px; }
+.hc-track { display: flex; transition: transform .35s ease; }
+.hc-slide { min-width: 100%; background: var(--teal-lt); border: 1px solid rgba(62,205,197,.3); border-radius: 10px; padding: 14px 16px; }
+.hc-stat { font-size: 14px; font-weight: 600; color: var(--dark); line-height: 1.4; margin-bottom: 6px; }
+.hc-src  { font-size: 11px; color: #888; }
+.hc-nav  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.hc-btn  { background: none; border: 1px solid #ccc; border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; color: #666; font-family: 'Asap', sans-serif; }
+.hc-btn:hover { background: var(--teal-lt); }
+.hc-dots { display: flex; gap: 5px; }
+.hc-dot  { width: 7px; height: 7px; border-radius: 50%; background: #ccc; cursor: pointer; }
+.hc-dot.on { background: var(--teal); }
+/* Ville pills */
+.villes-nav { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+.vpill { padding: 5px 12px; background: #fff; border: 1px solid #ccc; border-radius: 20px; font-size: 12px; cursor: pointer; color: #666; font-family: 'Asap', sans-serif; transition: .15s; white-space: nowrap; }
+.vpill.on { background: var(--dark); color: #fff; border-color: var(--dark); font-weight: 600; }
+.vblock { display: none; }
+.vblock.on { display: block; }
+</style>
+</head>
+<body>
+<div style="border-radius:12px;border:1px solid rgba(0,74,79,0.2);overflow:hidden;background:#fff;max-width:700px;">
+
+<!-- HEADER -->
+<div class="hband">
+  <h2>&#127979; Mobilité étudiante — bien choisir avant d'arriver</h2>
+  <p>À destination des étudiant·e·s et de leurs parents &mdash; simuler et comparer les options de transport</p>
+</div>
+
+<!-- ACC 1 : SIMULATEUR -->
+<div class="acc-head open cream" id="acc1-head" onclick="toggleAcc('acc1')">
+  <span class="acc-title"><span class="acc-ic">&#128663;</span>Simuler le coût d'une voiture étudiante<span class="acc-sum" id="acc1-sum"></span></span>
+  <span class="acc-chev">&#9656;</span>
+</div>
+<div class="acc-body open" id="acc1-body">
+<div class="acc-inner cream">
+  <div class="sec-t">Mon véhicule</div>
+  <div class="tog-row">
+    <button class="tgl on" id="tgl-achat" onclick="setMode('achat')">&#128203; Achat comptant / crédit</button>
+    <button class="tgl" id="tgl-none"  onclick="setMode('none')">&#128683; Pas de voiture</button>
+  </div>
+
+  <div id="panel-achat">
+    <div class="sr"><label for="prix-achat">Prix du véhicule</label><input type="range" id="prix-achat" min="500" max="20000" step="500" value="5000" oninput="update()"><span class="sv" id="out-prix-achat">5 000 €</span></div>
+    <div class="cash-box" id="cash-box">&#128181; Moins de 2 000 € : achat comptant sans crédit.</div>
+    <div id="financement-fields">
+      <div class="sr"><label for="apport">Apport personnel</label><input type="range" id="apport" min="0" max="10000" step="500" value="1000" oninput="update()"><span class="sv" id="out-apport">1 000 €</span></div>
+      <div class="sr"><label for="duree-credit">Durée du crédit (mois)</label><input type="range" id="duree-credit" min="0" max="84" step="6" value="36" oninput="update()"><span class="sv" id="out-duree-credit">36 mois</span></div>
+      <div class="sr"><label for="taux-credit">Taux annuel crédit (%)</label><input type="range" id="taux-credit" min="0" max="12" step="0.25" value="5" oninput="update()"><span class="sv" id="out-taux-credit">5,00 %</span></div>
+    </div>
+  </div>
+
+  <div class="sec-t" id="sec-trajet" style="margin-top:6px;">Mon trajet domicile&ndash;campus</div>
+  <div class="sr"><label for="km">Distance aller (km)</label><input type="range" id="km" min="1" max="80" step="1" value="25" oninput="update()"><span class="sv" id="out-km">25 km</span></div>
+  <div class="sr"><label for="jours">Jours présents / semaine</label><input type="range" id="jours" min="1" max="5" step="1" value="4" oninput="update()"><span class="sv" id="out-jours">4 j/sem</span></div>
+  <!-- Carburant masqué en mode "pas de voiture" -->
+  <div id="carburant-fields">
+    <div class="sr"><label for="pleins-mois">Nombre de pleins / mois</label><input type="range" id="pleins-mois" min="0.5" max="6" step="0.5" value="2" oninput="update()"><span class="sv" id="out-pleins-mois">2,0</span></div>
+    <div class="sr"><label for="prix-plein">Prix d'un plein</label><input type="range" id="prix-plein" min="20" max="100" step="2" value="65" oninput="update()"><span class="sv" id="out-prix-plein">65 €</span></div>
+  </div>
+</div>
+</div><!-- /acc1 -->
+
+<!-- ACC 2 : RÉSULTATS -->
+<div class="acc-head open" id="acc2-head" onclick="toggleAcc('acc2')">
+  <span class="acc-title"><span class="acc-ic">&#128200;</span>Ce que ça coûte vraiment<span class="acc-sum" id="acc2-sum"></span></span>
+  <span class="acc-chev">&#9656;</span>
+</div>
+<div class="acc-body open" id="acc2-body">
+<div class="acc-inner">
+
+  <!-- Affiché si voiture -->
+  <div id="voiture-results">
+    <div class="mg">
+      <div class="mc hi"><div class="mv" id="m-annuel">—</div><div class="ml">Coût annuel total</div></div>
+      <div class="mc"><div class="mv" id="m-mensuel">—</div><div class="ml">Par mois</div></div>
+      <div class="mc hi2" id="mc-budget"><div class="mv" id="m-budget">—</div><div class="ml">% budget type étudiant (~900 €/mois)</div></div>
+    </div>
+    <div id="prog-section">
+      <div class="prog-bg"><div class="prog-fill" id="prog-bar" style="width:0%"></div></div>
+      <div class="prog-label"><span id="prog-left">Acquisition</span><span id="prog-right">Carburant + entretien</span></div>
+    </div>
+    <div class="info-box" id="info-acq"></div>
+    <table class="bt" id="detail-table">
+      <tr><td>Acquisition (annualisé)</td><td class="tr" id="b-acq">—</td></tr>
+      <tr><td style="padding-left:12px;color:#888;font-size:12px;">Carburant (<span id="b-pleins-txt">—</span>)</td><td class="tr" style="color:#888;font-size:12px;" id="b-carb">—</td></tr>
+      <tr><td style="padding-left:12px;color:#888;font-size:12px;">
+        <span class="tip-wrap"><button class="tip-btn" id="tip-ent-btn" onclick="toggleTip('tip-ent')" type="button">?</button><span class="tip-pop" id="tip-ent">Source ADETEC (2022) : 33 cts/km, dont 26 % pour entretien et réparations.</span></span>
+        Entretien &amp; réparations
+      </td><td class="tr" style="color:#888;font-size:12px;" id="b-ent">—</td></tr>
+      <tr><td style="padding-left:12px;color:#888;font-size:12px;">
+        <span class="tip-wrap"><button class="tip-btn" id="tip-aut-btn" onclick="toggleTip('tip-aut')" type="button">?</button><span class="tip-pop" id="tip-aut">Assurance, stationnement, péages, pièces, carte grise : ~21 % du coût moyen (ADETEC 2022).</span></span>
+        Assurance, stationnement…
+      </td><td class="tr" style="color:#888;font-size:12px;" id="b-aut">—</td></tr>
+      <tr><td><strong>Total annuel estimé</strong></td><td class="tr" id="b-tot">—</td></tr>
+    </table>
+  </div>
+
+  <!-- Affiché si pas de voiture -->
+  <div id="nocar-results" style="display:none;">
+    <div class="green-box">
+      &#x1F4AA; <strong>Sans voiture, vous économisez potentiellement 3 000 à 6 000 € par an.</strong> C'est souvent l'équivalent d'une année de loyer étudiant. Ce budget peut financer vos études, un vélo électrique d'occasion, votre abonnement transport et bien plus.
+    </div>
+  </div>
+
+  <!-- Toujours affiché -->
+  <div class="air-box">&#x1F32B;&#xFE0F; <strong>Qualité de l'air :</strong> dans une voiture, vous respirez plus de polluants qu'à pied ou à vélo — les capteurs intérieurs captent davantage les gaz d'échappement. Chaque trajet actif réduit votre exposition et votre empreinte carbone.</div>
+  <div class="time-box"><span id="time-content">—</span></div>
+
+</div>
+</div><!-- /acc2 -->
+
+<!-- ACC 3 : COMPARATIF -->
+<div class="acc-head" id="acc3-head" onclick="toggleAcc('acc3')">
+  <span class="acc-title"><span class="acc-ic">&#128202;</span>Comparer avec les alternatives<span class="acc-sum" id="acc3-sum"></span></span>
+  <span class="acc-chev">&#9656;</span>
+</div>
+<div class="acc-body" id="acc3-body">
+<div class="acc-inner">
+  <table class="cmp-table" id="compare-table">
+    <tr><th>Mode</th><th class="num">Par an</th><th class="num">Par mois</th></tr>
+  </table>
+</div>
+</div><!-- /acc3 -->
+
+<!-- ACC 4 : TRANSPORTS EN COMMUN -->
+<div class="acc-head" id="acc4-head" onclick="toggleAcc('acc4')">
+  <span class="acc-title"><span class="acc-ic">&#128653;</span>Transports en commun<span class="acc-sum"></span></span>
+  <span class="acc-chev">&#9656;</span>
+</div>
+<div class="acc-body" id="acc4-body">
+<div class="acc-inner">
+
+  <div class="acard">
+    <div class="ah"><span class="ai">&#128646;</span><span class="at">Train régional (TER) &mdash; abonnement étudiant</span><span class="as">Jusqu'à &minus;88 %</span></div>
+    <div class="ab">
+      Le <strong>Mon Abo Étudiant TER Hauts-de-France</strong> offre jusqu'à <strong>88 % de réduction</strong> sur les abonnements mensuels TER. En train, à <strong>73,6 km/h en moyenne</strong> — c'est du temps pour lire, préparer ses cours ou écouter un podcast.
+      <table class="tarif-table" style="margin-top:10px;">
+        <tr><th>Titre</th><th>Territoire</th><th class="price">Tarif</th></tr>
+        <tr><td><strong>Pass&amp;Go</strong> (illimité annuel)</td><td><span class="badge badge-ville">Valenciennes uniquement</span></td><td class="price">20 €/an de frais</td></tr>
+        <tr><td><strong>Mon Abo Étudiant TER</strong></td><td><span class="badge badge-all">Hauts-de-France</span></td><td class="price">Jusqu'à &minus;88 %</td></tr>
+      </table>
+      <a class="rl" href="https://www.ter.sncf.com/hauts-de-france/abonnements/tous-les-abonnements/abonnements-etudiants-scolaires/mon-abo-etudiant-ter-hauts-de-france" target="_blank" style="font-size:12px;">&#8594; ter.sncf.com &mdash; Mon Abo Étudiant</a>
+    </div>
+  </div>
+
+  <p class="sec-t" style="margin-top:14px;">Réseaux urbains — selon votre ville d'études</p>
+  <div class="villes-nav" id="tc-pills">
+    <button class="vpill on" onclick="showVille('tc','dunkerque',this)">&#127963; Dunkerque</button>
+    <button class="vpill" onclick="showVille('tc','lille',this)">&#127963; Lille</button>
+    <button class="vpill" onclick="showVille('tc','nice',this)">&#127963; Nice</button>
+    <button class="vpill" onclick="showVille('tc','paris',this)">&#127963; Paris / IDF</button>
+    <button class="vpill" onclick="showVille('tc','autre',this)">&#128205; Autre ville</button>
+  </div>
+
+  <div class="vblock on" id="tc-dunkerque">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128692;</span><span class="at">Dunkerque — transports en commun gratuits</span><span class="as badge-free">Gratuit</span></div>
+      <div class="ab">La <strong>Communauté Urbaine de Dunkerque</strong> a rendu tous ses transports en commun <strong>totalement gratuits</strong> — sans abonnement, sans démarche. On monte dans le bus comme dans une boutique. C'est l'une des seules agglomérations françaises à avoir franchi ce pas à cette échelle.</div>
+    </div>
+  </div>
+
+  <div class="vblock" id="tc-lille">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128653;</span><span class="at">Ilévia — Métropole Européenne de Lille</span><span class="as">&minus;50 % à &minus;87 %</span></div>
+      <div class="ab">
+        Ilévia propose des <strong>réductions importantes pour les jeunes</strong> :
+        <ul>
+          <li><strong>Moins de 18 ans</strong> : accès aux transports en commun <strong>gratuit</strong></li>
+          <li><strong>18&ndash;25 ans</strong> : réductions de <strong>50 % à 87 %</strong> sur les abonnements selon les conditions</li>
+        </ul>
+        <a class="rl" href="https://www.ilevia.fr" target="_blank">ilevia.fr</a> &mdash; Tarification solidaire et sociale disponible sous conditions.
+      </div>
+    </div>
+  </div>
+
+  <div class="vblock" id="tc-nice">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128653;</span><span class="at">Nice — Lignes d'Azur</span></div>
+      <div class="ab">
+        Le réseau <strong>Lignes d'Azur</strong> dessert l'ensemble de la Métropole Nice Côte d'Azur. Les <strong>lignes 2 et 3 du tramway</strong> passent toutes les <strong>7&ndash;8 minutes</strong> du lundi au vendredi de 7h à 20h. La gare TER <strong>Nice Saint-Augustin</strong> est accessible à pied en moins de 12 minutes (850 m) — liaisons vers Marseille, Cannes, Menton, Ventimiglia.
+        <ul>
+          <li>Tramway : fréquence élevée, dessertes directes vers les campus</li>
+          <li>Tarifs étudiants disponibles — se renseigner sur <a class="rl" href="https://www.lignesdazur.com" target="_blank">lignesdazur.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="vblock" id="tc-paris">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128653;</span><span class="at">Paris / Île-de-France — Navigo Imagine'R</span></div>
+      <div class="ab">
+        Le <strong>pass Imagine'R</strong> est l'abonnement étudiant annuel pour l'ensemble des transports en commun (métro, RER, tramway, bus) en Île-de-France. À Paris, le vélo est souvent <strong>plus rapide que la voiture</strong> : vitesse moyenne en heure de pointe <strong>16 km/h</strong> en voiture vs <strong>~20 km/h pour un vélo électrique</strong>, avec un taux de congestion atteignant 84 %.
+        <br>Depuis novembre 2024, une <strong>Zone à Trafic Limité (ZTL)</strong> est en place à Paris Centre, rendant la voiture encore moins pratique dans l'intramuros.
+      </div>
+    </div>
+  </div>
+
+  <div class="vblock" id="tc-autre">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128205;</span><span class="at">Votre ville d'études</span></div>
+      <div class="ab">
+        Chaque réseau urbain propose des <strong>tarifs étudiants spécifiques</strong>. Cherchez "<em>abonnement étudiant [nom du réseau]</em>" ou renseignez-vous directement auprès de votre université, qui indique souvent les options dans son guide d'accueil. Beaucoup de réseaux proposent moins de <strong>30 €/mois</strong> pour les étudiants.
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /acc4 -->
+
+<!-- ACC 5 : VÉLO -->
+<div class="acc-head" id="acc5-head" onclick="toggleAcc('acc5')">
+  <span class="acc-title"><span class="acc-ic">&#128690;</span>Le vélo — souplesse et santé<span class="acc-sum"></span></span>
+  <span class="acc-chev">&#9656;</span>
+</div>
+<div class="acc-body" id="acc5-body">
+<div class="acc-inner">
+
+  <div class="hc"><div class="hc-track" id="hc-track"></div></div>
+  <div class="hc-nav">
+    <button class="hc-btn" onclick="hcMove(-1)">&#8592;</button>
+    <div class="hc-dots" id="hc-dots"></div>
+    <button class="hc-btn" onclick="hcMove(1)">&#8594;</button>
+  </div>
+
+  <!-- Libre-service par ville -->
+  <p class="sec-t" style="margin-top:4px;">Vélos libre-service — selon votre ville</p>
+  <div class="villes-nav" id="velo-pills">
+    <button class="vpill on" onclick="showVille('velo','nordF',this)">&#127963; Nord-de-France</button>
+    <button class="vpill" onclick="showVille('velo','dunkerque',this)">&#127963; Dunkerque</button>
+    <button class="vpill" onclick="showVille('velo','amiens',this)">&#127963; Amiens</button>
+    <button class="vpill" onclick="showVille('velo','nice',this)">&#127963; Nice</button>
+    <button class="vpill" onclick="showVille('velo','paris',this)">&#127963; Paris / IDF</button>
+  </div>
+
+  <div class="vblock on" id="velo-nordF">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128690;</span><span class="at">V'Lille (Métropole Lilloise &mdash; Ilévia)</span></div>
+      <div class="ab">300 stations, 3 000 vélos dans la métropole. Abonnement annuel ~35 €. <a class="rl" href="https://www.ilevia.fr/vlille" target="_blank">ilevia.fr/vlille</a></div>
+    </div>
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128690;</span><span class="at">Donkey Republic (Valenciennes et autres villes)</span></div>
+      <div class="ab">Location de vélos à la demande sur le territoire du Valenciennois et d'autres villes françaises. <a class="rl" href="https://www.donkey.bike/fr" target="_blank">donkey.bike/fr</a></div>
+    </div>
+  </div>
+
+  <div class="vblock" id="velo-dunkerque">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#9889;</span><span class="at">ÉCO-VÉLO — Communauté Urbaine de Dunkerque</span><span class="as badge-free">Gratuit</span></div>
+      <div class="ab">
+        Service de <strong>prêt gratuit de vélos à assistance électrique</strong> proposé par la CUD : vélos classiques, cargos, longtails, tricycles.
+        <ul>
+          <li>Réservation jusqu'à <strong>6 mois à l'avance</strong></li>
+          <li>Prêt de <strong>2 mois consécutifs</strong> du 1er octobre au 31 mars</li>
+          <li>Prêt de <strong>1 mois</strong> du 1er avril au 30 septembre</li>
+        </ul>
+        <strong>Conditions :</strong> <span class="badge badge-cond">+18 ans</span> résider sur le périmètre de la CUD, disposer d'un lieu de stationnement sécurisé, limité à 1 demande par personne et 2 par foyer.
+      </div>
+    </div>
+  </div>
+
+  <div class="vblock" id="velo-amiens">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128690;</span><span class="at">Buscyclette — Amiens</span></div>
+      <div class="ab">
+        Location de vélos à la <strong>journée, au mois ou à l'année</strong> : vélos sans assistance (enfant et adulte), avec assistance électrique, cargos, vélos adaptés. L'entretien et la maintenance sont inclus pendant toute la durée de la location (hors casse).
+        <a class="rl" href="https://www.buscyclette.fr/" target="_blank">buscyclette.fr</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="vblock" id="velo-nice">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128690;</span><span class="at">Lime &amp; Pony — Nice Côte d'Azur</span></div>
+      <div class="ab">
+        Deux opérateurs de vélos (et trottinettes) à assistance électrique en libre-service sur la métropole, avec des aires de stationnement devant les campus.
+        <table class="tarif-table" style="margin-top:8px;">
+          <tr><th>Usage</th><th>Lime (VAE)</th><th>Pony (VAE / musculaire)</th></tr>
+          <tr><td>Ponctuel</td><td class="price">~3,53 € / trajet</td><td class="price">3 € (aller-retour 24h)</td></tr>
+          <tr><td>Mensuel fréquent</td><td class="price">31,99 € (300 min)</td><td class="price">39 € (150 trajets/mois)</td></tr>
+        </table>
+        <span style="font-size:12px;color:#888;">Ces services ont remplacé les Vélos Bleus qui desservaient le campus pendant 15 ans. Pour un usage quotidien, préférer un vélo personnel ou un abonnement long terme.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="vblock" id="velo-paris">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128690;</span><span class="at">Vélib' — Paris et petite couronne</span></div>
+      <div class="ab">
+        1 480 stations dans 65 communes. Abonnements mensuels :
+        <ul>
+          <li><strong>3,10 €/mois</strong> pour un vélo musculaire</li>
+          <li><strong>9,30 €/mois</strong> pour un vélo électrique</li>
+        </ul>
+        Ces abonnements peuvent être pris en charge à <strong>50 % par l'employeur</strong> dans le cadre du Forfait Mobilités Durables. <a class="rl" href="https://www.velib-metropole.fr" target="_blank">velib-metropole.fr</a>
+      </div>
+    </div>
+    <div class="acard">
+      <div class="ah"><span class="ai">&#9889;</span><span class="at">Véligo — abonnement longue durée Île-de-France</span></div>
+      <div class="ab">
+        Abonnement de 6 mois proposé par la Région Île-de-France :
+        <ul>
+          <li><strong>40 €/mois</strong> pour un vélo électrique classique</li>
+          <li><strong>80 €/mois</strong> pour un vélo cargo électrique</li>
+        </ul>
+        Pris en charge à <strong>50 % par l'employeur</strong> (Forfait Mobilités Durables). Idéal pour tester avant d'acheter. <a class="rl" href="https://www.veligo-location.fr" target="_blank">veligo-location.fr</a>
+      </div>
+    </div>
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128690;</span><span class="at">Lime, Dott &amp; abonnements privés</span></div>
+      <div class="ab">Opérateurs privés disponibles à Paris : Lime, Dott (vélos électriques en libre-service). Abonnements privés à partir de <strong>16,90 €/mois</strong> (Swapfiets, vélo musculaire) jusqu'à <strong>69 €/mois</strong> (Dance, vélo électrique), intégrables dans le Forfait Mobilités Durables.</div>
+    </div>
+  </div>
+
+  <!-- Acheter un vélo d'occasion -->
+  <p class="sec-t" style="margin-top:16px;">Acheter &amp; réparer son vélo</p>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#128293;</span><span class="at">ReCycle-Moi (Roubaix) &amp; ressourceries vélo</span></div>
+    <div class="ab">
+      <ul>
+        <li><strong>ReCycle-Moi</strong> (Roubaix) : vélos reconditionnés, vente et ateliers — <a class="rl" href="https://www.recyclemoi.org/produits/" target="_blank">recyclemoi.org</a></li>
+        <li><strong>Vélos Égaux</strong> (Lille / Lomme / Hellemmes) : diagnostic mobilité, cours de vélo et accès à un vélo — <span class="badge badge-cond">Sous conditions de revenus</span> <a class="rl" href="https://www.veloegaux.fr/devenir-beneficiaire/" target="_blank">veloegaux.fr</a></li>
+        <li><strong>Brocantes vélo &amp; événements</strong> : agenda — <a class="rl" href="https://2raventure.com/2026/02/13/evenements-velo-ou-sinformer-tester-et-passer-a-laction/" target="_blank">2raventure.com</a></li>
+        <li><strong>Heureux Cyclage</strong> : carte nationale des ateliers d'autoréparation — <a class="rl" href="https://www.heureux-cyclage.org/" target="_blank">heureux-cyclage.org</a></li>
+        <li><strong>Les Mains dans le Guidon</strong> (Lille / Lomme / Hem) : ateliers et mise en selle — <a class="rl" href="https://lesmainsdansleguidon.fr/" target="_blank">lesmainsdansleguidon.fr</a></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</div><!-- /acc5 -->
+
+<!-- ACC 6 : COVOITURAGE & AUTOPARTAGE -->
+<div class="acc-head" id="acc6-head" onclick="toggleAcc('acc6')">
+  <span class="acc-title"><span class="acc-ic">&#128101;</span>Covoiturage &amp; autopartage<span class="acc-sum"></span></span>
+  <span class="acc-chev">&#9656;</span>
+</div>
+<div class="acc-body" id="acc6-body">
+<div class="acc-inner">
+  <div class="acard">
+    <div class="ah"><span class="ai">&#128101;</span><span class="at">PassPass Covoiturage — Hauts-de-France</span></div>
+    <div class="ab">Plateforme régionale de covoiturage. <a class="rl" href="https://www.passpasscovoiturage.fr/" target="_blank">passpasscovoiturage.fr</a></div>
+  </div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#128661;</span><span class="at">BlaBlaCar &amp; BlaBlaCar Daily</span></div>
+    <div class="ab">
+      Pour les trajets longue distance (retours chez les parents), <a class="rl" href="https://www.blablacar.fr" target="_blank">BlaBlaCar</a> reste très économique. BlaBlaCar Daily est orienté trajets quotidiens domicile-campus.
+      <ul>
+        <li><strong>Nice</strong> : la Métropole Nice Côte d'Azur finance les trajets BlaBlaCar Daily — <strong>1,50 € dès le 2e km</strong> jusqu'au 15e km, puis 10 cts/km, plafonné à <strong>200 €/mois</strong></li>
+        <li><strong>Paris / IDF</strong> : avec Karos, BlaBlaCar Daily ou Mobicoop, les conducteurs abonnés Navigo peuvent gagner jusqu'à <strong>150 €/mois</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#128204;</span><span class="at">Microstop</span></div>
+    <div class="ab">Covoiturage solidaire et spontané, zones rurales et périurbaines. <a class="rl" href="https://www.microstop.fr" target="_blank">microstop.fr</a></div>
+  </div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#9889;</span><span class="at">Autopartage — si vous avez besoin d'une voiture ponctuellement</span></div>
+    <div class="ab">
+      Plutôt que d'acheter, l'autopartage permet d'accéder à une voiture à la demande :
+      <ul>
+        <li><strong>Citiz Hauts-de-France</strong> : coopérative d'autopartage — <a class="rl" href="https://hauts-de-france.citiz.coop/" target="_blank">hauts-de-france.citiz.coop</a></li>
+        <li><strong>Mobilize Share</strong> (Nice) : voitures électriques (Renault ZOE, Dacia Spring) en libre-service dans 52 stations</li>
+        <li><strong>Getaround</strong> (Nice) : ~151 véhicules à proximité entre <strong>4 et 6 €/jour</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div><!-- /acc6 -->
+
+<!-- ACC 7 : AIDES -->
+<div class="acc-head" id="acc7-head" onclick="toggleAcc('acc7')">
+  <span class="acc-title"><span class="acc-ic">&#128142;</span>Aides &amp; dispositifs d'accompagnement<span class="acc-sum"></span></span>
+  <span class="acc-chev">&#9656;</span>
+</div>
+<div class="acc-body" id="acc7-body">
+<div class="acc-inner">
+  <div class="mel-box">&#128204; <strong>MobiliMEL</strong> recense plus de 100 dispositifs locaux dans la Métropole Lilloise pour faciliter la mobilité des 16&ndash;25 ans (vélo, permis, transport, covoiturage).</div>
+
+  <div class="acard">
+    <div class="ah"><span class="ai">&#127968;</span><span class="at">FAJEM — Fonds d'Aide aux Jeunes en Métropole (MEL)</span><span class="as"><span class="badge badge-cond">Sous conditions</span></span></div>
+    <div class="ab">Pour les <strong>16&ndash;25 ans</strong> en situation de précarité dans la Métropole Lilloise : prise en charge de transports, vélo, permis, etc. <a class="rl" href="https://www.lillemetropole.fr" target="_blank">lillemetropole.fr</a></div>
+  </div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#128203;</span><span class="at">Permis à 1 € par jour (État, 15&ndash;25 ans)</span></div>
+    <div class="ab">Crédit à taux zéro garanti par l'État pour financer le permis B. Utile si le permis est indispensable pour un stage ou un emploi. <a class="rl" href="https://www.service-public.fr" target="_blank">service-public.fr</a></div>
+  </div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#128176;</span><span class="at">Bourses permis &amp; aides vélo des communes (MEL)</span><span class="as"><span class="badge badge-cond">Selon commune</span></span></div>
+    <div class="ab">De nombreuses communes proposent des aides au permis (16&ndash;25 ans) et à l'achat de vélo : Lille, Roubaix, Tourcoing, Loos, Faches-Thumesnil, Lomme, Croix, Marcq-en-Barœul… Se renseigner auprès de sa mairie.</div>
+  </div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#9889;</span><span class="at">Leasing social voiture électrique (État)</span><span class="as"><span class="badge badge-cond">Sous conditions de revenus</span></span></div>
+    <div class="ab">Accès à une voiture électrique avec <strong>40 % pris en charge par l'État</strong>, à partir du 30/09/2025. <a class="rl" href="https://www.ecologie.gouv.fr/leasing-social" target="_blank">ecologie.gouv.fr</a></div>
+  </div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#128176;</span><span class="at">Microcrédit mobilité (UDAF 59)</span></div>
+    <div class="ab">Prêt à taux réduit pour financer vélo, permis ou véhicule. <a class="rl" href="https://www.udaf59.fr/services-aux-familles/point-conseil-budget/microcredit/" target="_blank">udaf59.fr</a></div>
+  </div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#127968;</span><span class="at">Aide à la mobilité Région Hauts-de-France</span><span class="as"><span class="badge badge-cond">Sous conditions</span></span></div>
+    <div class="ab">Aide au transport, au permis ou au vélo pour les 16&ndash;25 ans en formation ou insertion. <a class="rl" href="https://www.hautsdefrance.fr" target="_blank">hautsdefrance.fr</a></div>
+  </div>
+</div>
+</div><!-- /acc7 -->
+
+<!-- ACC 8 : PARENTS -->
+<div class="acc-head" id="acc8-head" onclick="toggleAcc('acc8')">
+  <span class="acc-title"><span class="acc-ic">&#128101;</span>Pour les parents : peser le pour et le contre</span>
+  <span class="acc-chev">&#9656;</span>
+</div>
+<div class="acc-body" id="acc8-body">
+<div class="acc-inner">
+  <div class="info-box">&#128161; <strong>Une voiture étudiante coûte souvent autant qu'un loyer.</strong> Entretien, assurance, carburant, remboursement du crédit… le coût réel dépasse facilement <strong>3 000 à 5 000 € par an</strong>. Sur un budget étudiant de 800&ndash;1 000 €/mois, c'est souvent <strong>25 à 40 % du budget total</strong>.</div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#9989;</span><span class="at">Alternatives à envisager ensemble</span></div>
+    <div class="ab"><ul>
+      <li>Un <strong>vélo électrique d'occasion</strong> (~400&ndash;800 €) pour les trajets jusqu'à 15 km</li>
+      <li>Un <strong>abonnement annuel transport</strong> (Pass&amp;Go : 20 €/an ; Mon Abo Étudiant TER : &minus;88 %)</li>
+      <li>Le <strong>covoiturage</strong> avec des camarades pour les trajets vers les parents</li>
+      <li>L'<strong>autopartage</strong> pour les besoins ponctuels (Citiz, Getaround…)</li>
+      <li>Les <strong>bourses et aides locales</strong> si le permis est vraiment indispensable</li>
+    </ul></div>
+  </div>
+  <div class="acard">
+    <div class="ah"><span class="ai">&#128516;</span><span class="at">Les bénéfices cachés du vélo et de la marche</span></div>
+    <div class="ab">Se déplacer activement au quotidien c'est aussi : <strong>moins de stress</strong> (–40 %), <strong>moins de risques de dépression</strong> (–17 %), <strong>+8 % de concentration</strong> en cours, et une activité physique intégrée sans effort supplémentaire.</div>
+  </div>
+</div>
+</div><!-- /acc8 -->
+
+</div><!-- /widget -->
+
+<script>
+var mode = 'achat', hcIdx = 0;
+
+var HEALTH = [
+  {ic:'&#128690;',txt:'Le vélotaf réduit le risque d\'Alzheimer de <strong>29 %</strong>. Un trajet actif, c\'est un investissement sur votre cerveau.',url:'https://ecf.com/policy-areas/cycling-economy/economic-benefits',src:'ECF'},
+  {ic:'&#128522;',txt:'Le vélotaf réduit le risque de dépression de <strong>17 %</strong>. Parfait pour les années d\'études intenses.',url:'https://ecf.com/policy-areas/cycling-economy/economic-benefits',src:'ECF'},
+  {ic:'&#127881;',txt:'Le vélo est le mode de transport qui rend le <strong>plus heureux</strong> pour aller travailler (études à Londres, Montréal, USA).',url:'https://ecf.com/policy-areas/cycling-economy/economic-benefits',src:'ECF'},
+  {ic:'&#129488;',txt:'Le vélotaf réduit de <strong>40 % le niveau de stress</strong>. Idéal avant un examen.',url:'https://pubmed.ncbi.nlm.nih.gov/25152507/',src:'PubMed 2014'},
+  {ic:'&#9889;',txt:'Le vélo électrique rend heureux ! Étude australienne : l\'effet positif est immédiat, même chez les personnes peu sportives.',url:'https://pubmed.ncbi.nlm.nih.gov/35263497/',src:'PubMed 2022'},
+  {ic:'&#127807;',txt:'<strong>40 % des cancers</strong> sont évitables grâce à une activité physique régulière comme le vélo ou la marche.',url:'https://www.youtube.com/watch?v=YPuMtK42H6A&t=38s',src:'Étude santé'},
+  {ic:'&#128694;',txt:'L\'OMS recommande <strong>30 minutes d\'activité quotidienne</strong>. Un trajet à pied ou à vélo, ça compte !',url:'https://www.who.int/fr/news-room/fact-sheets/detail/physical-activity',src:'OMS'},
+  {ic:'&#128516;',txt:'Les étudiants qui viennent à pied ou à vélo ont <strong>8 % de concentration en plus</strong> en cours que ceux amenés en voiture.',url:'#',src:'Étude internationale mobilité scolaire'}
+];
+
+function buildCarousel() {
+  var t=document.getElementById('hc-track'), d=document.getElementById('hc-dots');
+  t.innerHTML=''; d.innerHTML='';
+  HEALTH.forEach(function(h,i){
+    var s=document.createElement('div'); s.className='hc-slide';
+    s.innerHTML='<div class="hc-stat">'+h.ic+' '+h.txt+'</div><div class="hc-src"><a class="rl" href="'+h.url+'" target="_blank">'+h.src+'</a></div>';
+    t.appendChild(s);
+    var dot=document.createElement('div'); dot.className='hc-dot'+(i===0?' on':'');
+    dot.onclick=(function(idx){return function(){hcGo(idx);};})(i);
+    d.appendChild(dot);
+  });
+  hcGo(0);
+}
+function hcGo(idx){
+  hcIdx=(idx+HEALTH.length)%HEALTH.length;
+  document.getElementById('hc-track').style.transform='translateX(-'+hcIdx+'00%)';
+  document.querySelectorAll('.hc-dot').forEach(function(d,i){d.classList.toggle('on',i===hcIdx);});
+}
+function hcMove(dir){hcGo(hcIdx+dir);}
+
+function toggleAcc(id){
+  var h=document.getElementById(id+'-head'), b=document.getElementById(id+'-body');
+  var o=b.classList.contains('open');
+  b.classList.toggle('open',!o); h.classList.toggle('open',!o);
+}
+
+function toggleTip(id){
+  var p=document.getElementById(id), w=p.classList.contains('open');
+  document.querySelectorAll('.tip-pop, .tip-btn').forEach(function(x){x.classList.remove('open');});
+  if(!w){p.classList.add('open');document.getElementById(id+'-btn').classList.add('open');}
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.tip-wrap'))
+    document.querySelectorAll('.tip-pop, .tip-btn').forEach(function(x){x.classList.remove('open');});
+});
+
+function showVille(group, id, btn){
+  /* Désactiver tous les pills et vblocks du groupe */
+  var allBtns = document.getElementById(group+'-pills').querySelectorAll('.vpill');
+  allBtns.forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  /* Masquer tous les vblocks du groupe (via préfixe commun) */
+  document.querySelectorAll('[id^="'+group+'-"]').forEach(function(el){
+    if(el.classList.contains('vblock')) el.classList.remove('on');
+  });
+  var target = document.getElementById(group+'-'+id);
+  if(target) target.classList.add('on');
+}
+
+function setMode(m){
+  mode=m;
+  ['achat','none'].forEach(function(x){document.getElementById('tgl-'+x).classList.toggle('on',x===m);});
+  var noV = m==='none';
+  document.getElementById('panel-achat').style.display = noV ? 'none' : '';
+  document.getElementById('carburant-fields').style.display = noV ? 'none' : '';
+  document.getElementById('voiture-results').style.display = noV ? 'none' : '';
+  document.getElementById('nocar-results').style.display = noV ? '' : 'none';
+  /* Masquer prog si pas de voiture */
+  update();
+}
+
+function mensualite(c,t,n){
+  if(!n)return 0; if(!t)return c/n;
+  var tm=t/100/12;
+  return c*tm*Math.pow(1+tm,n)/(Math.pow(1+tm,n)-1);
+}
+function fr(n){return Math.round(n).toLocaleString('fr-FR')+' €';}
+
+function update(){
+  var km    = parseFloat(document.getElementById('km').value)||25;
+  var jours = parseFloat(document.getElementById('jours').value)||4;
+  document.getElementById('out-km').textContent    = km+' km';
+  document.getElementById('out-jours').textContent = jours+' j/sem';
+
+  var pleins = 0, prixPl = 0, carbAn = 0;
+  if(mode !== 'none'){
+    pleins = parseFloat(document.getElementById('pleins-mois').value)||2;
+    prixPl = parseFloat(document.getElementById('prix-plein').value)||65;
+    document.getElementById('out-pleins-mois').textContent = pleins.toFixed(1).replace('.',',');
+    document.getElementById('out-prix-plein').textContent  = fr(prixPl);
+    carbAn = pleins*12*prixPl;
+  }
+
+  var kmAn   = km*2*jours*40;
+  var entAn  = kmAn*0.33*0.26;
+  var autAn  = kmAn*0.33*0.21;
+  var acqAn  = 0, totalE = 0, infoTxt = '';
+
+  if(mode === 'achat'){
+    var pv = parseFloat(document.getElementById('prix-achat').value)||5000;
+    document.getElementById('out-prix-achat').textContent = fr(pv);
+    var petit = pv < 2000;
+    document.getElementById('cash-box').style.display = petit ? '' : 'none';
+    document.getElementById('financement-fields').style.display = petit ? 'none' : '';
+    if(petit){
+      acqAn=pv/10; totalE=pv;
+      infoTxt='Achat comptant de '+fr(pv)+'. Amorti sur 10 ans : '+fr(acqAn)+'/an.';
+    } else {
+      var ap=parseFloat(document.getElementById('apport').value)||1000;
+      var du=parseFloat(document.getElementById('duree-credit').value)||36;
+      var tx=parseFloat(document.getElementById('taux-credit').value)||5;
+      document.getElementById('out-apport').textContent       = fr(ap);
+      document.getElementById('out-duree-credit').textContent = du===0?'Comptant':du+' mois';
+      document.getElementById('out-taux-credit').textContent  = tx.toFixed(2).replace('.',',')+' %';
+      var cap = Math.max(0, pv-ap);
+      if(du===0){
+        acqAn=pv/10; totalE=pv;
+        infoTxt='Achat comptant de '+fr(pv)+'.';
+      } else {
+        var mens=mensualite(cap,tx,du);
+        totalE=ap+mens*du;
+        acqAn=totalE/(du/12);
+        infoTxt='Mensualité : '+fr(mens)+'/mois × '+du+' mois + apport '+fr(ap)+' = '+fr(totalE)+' au total.';
+      }
+    }
+  }
+
+  var totalAn = acqAn+carbAn+entAn+autAn;
+  var pcBudget = Math.round(totalAn/12/900*100);
+
+  if(mode !== 'none'){
+    document.getElementById('m-annuel').textContent  = fr(totalAn);
+    document.getElementById('m-mensuel').textContent = fr(totalAn/12);
+    document.getElementById('m-budget').textContent  = pcBudget+'%';
+    var pct = totalAn>0 ? Math.min(100,Math.round((acqAn/totalAn)*100)) : 0;
+    document.getElementById('prog-bar').style.width  = pct+'%';
+    document.getElementById('prog-left').textContent  = 'Acquisition : '+fr(acqAn)+'/an';
+    document.getElementById('prog-right').textContent = 'Usage : '+fr(carbAn+entAn+autAn)+'/an';
+    document.getElementById('prog-section').style.display = totalE>0 ? '' : 'none';
+    document.getElementById('info-acq').textContent = infoTxt;
+    document.getElementById('b-acq').textContent  = fr(acqAn);
+    document.getElementById('b-carb').textContent = fr(carbAn);
+    document.getElementById('b-pleins-txt').textContent = pleins.toFixed(1).replace('.',',')+' plein(s)/mois';
+    document.getElementById('b-ent').textContent  = fr(entAn);
+    document.getElementById('b-aut').textContent  = fr(autAn);
+    document.getElementById('b-tot').textContent  = fr(totalAn);
+  }
+
+  /* Temps de trajet */
+  var vit = km<10?30.7:50;
+  var minV = Math.round(km/vit*60);
+  var minP = Math.round(km/18*60);
+  var hAn  = Math.round(km*2/vit*jours*40);
+  var timeTxt;
+  if(mode==='none'){
+    timeTxt='&#127746; Sans voiture, les trajets à vélo ou en transport s\'intègrent naturellement à votre journée et comptent comme activité physique.';
+  } else if(km>=40){
+    timeTxt='&#x23F1; À '+km+' km, le train régional (~73,6 km/h) est souvent aussi rapide — mais vous pouvez lire, préparer vos cours ou faire une sieste pendant le trajet.';
+  } else {
+    timeTxt='&#x23F1; '+minV+' min en voiture vs '+minP+' min à vélo ('+km+' km). Vous passez <strong>~'+hAn+' heures/an</strong> dans votre voiture sur ce trajet — soit l\'équivalent de plusieurs semaines de cours.';
+  }
+  document.getElementById('time-content').innerHTML=timeTxt;
+
+  /* Comparatif */
+  var costTC    = 20;
+  var costVelo  = 200;
+  var costCovoit = Math.max(0,Math.round(totalAn*0.4));
+  var minCost = Math.min(costTC, costVelo, costCovoit);
+  var rows='<tr><th>Mode</th><th class="num">Par an</th><th class="num">Par mois</th></tr>';
+  if(mode!=='none') rows+='<tr class="car-row"><td><div class="mode-name">&#128663; Voiture estimée</div></td><td class="num">'+fr(totalAn)+'</td><td class="num">'+fr(totalAn/12)+'</td></tr>';
+  rows+='<tr'+(costTC===minCost?' class="best"':'')+"><td><div class='mode-name'>&#128653; Transports en commun (abonnement étudiant)</div></td><td class='num'>"+fr(costTC)+"</td><td class='num'>~2 €</td></tr>";
+  rows+='<tr'+(costVelo===minCost?' class="best"':'')+"><td><div class='mode-name'>&#128690; Vélo d'occasion + entretien</div></td><td class='num'>"+fr(costVelo)+"</td><td class='num'>"+fr(costVelo/12)+"</td></tr>";
+  rows+='<tr'+(costCovoit===minCost?' class="best"':'')+"><td><div class='mode-name'>&#128101; Covoiturage passager</div></td><td class='num'>"+fr(costCovoit)+"</td><td class='num'>"+fr(costCovoit/12)+"</td></tr>";
+  document.getElementById('compare-table').innerHTML=rows;
+
+  /* Résumés */
+  var prixDisp = mode==='achat' ? parseFloat(document.getElementById('prix-achat').value)||5000 : 0;
+  document.getElementById('acc1-sum').textContent = (mode==='none'?'Sans voiture':'Voiture '+fr(prixDisp))+' · '+km+' km';
+  document.getElementById('acc2-sum').textContent = mode==='none'?'Économies potentielles :'+fr(3500)+'/an':fr(totalAn)+'/an';
+  document.getElementById('acc3-sum').textContent = 'à partir de '+fr(minCost)+'/an';
+}
+
+function showTab(id,btn){
+  document.querySelectorAll('.tp').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.tb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('tab-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+
+buildCarousel();
+update();
+</script>
+</body>
+</html>
