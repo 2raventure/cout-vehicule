@@ -168,7 +168,7 @@ strong { font-weight: 600; }
     <div class="sr"><label for="loyer-leasing">Loyer mensuel (aide déduite)</label><input type="range" id="loyer-leasing" min="50" max="200" step="5" value="120" oninput="update()"><span class="sv" id="out-loyer-leasing">120 €/mois</span></div>
     <div class="sr"><label for="assurance-leasing">Assurance mensuelle</label><input type="range" id="assurance-leasing" min="30" max="130" step="5" value="60" oninput="update()"><span class="sv" id="out-assurance-leasing">60 €/mois</span></div>
     <div class="sr"><label for="recharge-leasing">Recharge électrique / mois</label><input type="range" id="recharge-leasing" min="10" max="80" step="5" value="30" oninput="update()"><span class="sv" id="out-recharge-leasing">30 €/mois</span></div>
-    <p style="font-size:11.5px;color:#888;margin-top:-6px;margin-bottom:10px;">Recharge à domicile estimée à 2,5&ndash;3 cts/km. La borne est gratuite sur les campus UPHF pour les agents.</p>
+    <p style="font-size:11.5px;color:#888;margin-top:-6px;margin-bottom:10px;">Recharge à domicile estimée à 2,5&ndash;3 cts/km. De nombreux employeurs proposent des bornes de recharge pour leurs salariés.La carte de l'application (et du site web) chargemap offre une visibilité de toutes les bornes de recharge disponibles. </p>
   </div>
 
   <div class="sec-t" style="margin-top:4px;">Mon trajet domicile&ndash;travail</div>
@@ -269,7 +269,7 @@ strong { font-weight: 600; }
 
   <div class="acard elec-card">
     <div class="ah"><span class="ai elec">&#9889;</span><span class="at">Loyer mensuel &lt; 140 € (aide État déduite)</span><span class="as elec">Aide incluse</span></div>
-    <div class="ab">Le loyer affiché est <strong>déjà net de l'aide de l'État</strong>. Il couvre la location du véhicule ; l'entretien courant est souvent inclus selon le contrat. <strong>Non inclus :</strong> assurance (50–100 €/mois selon profil), recharge électrique (~2,5–3 cts/km à domicile, gratuite sur les bornes UPHF pour les agents).</div>
+    <div class="ab">Le loyer affiché est <strong>déjà net de l'aide de l'État</strong>. Il couvre la location du véhicule ; l'entretien courant est souvent inclus selon le contrat. <strong>Non inclus :</strong> assurance (50–100 €/mois selon profil), recharge électrique (~2,5–3 cts/km à domicile)).</div>
   </div>
 
   <div class="acard elec-card">
@@ -290,7 +290,6 @@ strong { font-weight: 600; }
       <li><strong>Zéro émission à l'usage</strong> — pas de particules fines, pas de CO₂ local</li>
       <li><strong>Recharge à domicile :</strong> 2,5–3 cts/km vs 8–12 cts/km pour un véhicule thermique</li>
       <li><strong>Entretien réduit :</strong> pas de vidange, moins de pièces d'usure, freinage régénératif</li>
-      <li><strong>Recharge gratuite</strong> sur les campus UPHF pour les agents</li>
     </ul></div>
   </div>
 
@@ -335,15 +334,13 @@ strong { font-weight: 600; }
       <div class="villes-nav" id="tc-pills">
         <button class="vpill on" onclick="showVille('tc','dunkerque',this)">&#127963; Dunkerque</button>
         <button class="vpill" onclick="showVille('tc','lille',this)">&#127963; Lille</button>
-        <button class="vpill" onclick="showVille('tc','nice',this)">&#127963; Nice</button>
         <button class="vpill" onclick="showVille('tc','paris',this)">&#127963; Paris / IDF</button>
         <button class="vpill" onclick="showVille('tc','autre',this)">&#128205; Autre</button>
       </div>
       <div class="vblock on" id="tc-dunkerque">&#x1F6AB; <strong>Transports gratuits</strong> dans toute la Communauté Urbaine de Dunkerque — sans abonnement, sans démarche. On monte dans le bus comme dans une boutique.</div>
-      <div class="vblock" id="tc-lille"><strong>Ilévia (MEL)</strong> : abonnements avec prise en charge employeur 75 %. Tarification solidaire disponible. <a class="rl" href="https://www.ilevia.fr" target="_blank">ilevia.fr</a></div>
-      <div class="vblock" id="tc-nice"><strong>Lignes d'Azur</strong> — Métropole Nice Côte d'Azur. Tramways lignes 2 &amp; 3 : toutes les <strong>7&ndash;8 min</strong> lun.&ndash;ven. 7h&ndash;20h. Gare TER <strong>Nice Saint-Augustin</strong> à 850 m du campus EDHEC, liaisons vers Marseille, Cannes, Menton. <a class="rl" href="https://www.lignesdazur.com" target="_blank">lignesdazur.com</a></div>
-      <div class="vblock" id="tc-paris"><strong>Paris / IDF</strong> — pass Navigo, remboursement employeur 75 %. ZTL Paris Centre depuis nov. 2024 : voiture à 16 km/h en heure de pointe contre ~20 km/h pour un vélo électrique. Les transports en commun y sont largement compétitifs.</div>
-      <div class="vblock" id="tc-autre">Renseignez-vous auprès de votre employeur (remboursement 75 % obligatoire) et du réseau local. La plupart des réseaux proposent des abonnements mensuels autour de 30&ndash;60 €/mois, soit 7,50&ndash;15 € après remboursement.</div>
+      <div class="vblock" id="tc-lille"><strong>Ilévia (MEL)</strong> : abonnements avec prise en charge employeur 50 %. Tarification solidaire disponible. <a class="rl" href="https://www.ilevia.fr" target="_blank">ilevia.fr</a></div>
+       <div class="vblock" id="tc-paris"><strong>Paris / IDF</strong> — pass Navigo, remboursement employeur 50 %. ZTL Paris Centre depuis nov. 2024 : voiture à 16 km/h en heure de pointe contre ~20 km/h pour un vélo électrique. Les transports en commun y sont largement compétitifs.</div>
+      <div class="vblock" id="tc-autre">Renseignez-vous auprès de votre employeur (remboursement 50 % obligatoire) et du réseau local. La plupart des réseaux proposent des abonnements mensuels autour de 30&ndash;70 €/mois, soit 7,50&ndash;15 € après remboursement.</div>
     </div>
   </div>
 </div>
