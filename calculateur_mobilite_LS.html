@@ -3,648 +3,974 @@
 <head>
 <meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Asap', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; color: #4D4D4D; background: transparent; }
-:root {
-  --dark: #004A4F; --teal: #3ECDC5; --cream: #FBF7F3;
-  --text: #4D4D4D; --line: rgba(0,74,79,0.13);
-  --teal-lt: #e4faf9; --warn: #b84c00;
-  --elec: #1a6e2e; --elec-lt: #e8f5e9;
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Asap',sans-serif;font-size:15px;color:#4D4D4D;background:transparent;-webkit-font-smoothing:antialiased;}
+:root{
+  --dark:#004A4F;--teal:#3ECDC5;--teal-lt:#e4faf9;--teal-dk:#2ba8a1;
+  --cream:#FBF7F3;--text:#4D4D4D;--muted:#777;
+  --line:rgba(0,74,79,0.13);
+  --g:#1a6e2e;--g-lt:#e8f5e9;--g-dk:#145522;
+  --red:#c0392b;--red-lt:#fef2f2;
+  --amber:#b84c00;--amber-lt:#fff3e0;
+  --blue:#1e40af;--blue-lt:#eff6ff;
 }
-.hband { background: var(--dark); color: #fff; padding: 16px 22px 13px; border-radius: 12px 12px 0 0; }
-.hband h2 { font-size: 17px; font-weight: 700; margin: 0 0 3px; }
-.hband p  { font-size: 12px; opacity: .8; margin: 0; }
-.acc-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 22px; cursor: pointer; background: #fff; user-select: none; border-bottom: 1px solid var(--line); transition: background .15s; }
-.acc-head:hover { background: #f5f2ee; }
-.acc-head.cream { background: var(--cream); }
-.acc-head.cream:hover { background: #f0ebe4; }
-.acc-title { font-size: 13px; font-weight: 600; color: var(--dark); display: flex; align-items: center; gap: 8px; }
-.acc-ic { font-size: 17px; }
-.acc-sum { font-size: 12px; color: #888; margin-left: 6px; font-weight: 400; }
-.acc-chev { font-size: 11px; color: #aaa; transition: transform .2s; flex-shrink: 0; }
-.acc-head.open .acc-chev { transform: rotate(90deg); }
-.acc-body { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
-.acc-body.open { max-height: 5000px; }
-.acc-inner { padding: 16px 22px 20px; }
-.acc-inner.cream { background: var(--cream); }
-.sr { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
-.sr label { font-size: 13px; color: #666; min-width: 175px; flex-shrink: 0; }
-.sr input[type=range] { flex: 1; accent-color: var(--teal); cursor: pointer; }
-.sv { font-size: 13px; font-weight: 600; min-width: 90px; text-align: right; color: var(--dark); white-space: nowrap; }
-.tog-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
-.tgl { flex: 1; min-width: 110px; padding: 9px 6px; background: #fff; border: 2px solid #ccc; border-radius: 8px; font-size: 12px; cursor: pointer; color: #777; font-family: 'Asap', sans-serif; transition: background-color .15s, color .15s, border-color .15s; text-align: center; line-height: 1.4; }
-.tgl.on { background: var(--dark) !important; color: #fff !important; border-color: var(--dark) !important; font-weight: 700; }
-.tgl.elec.on { background: var(--elec) !important; border-color: var(--elec) !important; }
-.mg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-.mg4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
-.mc { background: var(--cream); border-radius: 8px; padding: 10px 12px; text-align: center; }
-.mv { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.2; }
-.ml { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.3; }
-.mc.hi .mv  { color: var(--teal); }
-.mc.hi2 .mv { color: var(--dark); }
-.mc.elec .mv { color: var(--elec); }
-.mc.warn .mv { color: var(--warn); }
-.prog-bg { background: #ddd; border-radius: 5px; height: 9px; overflow: hidden; margin-bottom: 4px; }
-.prog-fill { height: 100%; border-radius: 5px; background: var(--teal); transition: width .4s; }
-.prog-label { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-bottom: 14px; }
-.info-box  { background: var(--teal-lt); border-left: 3px solid var(--teal); border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: var(--text); line-height: 1.5; }
-.air-box   { background: #fef9e7; border-left: 3px solid #e6a700; border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: #6b4f00; line-height: 1.5; }
-.cash-box  { background: #fff7e6; border-left: 3px solid #e6a700; border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: #6b4f00; line-height: 1.5; display: none; }
-.time-box  { background: #edf4ff; border-left: 3px solid #4a7fcb; border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: #1a3a5c; line-height: 1.6; }
-.green-box { background: var(--teal-lt); border-left: 3px solid var(--teal); border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: var(--dark); line-height: 1.5; }
-.elec-box  { background: var(--elec-lt); border-left: 3px solid var(--elec); border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 14px; font-size: 13px; color: var(--elec); line-height: 1.5; }
-.mel-box   { background: #f0fdf9; border-left: 3px solid var(--teal); border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: var(--text); line-height: 1.5; }
-.warn-box  { background: #fff3cd; border-left: 3px solid #e6a700; border-radius: 0 6px 6px 0; padding: 10px 13px; margin-bottom: 12px; font-size: 13px; color: #6b4f00; line-height: 1.6; }
-table.bt { width: 100%; border-collapse: collapse; font-size: 13px; }
-table.bt td { padding: 5px 0; border-bottom: 1px solid var(--line); color: var(--text); }
-table.bt tr:last-child td { border-bottom: none; font-weight: 600; }
-table.bt .tr { text-align: right; }
-.sec-t { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
-.acard { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
-.acard:last-child { margin-bottom: 0; }
-.acard.elec-card { border-color: rgba(26,110,46,0.25); background: #f9fef9; }
-.ah { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; flex-wrap: wrap; }
-.ai { font-size: 18px; color: var(--teal); flex-shrink: 0; }
-.ai.elec { color: var(--elec); }
-.at { font-size: 14px; font-weight: 600; color: var(--dark); }
-.as { margin-left: auto; background: var(--teal-lt); color: var(--dark); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
-.as.elec { background: var(--elec-lt); color: var(--elec); }
-.badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 12px; margin-right: 4px; vertical-align: middle; }
-.badge-cond  { background: #fde68a; color: #78350f; }
-.badge-all   { background: #d1fae5; color: #065f46; }
-.badge-free  { background: #dcfce7; color: #166534; }
-.badge-ville { background: #e0e7ff; color: #3730a3; }
-.ab { font-size: 12.5px; color: #666; line-height: 1.7; }
-.ab ul { padding-left: 16px; margin-top: 4px; }
-.ab li { margin-bottom: 3px; }
-.rl { color: var(--dark); text-decoration: none; border-bottom: 1px dashed var(--teal); }
-strong { font-weight: 600; }
-.tarif-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 8px; }
-.tarif-table th { background: var(--teal-lt); color: var(--dark); font-weight: 700; padding: 6px 8px; text-align: left; font-size: 11px; border-bottom: 2px solid var(--teal); }
-.tarif-table td { padding: 5px 8px; border-bottom: 1px solid var(--line); color: var(--text); font-size: 12px; }
-.tarif-table tr:last-child td { border-bottom: none; }
-.tarif-table .price { font-weight: 700; color: var(--dark); text-align: right; white-space: nowrap; }
-.cmp-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-.cmp-table th { background: var(--cream); color: #888; font-weight: 700; padding: 8px 10px; text-align: left; font-size: 11px; border-bottom: 2px solid #ccc; }
-.cmp-table th.num { text-align: right; }
-.cmp-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); color: var(--text); }
-.cmp-table td.num { text-align: right; font-weight: 600; }
-.cmp-table tr.car-row { background: #fdf2f2; }
-.cmp-table tr.elec-row { background: var(--elec-lt); }
-.cmp-table tr.best td.num { color: var(--dark); font-weight: 700; }
-.cmp-table tr:last-child td { border-bottom: none; }
-.mode-name { display: flex; align-items: center; gap: 6px; }
-.tip-wrap { position: relative; display: inline-flex; }
-.tip-btn { width: 16px; height: 16px; border-radius: 50%; background: #bbb; color: #fff; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-family: inherit; flex-shrink: 0; }
-.tip-btn:hover, .tip-btn.open { background: var(--teal); }
-.tip-pop { display: none; position: absolute; top: 22px; left: 0; z-index: 20; width: 280px; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #666; line-height: 1.5; box-shadow: 0 4px 14px rgba(0,0,0,.12); }
-.tip-pop.open { display: block; }
-.hc { overflow: hidden; border-radius: 10px; margin-bottom: 8px; }
-.hc-track { display: flex; transition: transform .35s ease; }
-.hc-slide { min-width: 100%; background: var(--teal-lt); border: 1px solid rgba(62,205,197,.3); border-radius: 10px; padding: 14px 16px; }
-.hc-stat { font-size: 14px; font-weight: 600; color: var(--dark); line-height: 1.4; margin-bottom: 6px; }
-.hc-src  { font-size: 11px; color: #888; }
-.hc-nav  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.hc-btn  { background: none; border: 1px solid #ccc; border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; color: #666; font-family: 'Asap', sans-serif; }
-.hc-btn:hover { background: var(--teal-lt); }
-.hc-dots { display: flex; gap: 5px; }
-.hc-dot  { width: 7px; height: 7px; border-radius: 50%; background: #ccc; cursor: pointer; }
-.hc-dot.on { background: var(--teal); }
-.villes-nav { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
-.vpill { padding: 5px 12px; background: #fff; border: 1px solid #ccc; border-radius: 20px; font-size: 12px; cursor: pointer; color: #666; font-family: 'Asap', sans-serif; transition: .15s; white-space: nowrap; }
-.vpill.on { background: var(--dark); color: #fff; border-color: var(--dark); font-weight: 600; }
-.vblock { display: none; }
-.vblock.on { display: block; }
-.eligibility { background: var(--cream); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
-.elig-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; cursor: pointer; }
-.elig-item:last-child { margin-bottom: 0; }
-.elig-item input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--elec); cursor: pointer; flex-shrink: 0; margin-top: 2px; }
-.elig-label { font-size: 13px; color: var(--text); line-height: 1.5; }
-.elig-result { border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 600; text-align: center; margin-top: 12px; display: none; line-height: 1.6; }
-.elig-result.ok  { background: var(--elec-lt); color: var(--elec); }
-.elig-result.nok { background: #fef2f2; color: #b91c1c; }
-.elig-result.partial { background: #fef9e7; color: #78350f; }
+.widget{border-radius:16px;border:1px solid rgba(0,74,79,0.18);overflow:hidden;background:#fff;max-width:700px;}
+
+/* ── Étapes ── */
+.step-wrap{border-bottom:1px solid var(--line);}
+.step-wrap:last-child{border-bottom:none;}
+.step-hd{display:flex;align-items:center;gap:14px;padding:18px 24px 16px;background:var(--cream);}
+.step-badge{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;transition:.2s;}
+.step-badge.act{background:var(--dark);color:#fff;}
+.step-badge.done{background:var(--teal);color:#fff;}
+.step-badge.teal-ic{background:var(--teal);color:#fff;font-size:22px;}
+.step-badge.amber-ic{background:var(--amber);color:#fff;font-size:22px;}
+.step-meta{flex:1;}
+.step-label{font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
+.step-title{font-size:17px;font-weight:700;color:var(--dark);line-height:1.25;}
+.step-status{font-size:12px;color:#aaa;margin-top:3px;}
+.step-body{padding:20px 24px 26px;}
+.step-body.cr{background:var(--cream);}
+.s3-hidden{display:none;}
+.hidden-q{display:none;}
+
+/* ── Stats hero ── */
+.hero-intro{font-size:15px;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+.hero-intro strong{color:var(--dark);}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
+.stat-card{background:var(--teal-lt);border-radius:12px;padding:14px 12px;text-align:center;border:1px solid rgba(62,205,197,.25);}
+.stat-val{font-size:26px;font-weight:700;color:var(--dark);line-height:1.1;margin-bottom:4px;}
+.stat-lbl{font-size:11.5px;color:var(--muted);line-height:1.4;}
+
+/* ── Simulateur ── */
+.sim-box{background:var(--cream);border-radius:12px;padding:16px 18px;margin-bottom:20px;border:1px solid var(--line);}
+.sim-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:12px;}
+.sr{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.sr label{font-size:13px;color:var(--muted);min-width:165px;flex-shrink:0;}
+.sr input[type=range]{flex:1;accent-color:var(--teal);cursor:pointer;}
+.sv{font-size:13px;font-weight:700;min-width:82px;text-align:right;color:var(--dark);white-space:nowrap;}
+
+/* Grille comparaison 2+2 colonnes */
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;margin-bottom:8px;}
+.cmp-col{border-radius:10px;padding:12px 13px;}
+.cmp-col.therm{background:#fdf2f2;border:1px solid rgba(192,57,43,.2);}
+.cmp-col.elec{background:var(--g-lt);border:1px solid rgba(26,110,46,.25);}
+.cmp-head-val{font-size:22px;font-weight:700;line-height:1.2;margin-bottom:2px;}
+.cmp-col.therm .cmp-head-val{color:var(--red);}
+.cmp-col.elec .cmp-head-val{color:var(--g);}
+.cmp-head-lbl{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.3;}
+.cmp-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.cmp-row:last-child{border-bottom:none;font-weight:700;}
+.cmp-row .label{color:var(--muted);}
+.cmp-row .val{font-weight:600;color:var(--text);}
+.sim-eco{font-size:13px;font-weight:700;color:var(--g);text-align:center;margin-top:6px;padding:8px;background:var(--g-lt);border-radius:8px;display:none;}
+.sim-note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5;text-align:center;}
+
+.cta-btn{display:block;width:100%;padding:14px 20px;background:var(--dark);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Asap',sans-serif;text-align:center;transition:background .15s;margin-top:4px;}
+.cta-btn:hover{background:var(--teal-dk);}
+
+/* ── Questions OUI/NON ── */
+.q-block{background:var(--cream);border-radius:12px;padding:16px 18px;margin-bottom:12px;border:2px solid transparent;transition:border-color .2s,background .2s;}
+.q-block.answered-yes{border-color:rgba(62,205,197,.5);background:var(--teal-lt);}
+.q-block.answered-no{border-color:rgba(192,57,43,.3);background:var(--red-lt);}
+.q-num{font-size:10.5px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;}
+.q-icon{font-size:28px;display:block;margin-bottom:7px;}
+.q-text{font-size:15px;font-weight:700;color:var(--dark);line-height:1.35;margin-bottom:5px;}
+.q-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;}
+.q-sub strong{color:var(--text);}
+.q-sub a{color:var(--dark);text-decoration:none;border-bottom:1px dashed var(--teal);}
+.q-sub .ex{display:block;background:#fff;border-radius:8px;padding:8px 11px;margin-top:8px;font-size:12.5px;color:var(--text);line-height:1.7;}
+.yn-row{display:flex;gap:8px;}
+.yn{flex:1;padding:11px 8px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;border:2px solid #ddd;background:#fff;font-family:'Asap',sans-serif;transition:.15s;text-align:center;}
+.yn.yes:hover,.yn.yes.on{background:var(--teal);color:#fff;border-color:var(--teal);}
+.yn.no:hover,.yn.no.on{background:var(--red);color:#fff;border-color:var(--red);}
+
+/* ── Résultat éligibilité ── */
+.elig-banner{border-radius:12px;padding:16px 18px;margin-top:4px;line-height:1.5;display:none;}
+.elig-banner.ok{background:var(--teal-lt);border:2px solid rgba(62,205,197,.5);color:var(--dark);}
+.elig-banner.nok-dist{background:var(--blue-lt);border:2px solid rgba(30,64,175,.3);color:var(--blue);}
+.elig-banner.nok-other{background:var(--amber-lt);border:2px solid rgba(184,76,0,.3);color:var(--amber);}
+.elig-banner.partial{background:var(--cream);border:2px solid #ccc;color:var(--muted);}
+.elig-icon{font-size:26px;display:block;margin-bottom:6px;}
+.elig-ttl{font-size:17px;font-weight:700;margin-bottom:5px;}
+.elig-sub{font-size:13px;font-weight:400;opacity:.9;}
+.elig-cta{display:none;margin-top:12px;width:100%;padding:12px;background:var(--dark);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Asap',sans-serif;transition:.15s;}
+.elig-cta:hover{background:var(--teal-dk);}
+.elig-cta.amber{background:var(--amber);}
+.elig-cta.blue{background:var(--blue);}
+
+/* ── Solutions cartes ── */
+.sol-card{border-radius:12px;padding:14px 16px;margin-bottom:10px;border:1px solid var(--line);background:#fff;}
+.sol-card:last-child{margin-bottom:0;}
+.sol-head{display:flex;align-items:center;gap:10px;margin-bottom:7px;flex-wrap:wrap;}
+.sol-ic{font-size:22px;color:var(--teal);flex-shrink:0;}
+.sol-ic.blue{color:var(--blue);}
+.sol-ic.amber{color:var(--amber);}
+.sol-title{font-size:14px;font-weight:700;color:var(--dark);}
+.sol-badge{margin-left:auto;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.sol-badge.teal{background:var(--teal-lt);color:var(--dark);}
+.sol-badge.blue{background:var(--blue-lt);color:var(--blue);}
+.sol-badge.amber{background:var(--amber-lt);color:var(--amber);}
+.sol-body{font-size:13px;color:var(--muted);line-height:1.7;}
+.sol-body ul{padding-left:16px;margin-top:4px;}
+.sol-body li{margin-bottom:3px;}
+.sol-body strong{color:var(--text);}
+.sol-body a{color:var(--dark);text-decoration:none;border-bottom:1px dashed var(--teal);}
+.badge-cond{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:12px;background:#fde68a;color:#78350f;margin-right:3px;vertical-align:middle;}
+
+/* ── Boîtes info ── */
+.info-box{background:var(--teal-lt);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:14px;font-size:13px;color:var(--text);line-height:1.6;}
+.warn-box{background:var(--amber-lt);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:14px;font-size:13px;color:#6b4f00;line-height:1.6;}
+.green-box{background:var(--teal-lt);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:14px;font-size:13px;color:var(--dark);line-height:1.6;}
+.sec-t{font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;}
+
+/* ── Checklist docs ── */
+.doc-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:8px;cursor:pointer;border:2px solid var(--line);background:#fff;transition:.15s;}
+.doc-item.checked{background:var(--teal-lt);border-color:rgba(62,205,197,.45);}
+.doc-check{width:22px;height:22px;border-radius:50%;border:2px solid #ccc;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;transition:.15s;margin-top:1px;}
+.doc-item.checked .doc-check{background:var(--teal);border-color:var(--teal);color:#fff;}
+.doc-txt strong{font-size:14px;font-weight:700;color:var(--dark);display:block;margin-bottom:2px;}
+.doc-txt span{font-size:12.5px;color:var(--muted);line-height:1.4;}
+.prog-bg{background:#ddd;border-radius:5px;height:8px;overflow:hidden;margin-bottom:5px;}
+.prog-fill{height:100%;border-radius:5px;background:var(--teal);transition:width .4s;}
+.prog-label{font-size:12px;color:var(--muted);margin-bottom:16px;}
+
+/* ── Étapes concessionnaire ── */
+.cs-step{display:flex;gap:12px;margin-bottom:16px;align-items:flex-start;}
+.cs-n{width:32px;height:32px;border-radius:50%;background:var(--dark);color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.cs-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:3px;}
+.cs-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.cs-desc strong{color:var(--text);}
+.cs-desc a{color:var(--dark);text-decoration:none;border-bottom:1px dashed var(--teal);}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:12px;margin-top:5px;margin-right:3px;}
+.tag-teal{background:var(--teal-lt);color:var(--dark);}
+.tag-warn{background:var(--amber-lt);color:var(--amber);}
+.step-div{border:none;border-top:1px solid var(--line);margin:16px 0;}
+
+/* ── Comparateur véhicules ── */
+.vc-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.vc-filter{padding:5px 12px;background:#fff;border:1px solid #ccc;border-radius:20px;font-size:12px;cursor:pointer;color:var(--muted);font-family:'Asap',sans-serif;transition:.15s;white-space:nowrap;}
+.vc-filter.on{background:var(--dark);color:#fff;border-color:var(--dark);font-weight:700;}
+.vc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+@media(max-width:500px){.vc-grid{grid-template-columns:1fr;}}
+.vc-card{border:2px solid var(--line);border-radius:12px;padding:13px 14px;background:#fff;transition:.15s;position:relative;}
+.vc-card:hover{border-color:var(--teal);background:var(--teal-lt);}
+.vc-fr{border-color:rgba(62,205,197,.3);}
+.vc-flag{font-size:10px;font-weight:700;position:absolute;top:10px;right:10px;padding:2px 7px;border-radius:10px;background:var(--cream);color:var(--muted);}
+.vc-flag.fr{background:var(--teal);color:#fff;}
+.vc-name{font-size:13.5px;font-weight:700;color:var(--dark);margin-bottom:2px;padding-right:55px;line-height:1.3;}
+.vc-seg{font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic;}
+.vc-specs{display:grid;grid-template-columns:1fr 1fr;gap:3px 8px;margin-bottom:9px;}
+.vc-spec{font-size:12px;color:var(--muted);}
+.vc-spec strong{color:var(--text);}
+.vc-loyer{padding:7px 10px;border-radius:8px;font-size:14px;font-weight:700;text-align:center;background:var(--teal-lt);color:var(--dark);}
+.vc-loyer.loyer-best{background:var(--g-lt);color:var(--g);}
+.vc-loyer.loyer-high{background:var(--cream);color:var(--muted);}
+.vc-assur{font-size:11px;color:var(--g);margin-top:6px;padding:4px 8px;background:var(--g-lt);border-radius:6px;line-height:1.4;}
+.vc-links{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.vc-link{flex:1;min-width:120px;text-align:center;font-size:11.5px;font-weight:600;color:var(--dark);background:var(--cream);border:1px solid var(--line);border-radius:7px;padding:5px 6px;text-decoration:none;transition:.15s;white-space:nowrap;}
+.vc-link:hover{background:var(--teal-lt);border-color:var(--teal);}
+.vc-note{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.5;}
+.vc-sort{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.vc-sort label{font-size:12px;color:var(--muted);font-weight:700;}
+.vc-sort select{font-size:12px;padding:4px 8px;border:1px solid #ccc;border-radius:6px;font-family:'Asap',sans-serif;color:var(--text);background:#fff;cursor:pointer;}
 </style>
 </head>
 <body>
-<div style="border-radius:12px;border:1px solid rgba(0,74,79,0.2);overflow:hidden;background:#fff;max-width:700px;">
+<div class="widget">
 
-<!-- HEADER -->
-<div class="hband">
-  <h2>&#x1F4B0; Calculateur budget mobilité</h2>
-  <p>Simuler et comparer les options de transport &mdash; salarié·e·s et particuliers</p>
-</div>
-
-<!-- ACC 1 : SIMULATEUR -->
-<div class="acc-head open cream" id="acc1-head" onclick="toggleAcc('acc1')">
-  <span class="acc-title"><span class="acc-ic">&#128663;</span>Simuler le coût de mon véhicule<span class="acc-sum" id="acc1-sum"></span></span>
-  <span class="acc-chev">&#9656;</span>
-</div>
-<div class="acc-body open" id="acc1-body">
-<div class="acc-inner cream">
-  <div class="sec-t">Mon véhicule</div>
-  <div class="tog-row">
-    <button class="tgl on"   id="tgl-achat"   onclick="setMode('achat')">&#128203; Achat / crédit</button>
-    <button class="tgl elec" id="tgl-leasing" onclick="setMode('leasing')">&#9889; Leasing social</button>
-    <button class="tgl"      id="tgl-none"    onclick="setMode('none')">&#128683; Pas de voiture</button>
+<!-- ══════════ ÉTAPE 1 — Donner envie ══════════ -->
+<div class="step-wrap">
+<div class="step-hd">
+  <div class="step-badge act">1</div>
+  <div class="step-meta">
+    <div class="step-label">Étape 1</div>
+    <div class="step-title">Rouler en électrique pour moins de 140&thinsp;€/mois</div>
   </div>
+</div>
+<div class="step-body">
+  <p class="hero-intro">Grâce au <strong>leasing social 2026</strong>, l'État aide les foyers modestes à accéder à une voiture électrique neuve. L'aide est déduite directement de votre loyer mensuel.</p>
 
-  <!-- ACHAT -->
-  <div id="panel-achat">
-    <div class="sr"><label for="prix-achat">Prix du véhicule</label><input type="range" id="prix-achat" min="500" max="25000" step="500" value="12000" oninput="update()"><span class="sv" id="out-prix-achat">12 000 €</span></div>
-    <div class="cash-box" id="cash-box">&#128181; Moins de 2 000 € : achat comptant sans crédit.</div>
-    <div id="financement-fields">
-      <div class="sr"><label for="apport">Apport personnel</label><input type="range" id="apport" min="0" max="10000" step="500" value="2000" oninput="update()"><span class="sv" id="out-apport">2 000 €</span></div>
-      <div class="sr"><label for="duree-credit">Durée du crédit (mois)</label><input type="range" id="duree-credit" min="0" max="84" step="6" value="48" oninput="update()"><span class="sv" id="out-duree-credit">48 mois</span></div>
-      <div class="sr"><label for="taux-credit">Taux annuel crédit (%)</label><input type="range" id="taux-credit" min="0" max="12" step="0.25" value="5" oninput="update()"><span class="sv" id="out-taux-credit">5,00 %</span></div>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-val">430&thinsp;€</div>
+      <div class="stat-lbl">Coût mensuel moyen d'une voiture thermique (crédit + carburant + entretien)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">&minus;70&thinsp;%</div>
+      <div class="stat-lbl">Économie sur l'énergie : 2,5&thinsp;cts/km en électrique vs 10&thinsp;cts/km en thermique</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">0&thinsp;g</div>
+      <div class="stat-lbl">CO₂ émis à l'usage — ni particules fines, ni gaz d'échappement en ville</div>
     </div>
   </div>
 
-  <!-- LEASING SOCIAL -->
-  <div id="panel-leasing" style="display:none;">
-    <div class="elec-box">&#9889; <strong>Leasing social 2026</strong> — louer un véhicule électrique neuf en LOA ou LLD à <strong>moins de 140 €/mois</strong> (hors assurance, hors recharge), grâce à une aide directe de l'État. Contrats éligibles à partir du <strong>16 juillet 2026</strong>. <a class="rl" href="https://www.ecologie.gouv.fr/leasing-social" target="_blank">ecologie.gouv.fr</a></div>
-    <div class="sr"><label for="loyer-leasing">Loyer mensuel (aide déduite)</label><input type="range" id="loyer-leasing" min="50" max="200" step="5" value="120" oninput="update()"><span class="sv" id="out-loyer-leasing">120 €/mois</span></div>
-    <div class="sr"><label for="assurance-leasing">Assurance mensuelle</label><input type="range" id="assurance-leasing" min="30" max="130" step="5" value="60" oninput="update()"><span class="sv" id="out-assurance-leasing">60 €/mois</span></div>
-    <div class="sr"><label for="recharge-leasing">Recharge électrique / mois</label><input type="range" id="recharge-leasing" min="10" max="80" step="5" value="30" oninput="update()"><span class="sv" id="out-recharge-leasing">30 €/mois</span></div>
-    <p style="font-size:11.5px;color:#888;margin-top:-6px;margin-bottom:10px;">Recharge à domicile estimée à 2,5&ndash;3 cts/km. De nombreux employeurs proposent des bornes de recharge pour leurs salariés.La carte de l'application (et du site web) chargemap offre une visibilité de toutes les bornes de recharge disponibles. </p>
-  </div>
+  <div class="sim-box">
+    <div class="sim-title">&#128663;&ensp;Comparez votre voiture actuelle avec le leasing social</div>
+    <div class="sr"><label for="s1-km">Distance domicile&ndash;travail</label><input type="range" id="s1-km" min="1" max="80" step="1" value="18" oninput="updateStep1()"><span class="sv" id="s1-km-v">18&thinsp;km</span></div>
+    <div class="sr"><label for="s1-jours">Jours travaillés / semaine</label><input type="range" id="s1-jours" min="1" max="5" step="1" value="4" oninput="updateStep1()"><span class="sv" id="s1-jours-v">4&thinsp;j/sem</span></div>
+    <div class="sr"><label for="s1-pleins">Pleins d'essence / mois</label><input type="range" id="s1-pleins" min="0.5" max="8" step="0.5" value="2" oninput="updateStep1()"><span class="sv" id="s1-pleins-v">2,0</span></div>
+    <div class="sr"><label for="s1-prix-plein">Prix d'un plein</label><input type="range" id="s1-prix-plein" min="20" max="100" step="2" value="65" oninput="updateStep1()"><span class="sv" id="s1-prix-v">65&thinsp;€</span></div>
+    <div class="sr"><label for="s1-mensualite">Mensualité crédit voiture</label><input type="range" id="s1-mensualite" min="0" max="600" step="10" value="200" oninput="updateStep1()"><span class="sv" id="s1-mens-v">200&thinsp;€/mois</span></div>
+    <div class="sr"><label for="s1-assurance">Assurance voiture</label><input type="range" id="s1-assurance" min="20" max="200" step="5" value="75" oninput="updateStep1()"><span class="sv" id="s1-assur-v">75&thinsp;€/mois</span></div>
 
-  <div class="sec-t" style="margin-top:4px;">Mon trajet domicile&ndash;travail</div>
-  <div class="sr"><label for="km">Distance aller (km)</label><input type="range" id="km" min="1" max="80" step="1" value="18" oninput="update()"><span class="sv" id="out-km">18 km</span></div>
-  <div class="sr"><label for="jours">Jours travaillés / semaine</label><input type="range" id="jours" min="1" max="5" step="1" value="4" oninput="update()"><span class="sv" id="out-jours">4 j/sem</span></div>
-  <div id="carburant-fields">
-    <div class="sr"><label for="pleins-mois">Nombre de pleins / mois</label><input type="range" id="pleins-mois" min="0.5" max="8" step="0.5" value="2" oninput="update()"><span class="sv" id="out-pleins-mois">2,0</span></div>
-    <div class="sr"><label for="prix-plein">Prix d'un plein</label><input type="range" id="prix-plein" min="20" max="100" step="2" value="65" oninput="update()"><span class="sv" id="out-prix-plein">65 €</span></div>
-  </div>
-</div>
-</div><!-- /acc1 -->
-
-<!-- ACC 2 : RÉSULTATS -->
-<div class="acc-head open" id="acc2-head" onclick="toggleAcc('acc2')">
-  <span class="acc-title"><span class="acc-ic">&#128200;</span>Ce que ça coûte vraiment<span class="acc-sum" id="acc2-sum"></span></span>
-  <span class="acc-chev">&#9656;</span>
-</div>
-<div class="acc-body open" id="acc2-body">
-<div class="acc-inner">
-
-  <div id="voiture-results">
-    <!-- Standard (achat) -->
-    <div class="mg" id="mg-standard">
-      <div class="mc hi"><div class="mv" id="m-annuel">—</div><div class="ml">Coût annuel total</div></div>
-      <div class="mc"><div class="mv" id="m-mensuel">—</div><div class="ml">Par mois</div></div>
-      <div class="mc hi2"><div class="mv" id="m-engage">—</div><div class="ml" id="ml-engage">Engagement total</div></div>
-    </div>
-    <!-- Leasing (détail 4 colonnes) -->
-    <div id="mg-leasing-detail" style="display:none;">
-      <div class="mg4">
-        <div class="mc elec"><div class="mv" id="ml-loyer">—</div><div class="ml">Loyer/mois</div></div>
-        <div class="mc"><div class="mv" id="ml-assur">—</div><div class="ml">Assurance/mois</div></div>
-        <div class="mc"><div class="mv" id="ml-rech">—</div><div class="ml">Recharge/mois</div></div>
-        <div class="mc warn"><div class="mv" id="ml-total-mois">—</div><div class="ml">Total/mois</div></div>
+    <div class="cmp-grid">
+      <div class="cmp-col therm">
+        <div class="cmp-head-val" id="s1-therm-total">—</div>
+        <div class="cmp-head-lbl">Ma voiture thermique / mois</div>
+        <div class="cmp-row"><span class="label">Mensualité crédit</span><span class="val" id="r-credit">—</span></div>
+        <div class="cmp-row"><span class="label">Carburant</span><span class="val" id="r-carb">—</span></div>
+        <div class="cmp-row"><span class="label">Assurance</span><span class="val" id="r-assur">—</span></div>
+        <div class="cmp-row"><span class="label">Entretien (estimé)</span><span class="val" id="r-ent">—</span></div>
+        <div class="cmp-row"><span class="label">Total</span><span class="val" id="r-tot-therm">—</span></div>
+      </div>
+      <div class="cmp-col elec">
+        <div class="cmp-head-val" id="s1-elec-total">~190&thinsp;€</div>
+        <div class="cmp-head-lbl">Leasing social / mois</div>
+        <div class="cmp-row"><span class="label">Loyer (aide déduite)</span><span class="val">~120&thinsp;€</span></div>
+        <div class="cmp-row"><span class="label">Recharge électrique</span><span class="val" id="r-rech">~10&thinsp;€</span></div>
+        <div class="cmp-row"><span class="label">Assurance</span><span class="val">~60&thinsp;€</span></div>
+        <div class="cmp-row"><span class="label">Entretien</span><span class="val">Inclus contrat</span></div>
+        <div class="cmp-row"><span class="label">Total</span><span class="val" id="r-tot-elec">~190&thinsp;€</span></div>
       </div>
     </div>
-    <div id="prog-section">
-      <div class="prog-bg"><div class="prog-fill" id="prog-bar" style="width:0%"></div></div>
-      <div class="prog-label"><span id="prog-left">—</span><span id="prog-right">—</span></div>
+    <div class="sim-eco" id="s1-eco"></div>
+    <div class="sim-note">Estimation basée sur ADETEC (2022) : 33&thinsp;cts/km. La recharge électrique est estimée à environ 15&thinsp;% du coût en carburant pour la même distance (2,5&thinsp;cts/km vs ~10&thinsp;cts/km).</div>
+  </div>
+
+  <button class="cta-btn" onclick="scrollToStep2()">Vérifier mon éligibilité &#8595;</button>
+</div>
+</div>
+
+<!-- ══════════ ÉTAPE 2 — Éligibilité ══════════ -->
+<div class="step-wrap" id="step2-wrap">
+<div class="step-hd">
+  <div class="step-badge act" id="step2-badge">2</div>
+  <div class="step-meta">
+    <div class="step-label">Étape 2</div>
+    <div class="step-title">Suis-je éligible au leasing social&thinsp;?</div>
+    <div class="step-status" id="step2-status">Répondez aux 4 questions</div>
+  </div>
+</div>
+<div class="step-body cr">
+
+  <!-- Q1 : Distance (reprend la valeur de l'étape 1) -->
+  <div class="q-block" id="qb1">
+    <div class="q-num">Question 1 / 4</div>
+    <span class="q-icon">&#128663;</span>
+    <div class="q-text" id="q1-text">Faites-vous plus de 10&thinsp;km pour aller au travail&thinsp;?</div>
+    <div class="q-sub">
+      D'après votre saisie : votre trajet est de <strong id="q1-km-display">18&thinsp;km</strong>.<br>
+      Condition : <strong>plus de 10&thinsp;km</strong> domicile&ndash;travail, <em>ou</em> plus de <strong>8&thinsp;000&thinsp;km/an</strong> pour raisons professionnelles avec votre véhicule personnel.
+      <span class="ex">&#128207; Pour vérifier : ouvrez Google Maps, tapez votre adresse → votre lieu de travail. La distance s'affiche en haut à gauche.</span>
     </div>
-    <div class="info-box" id="info-acq"></div>
-    <table class="bt" id="detail-table">
-      <tr><td>Acquisition / location (annualisé)</td><td class="tr" id="b-acq">—</td></tr>
-      <tr id="row-carb"><td style="padding-left:12px;color:#888;font-size:12px;">Carburant / énergie (<span id="b-pleins-txt">—</span>)</td><td class="tr" style="color:#888;font-size:12px;" id="b-carb">—</td></tr>
-      <tr><td style="padding-left:12px;color:#888;font-size:12px;"><span class="tip-wrap"><button class="tip-btn" id="tip-ent-btn" onclick="toggleTip('tip-ent')" type="button">?</button><span class="tip-pop" id="tip-ent">Source ADETEC (2022) : 33 cts/km, dont 26 % pour entretien et réparations.</span></span> Entretien &amp; réparations</td><td class="tr" style="color:#888;font-size:12px;" id="b-ent">—</td></tr>
-      <tr><td style="padding-left:12px;color:#888;font-size:12px;"><span class="tip-wrap"><button class="tip-btn" id="tip-aut-btn" onclick="toggleTip('tip-aut')" type="button">?</button><span class="tip-pop" id="tip-aut">Assurance, stationnement, péages, pièces, carte grise : ~21 % du coût moyen (ADETEC 2022).</span></span> Assurance, stationnement…</td><td class="tr" style="color:#888;font-size:12px;" id="b-aut">—</td></tr>
-      <tr><td><strong>Total annuel estimé</strong></td><td class="tr" id="b-tot">—</td></tr>
-    </table>
+    <div class="yn-row">
+      <button class="yn yes" id="q1-yes" onclick="setQ(1,true)">&#10003;&ensp;Oui, plus de 10&thinsp;km</button>
+      <button class="yn no"  id="q1-no"  onclick="setQ(1,false)">&#10007;&ensp;Non, moins de 10&thinsp;km</button>
+    </div>
   </div>
 
-  <div id="nocar-results" style="display:none;">
-    <div class="green-box">&#x1F4AA; <strong>Sans voiture, vous économisez potentiellement 3 000 à 6 000 € par an.</strong> Ce budget peut financer un vélo électrique, votre abonnement transport en commun et bien plus.</div>
+  <!-- Q2 : Revenus -->
+  <div class="q-block" id="qb2">
+    <div class="q-num">Question 2 / 4</div>
+    <span class="q-icon">&#128176;</span>
+    <div class="q-text">Vos revenus sont-ils dans les plafonds&thinsp;?</div>
+    <div class="q-sub">
+      Sur votre <strong>avis d'imposition</strong>, repérez deux lignes&thinsp;:<br>
+      &bull;&ensp;<strong>Revenu fiscal de référence</strong> (en bas de la 1ère page)<br>
+      &bull;&ensp;<strong>Nombre de parts fiscales</strong><br><br>
+      <strong>Comment compter ses parts :</strong><br>
+      &bull;&ensp;Vous seul·e : <strong>1 part</strong><br>
+      &bull;&ensp;Couple marié ou pacsé : <strong>2 parts</strong><br>
+      &bull;&ensp;1er enfant à charge : <strong>+0,5 part</strong><br>
+      &bull;&ensp;2e enfant à charge : <strong>+0,5 part</strong><br>
+      &bull;&ensp;<strong>À partir du 3e enfant : +1 part entière</strong> par enfant supplémentaire<br><br>
+      Divisez le revenu fiscal par le nombre de parts.<br>
+      Si le résultat est <strong>inférieur ou égal à 16&thinsp;880&thinsp;€</strong>, vous êtes dans les plafonds.
+      <span class="ex">
+        &#128994;&ensp;Exemple OK&thinsp;: 28&thinsp;000&thinsp;€ ÷ 2 parts (couple) = <strong>14&thinsp;000&thinsp;€</strong> ✅<br>
+        &#128994;&ensp;Exemple OK&thinsp;: 50&thinsp;000&thinsp;€ ÷ 4 parts (couple + 3 enfants) = <strong>12&thinsp;500&thinsp;€</strong> ✅<br>
+        &#128308;&ensp;Exemple non&thinsp;: 20&thinsp;000&thinsp;€ ÷ 1 part (seul·e) = <strong>20&thinsp;000&thinsp;€</strong> ❌ (dépasse 16&thinsp;880&thinsp;€)
+      </span>
+    </div>
+    <div class="yn-row">
+      <button class="yn yes" id="q2-yes" onclick="setQ(2,true)">&#10003;&ensp;Oui, en dessous du plafond</button>
+      <button class="yn no"  id="q2-no"  onclick="setQ(2,false)">&#10007;&ensp;Non, au-dessus</button>
+    </div>
   </div>
 
-  <div class="air-box">&#x1F32B;&#xFE0F; <strong>Qualité de l'air :</strong> dans un véhicule thermique, vous respirez davantage de polluants qu'à pied ou à vélo. Chaque trajet actif réduit votre exposition et votre empreinte carbone.</div>
-  <div class="time-box"><span id="time-content">—</span></div>
+  <!-- Q3 : Première fois -->
+  <div class="q-block" id="qb3">
+    <div class="q-num">Question 3 / 4</div>
+    <span class="q-icon">&#128260;</span>
+    <div class="q-text">C'est votre première demande de leasing social&thinsp;?</div>
+    <div class="q-sub">Le leasing social existe depuis 2024. Vous ne pouvez en bénéficier <strong>qu'une seule fois</strong>. Si vous avez signé un contrat en 2024 ou 2025, vous n'êtes pas éligible à nouveau.</div>
+    <div class="yn-row">
+      <button class="yn yes" id="q3-yes" onclick="setQ(3,true)">&#10003;&ensp;Oui, première fois</button>
+      <button class="yn no"  id="q3-no"  onclick="setQ(3,false)">&#10007;&ensp;Non, j'ai déjà eu</button>
+    </div>
+  </div>
+
+  <!-- Q4 : Contrat LOA/LLD -->
+  <div class="q-block" id="qb4">
+    <div class="q-num">Question 4 / 4</div>
+    <span class="q-icon">&#128203;</span>
+    <div class="q-text">Pouvez-vous signer un contrat de location pour 3 ans minimum&thinsp;?</div>
+    <div class="q-sub">
+      Le leasing social, c'est une <strong>location</strong>, pas un achat.<br>
+      &bull;&ensp;<strong>LOA</strong> (Location avec Option d'Achat) : vous pouvez racheter la voiture à la fin<br>
+      &bull;&ensp;<strong>LLD</strong> (Location Longue Durée) : vous rendez la voiture à la fin<br>
+      Durée minimum : <strong>36 mois</strong> — 15&thinsp;000&thinsp;km/an inclus sans supplément.<br>
+      Contrat signé <strong>à partir du 16 juillet 2026</strong>.
+    </div>
+    <div class="yn-row">
+      <button class="yn yes" id="q4-yes" onclick="setQ(4,true)">&#10003;&ensp;Oui, je peux m'engager sur 3 ans</button>
+      <button class="yn no"  id="q4-no"  onclick="setQ(4,false)">&#10007;&ensp;Non, je préfère acheter</button>
+    </div>
+  </div>
+
+  <!-- Résultat -->
+  <div class="elig-banner" id="elig-result">
+    <span class="elig-icon" id="elig-icon"></span>
+    <div class="elig-ttl" id="elig-ttl"></div>
+    <div class="elig-sub" id="elig-sub"></div>
+    <button class="elig-cta" id="elig-cta" onclick="scrollToStep3()"></button>
+  </div>
+
 </div>
-</div><!-- /acc2 -->
-
-<!-- ACC LEASING SOCIAL (volet dédié) -->
-<div class="acc-head" id="acc-ls-head" onclick="toggleAcc('acc-ls')">
-  <span class="acc-title"><span class="acc-ic">&#9889;</span>Leasing social — conditions et éligibilité<span class="acc-sum" id="acc-ls-sum"></span></span>
-  <span class="acc-chev">&#9656;</span>
 </div>
-<div class="acc-body" id="acc-ls-body">
-<div class="acc-inner">
 
-  <div class="elec-box">
-    &#9889; <strong>Le leasing social 2026</strong> permet de louer un véhicule électrique neuf (LOA ou LLD) à <strong>moins de 140 €/mois</strong> (hors assurance et recharge), grâce à une aide directe de l'État déduite du loyer. Bons de commande éligibles à partir du <strong>16 juillet 2026</strong>. <a class="rl" href="https://www.ecologie.gouv.fr/leasing-social" target="_blank">ecologie.gouv.fr/leasing-social</a>
+<!-- ══════════ ÉTAPE 3A — < 10 km : vélo ══════════ -->
+<div class="step-wrap s3-hidden" id="step3a-wrap">
+<div class="step-hd">
+  <div class="step-badge teal-ic">&#128690;</div>
+  <div class="step-meta">
+    <div class="step-label">Étape 3 — Votre solution</div>
+    <div class="step-title">À moins de 10&thinsp;km&thinsp;: le vélo est fait pour vous</div>
+  </div>
+</div>
+<div class="step-body">
+  <div class="info-box">&#128690;&ensp;<strong>À moins de 10&thinsp;km, un vélo à assistance électrique bat souvent la voiture en temps de trajet</strong> — pas d'embouteillages, pas de stationnement, et 2&thinsp;000 à 5&thinsp;000&thinsp;€ d'économies par an.</div>
+
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic">&#128188;</span><div class="sol-title">Vélo via votre employeur</div><span class="sol-badge teal">Conversion de salaire</span></div>
+    <div class="sol-body">Votre employeur peut vous mettre à disposition un vélo (neuf ou électrique) en <strong>conversion de salaire</strong> — vous renoncez à une partie du salaire brut en échange du vélo, ce qui réduit les charges. Demandez à votre service RH ou à votre référent mobilité.<br>
+    <a href="https://2raventure.com/2026/03/06/combien-coute-vraiment-un-velo-pour-aller-travailler/" target="_blank" style="font-size:12.5px;color:var(--dark);border-bottom:1px dashed var(--teal);">&#128690;&ensp;Combien coûte vraiment un vélo pour aller travailler ? (2raventure.com)</a></div>
   </div>
 
-  <div class="sec-t">Vérifier mon éligibilité</div>
-  <div class="eligibility" id="eligibility-block">
-    <label class="elig-item">
-      <input type="checkbox" id="elig1" onchange="checkEligibility()">
-      <span class="elig-label">&#128663; Je parcours <strong>plus de 10 km</strong> pour me rendre sur mon lieu de travail depuis mon domicile, <em>ou</em> plus de <strong>8 000 km par an</strong> dans le cadre de mon activité professionnelle avec mon véhicule personnel.</span>
-    </label>
-    <label class="elig-item">
-      <input type="checkbox" id="elig2" onchange="checkEligibility()">
-      <span class="elig-label">&#128176; Mon <strong>revenu fiscal de référence divisé par le nombre de parts fiscales</strong> est <strong>&le; 16 880 €</strong> — avis d'imposition 2025 sur revenus 2024 (si contrat en 2026) ou avis 2026 sur revenus 2025 (si contrat en 2027).</span>
-    </label>
-    <label class="elig-item">
-      <input type="checkbox" id="elig3" onchange="checkEligibility()">
-      <span class="elig-label">&#9889; Je choisis un <strong>véhicule électrique éligible</strong> — masse &lt; 1,8 t, prix d'achat &lt; 47 000 € TTC, score environnemental minimal atteint. <a class="rl" href="https://www.ecologie.gouv.fr/sites/default/files/documents/28072026%20Liste%20leasing%20particulier-3.pdf" target="_blank">Voir la liste officielle (PDF)</a></span>
-    </label>
-    <label class="elig-item">
-      <input type="checkbox" id="elig4" onchange="checkEligibility()">
-      <span class="elig-label">&#128203; Le contrat est une <strong>LOA ou LLD de minimum 36 mois</strong>, incluant <strong>15 000 km/an</strong> sans frais supplémentaires, signé à partir du <strong>16 juillet 2026</strong>.</span>
-    </label>
-    <label class="elig-item">
-      <input type="checkbox" id="elig5" onchange="checkEligibility()">
-      <span class="elig-label">&#10060; Je n'ai <strong>pas bénéficié du leasing social</strong> lors des éditions précédentes, et je ne cumule pas avec les primes coup de pouce CEE.</span>
-    </label>
-    <div class="elig-result" id="elig-result"></div>
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic">&#128176;</span><div class="sol-title">Forfait Mobilités Durables (FMD)</div><span class="sol-badge teal">300 à 600&thinsp;€/an</span></div>
+    <div class="sol-body">Versé par votre employeur pour vos trajets à vélo, exonéré d'impôts et de cotisations&thinsp;:<br>
+    &bull;&ensp;<strong>Fonction publique</strong> : jusqu'à <strong>300&thinsp;€/an</strong><br>
+    &bull;&ensp;<strong>Salariés du privé</strong> : jusqu'à <strong>600&thinsp;€/an</strong></div>
   </div>
 
-  <div class="sec-t">Ce que comprend un contrat leasing social</div>
-
-  <div class="acard elec-card">
-    <div class="ah"><span class="ai elec">&#9889;</span><span class="at">Loyer mensuel &lt; 140 € (aide État déduite)</span><span class="as elec">Aide incluse</span></div>
-    <div class="ab">Le loyer affiché est <strong>déjà net de l'aide de l'État</strong>. Il couvre la location du véhicule ; l'entretien courant est souvent inclus selon le contrat. <strong>Non inclus :</strong> assurance (50–100 €/mois selon profil), recharge électrique (~2,5–3 cts/km à domicile)).</div>
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic blue">&#127981;</span><div class="sol-title">Prêt à taux zéro vélo — CIC / Crédit Mutuel</div><span class="sol-badge blue">0&thinsp;% d'intérêts</span></div>
+    <div class="sol-body">Prêt à taux 0&thinsp;% pour un vélo à assistance électrique, jusqu'à <strong>3&thinsp;000&thinsp;€ sur 3 ans</strong> (~83&thinsp;€/mois). Renseignez-vous auprès de votre agence, cumulable avec les aides locales.</div>
   </div>
 
-  <div class="acard elec-card">
-    <div class="ah"><span class="ai elec">&#128203;</span><span class="at">Modalités du contrat</span></div>
-    <div class="ab"><ul>
-      <li><strong>Durée minimum :</strong> 36 mois</li>
-      <li><strong>Kilométrage inclus :</strong> 15 000 km/an sans frais supplémentaires</li>
-      <li><strong>LOA</strong> : option d'achat en fin de contrat possible</li>
-      <li><strong>LLD</strong> : restitution du véhicule en fin de contrat</li>
-      <li><strong>Non cumulable</strong> avec les primes coup de pouce des certificats d'économies d'énergie</li>
-      <li>Réservé aux bénéficiaires n'ayant pas profité des éditions précédentes</li>
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic">&#127981;</span><div class="sol-title">Aides à l'achat d'un vélo</div><span class="sol-badge teal">Jusqu'à plusieurs centaines €</span></div>
+    <div class="sol-body">Découvrez toutes les aides disponibles selon votre situation (bonus État, aides régionales, communes, employeur…) sur <a href="https://mesaidesvelo.fr" target="_blank"><strong>mesaidesvelo.fr</strong></a> — le simulateur officiel gratuit.</div>
+  </div>
+
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic">&#128293;</span><div class="sol-title">Vélos reconditionnés &amp; ateliers</div></div>
+    <div class="sol-body"><ul>
+      <li><strong>ReCycle-Moi</strong> (Roubaix) — <a href="https://www.recyclemoi.org" target="_blank">recyclemoi.org</a></li>
+      <li><strong>Vélos Égaux</strong> (Lille/Lomme/Hellemmes) : programme gratuit <span class="badge-cond">sous conditions de revenus</span> — <a href="https://www.veloegaux.fr" target="_blank">veloegaux.fr</a></li>
+      <li><strong>Les Mains dans le Guidon</strong> (Lille/Lomme/Hem) : ateliers autoréparation — <a href="https://lesmainsdansleguidon.fr" target="_blank">lesmainsdansleguidon.fr</a></li>
+      <li><strong>Heureux Cyclage</strong> : carte des ateliers France entière — <a href="https://www.heureux-cyclage.org" target="_blank">heureux-cyclage.org</a></li>
     </ul></div>
   </div>
 
-  <div class="acard elec-card">
-    <div class="ah"><span class="ai elec">&#127807;</span><span class="at">Avantages par rapport au thermique</span></div>
-    <div class="ab"><ul>
-      <li><strong>Zéro émission à l'usage</strong> — pas de particules fines, pas de CO₂ local</li>
-      <li><strong>Recharge à domicile :</strong> 2,5–3 cts/km vs 8–12 cts/km pour un véhicule thermique</li>
-      <li><strong>Entretien réduit :</strong> pas de vidange, moins de pièces d'usure, freinage régénératif</li>
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic">&#128101;</span><div class="sol-title">Covoiturage — divisez vos frais de déplacement</div><span class="sol-badge teal" id="s3a-covoit-eco">Économies estimées</span></div>
+    <div class="sol-body">
+      En covoiturage, vous pouvez partager les frais et réduire votre coût de déplacement de moitié. Plusieurs plateformes facilitent la mise en relation autour de chez vous&thinsp;:<br>
+      <ul style="margin-top:6px;">
+        <li><a href="https://www.passpasscovoiturage.fr/" target="_blank"><strong>PassPass Covoiturage</strong></a> — plateforme régionale Hauts-de-France</li>
+        <li><a href="https://www.karos.fr/" target="_blank"><strong>Karos</strong></a> — covoiturage courte distance, trajets domicile&ndash;travail</li>
+        <li><a href="https://www.mobicoop.fr/" target="_blank"><strong>Mobicoop</strong></a> — plateforme coopérative, trajets et longue distance</li>
+      </ul>
+      <div id="s3a-covoit-txt" style="margin-top:8px;padding:8px 10px;background:var(--teal-lt);border-radius:8px;font-size:12.5px;color:var(--dark);"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ ÉTAPE 3B — Autres blocages ══════════ -->
+<div class="step-wrap s3-hidden" id="step3b-wrap">
+<div class="step-hd">
+  <div class="step-badge amber-ic">&#128161;</div>
+  <div class="step-meta">
+    <div class="step-label">Étape 3 — Votre solution</div>
+    <div class="step-title">D'autres solutions pour rouler durable</div>
+  </div>
+</div>
+<div class="step-body">
+  <div class="warn-box" id="step3b-reason"></div>
+
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic blue">&#9889;</span><div class="sol-title">Crédit véhicule propre — CIC / Crédit Mutuel</div><span class="sol-badge blue">Taux réduit</span></div>
+    <div class="sol-body">Prêts à taux réduit ou à taux zéro pour l'achat d'un véhicule électrique ou hybride d'occasion, même hors plafonds du leasing social.<ul><li>Jusqu'à 30&thinsp;000&thinsp;€ selon profil</li><li>Taux "mobilité verte" inférieur au crédit auto classique</li></ul></div>
+  </div>
+
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic blue">&#127981;</span><div class="sol-title">Prêt mobilité durable — Caisse d'Épargne</div><span class="sol-badge blue">Véhicule propre</span></div>
+    <div class="sol-body">Offres de financement dédiées aux véhicules peu polluants avec conditions préférentielles par rapport à un crédit auto standard.</div>
+  </div>
+
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic amber">&#128663;</span><div class="sol-title">Autopartage — une voiture sans en posséder une</div></div>
+    <div class="sol-body"><ul>
+      <li><strong>Citiz Hauts-de-France</strong> — <a href="https://hauts-de-france.citiz.coop" target="_blank">hauts-de-france.citiz.coop</a></li>
+      <li><strong>Getaround</strong> : location entre particuliers, 4 à 6&thinsp;€/jour</li>
+      <li><strong>Mobilize Share</strong> (Nice) : voitures électriques en libre-service</li>
     </ul></div>
   </div>
 
-  <div class="warn-box">&#9888;&#xFE0F; <strong>Points d'attention :</strong> comparez le coût total sur 36 mois (loyer × 36 + premier loyer majoré éventuel + assurance + recharge). Vérifiez les conditions de kilométrage et les pénalités de dépassement. Renseignez-vous auprès de plusieurs concessionnaires. <a class="rl" href="https://www.ecologie.gouv.fr/leasing-social" target="_blank">ecologie.gouv.fr/leasing-social</a></div>
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic amber">&#127968;</span><div class="sol-title">Solimob &amp; microcrédit UDAF 59</div><span class="sol-badge amber">Solidaire</span></div>
+    <div class="sol-body"><ul>
+      <li><strong>Solimob</strong> : location solidaire de véhicules et vélos électriques — <a href="https://solimob.fr" target="_blank">solimob.fr</a></li>
+      <li><strong>Microcrédit mobilité UDAF 59</strong> : prêt à taux réduit — <a href="https://www.udaf59.fr" target="_blank">udaf59.fr</a></li>
+    </ul></div>
+  </div>
 
-</div>
-</div><!-- /acc-ls -->
-
-<!-- ACC 3 : COMPARATIF -->
-<div class="acc-head" id="acc3-head" onclick="toggleAcc('acc3')">
-  <span class="acc-title"><span class="acc-ic">&#128202;</span>Comparer avec les alternatives<span class="acc-sum" id="acc3-sum"></span></span>
-  <span class="acc-chev">&#9656;</span>
-</div>
-<div class="acc-body" id="acc3-body">
-<div class="acc-inner">
-  <table class="cmp-table" id="compare-table">
-    <tr><th>Mode</th><th class="num">Par an</th><th class="num">Par mois</th></tr>
-  </table>
-</div>
-</div><!-- /acc3 -->
-
-<!-- ACC 4 : TRANSPORTS EN COMMUN -->
-<div class="acc-head" id="acc4-head" onclick="toggleAcc('acc4')">
-  <span class="acc-title"><span class="acc-ic">&#128653;</span>Transports en commun<span class="acc-sum"></span></span>
-  <span class="acc-chev">&#9656;</span>
-</div>
-<div class="acc-body" id="acc4-body">
-<div class="acc-inner">
-  <div class="acard">
-    <div class="ah"><span class="ai">&#128646;</span><span class="at">Train régional (TER) — abonnement salarié</span><span class="as">Remboursement 75 %</span></div>
-    <div class="ab">L'employeur rembourse <strong>75 %</strong> de l'abonnement de transport en commun. En train à <strong>73,6 km/h en moyenne</strong> — le temps de lire, travailler ou se reposer.
-      <table class="tarif-table" style="margin-top:10px;">
-        <tr><th>Titre</th><th>Territoire</th><th class="price">Tarif</th></tr>
-        <tr><td><strong>Pass&amp;Go</strong> (illimité annuel)</td><td><span class="badge badge-ville">Valenciennes uniquement</span></td><td class="price">20 €/an de frais</td></tr>
-        <tr><td><strong>Abonnement TER mensuel</strong></td><td><span class="badge badge-all">Hauts-de-France</span></td><td class="price">75 % remboursé employeur</td></tr>
-      </table>
+  <div class="sol-card">
+    <div class="sol-head"><span class="sol-ic amber">&#128101;</span><div class="sol-title">Covoiturage — divisez vos frais de déplacement</div><span class="sol-badge amber" id="s3b-covoit-eco">Économies estimées</span></div>
+    <div class="sol-body">
+      Le covoiturage permet de partager les frais et de réduire votre coût de déplacement de moitié :
+      <ul style="margin-top:6px;">
+        <li><a href="https://www.passpasscovoiturage.fr/" target="_blank"><strong>PassPass Covoiturage</strong></a> — plateforme régionale Hauts-de-France</li>
+        <li><a href="https://www.karos.fr/" target="_blank"><strong>Karos</strong></a> — covoiturage courte distance, trajets domicile&ndash;travail</li>
+        <li><a href="https://www.mobicoop.fr/" target="_blank"><strong>Mobicoop</strong></a> — plateforme coopérative, trajets et longue distance</li>
+      </ul>
+      <div id="s3b-covoit-txt" style="margin-top:8px;padding:8px 10px;background:var(--amber-lt);border-radius:8px;font-size:12.5px;color:#6b4f00;"></div>
     </div>
   </div>
-  <div class="acard">
-    <div class="ah"><span class="ai">&#128653;</span><span class="at">Réseaux urbains — selon votre ville</span></div>
-    <div class="ab">
-      <div class="villes-nav" id="tc-pills">
-        <button class="vpill on" onclick="showVille('tc','dunkerque',this)">&#127963; Dunkerque</button>
-        <button class="vpill" onclick="showVille('tc','lille',this)">&#127963; Lille</button>
-        <button class="vpill" onclick="showVille('tc','paris',this)">&#127963; Paris / IDF</button>
-        <button class="vpill" onclick="showVille('tc','autre',this)">&#128205; Autre</button>
+
+  <div class="info-box">&#128161;&ensp;<strong>Astuce parts fiscales :</strong> vérifiez votre nombre de parts. Un enfant à charge ajoute 0,5 part (1 part entière à partir du 3e enfant). Une part supplémentaire peut faire passer votre quotient sous le plafond de 16&thinsp;880&thinsp;€.</div>
+</div>
+</div>
+
+<!-- ══════════ ÉTAPE 3C — Éligible : documents + comparateur ══════════ -->
+<div class="step-wrap s3-hidden" id="step3c-wrap">
+<div class="step-hd">
+  <div class="step-badge done" id="step3c-badge">3</div>
+  <div class="step-meta">
+    <div class="step-label">Étape 3 — Vous êtes éligible</div>
+    <div class="step-title">Choisissez votre voiture et préparez votre dossier</div>
+    <div class="step-status" id="doc-status">0 / 7 documents cochés &mdash; <a href="https://www.ecologie.gouv.fr/politiques-publiques/faq-leasing-social" target="_blank" style="color:var(--teal);font-size:11px;">FAQ officielle</a></div>
+  </div>
+</div>
+<div class="step-body">
+
+  <div class="green-box">&#9989;&ensp;<strong>Vous remplissez toutes les conditions.</strong> Commencez par choisir votre voiture, puis rassemblez vos documents avant d'aller chez le concessionnaire.</div>
+
+  <div class="sec-t" style="margin-bottom:8px;">&#9889;&ensp;Comparer les véhicules éligibles</div>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5;">37 modèles éligibles sur la liste officielle au 28 juillet 2026. Les loyers sont ceux annoncés par les constructeurs — vérifiez chez votre concessionnaire.</p>
+
+  <div class="vc-sort">
+    <label>Trier par :</label>
+    <select id="vc-sort-sel" onchange="renderVehicles()">
+      <option value="loyer" selected>Loyer croissant</option>
+      <option value="autonomie">Autonomie décroissante</option>
+      <option value="marque">Marque A→Z</option>
+    </select>
+    <label style="margin-left:8px;">Filtrer :</label>
+    <select id="vc-filter-sel" onchange="renderVehicles()">
+      <option value="all">Tous les segments</option>
+      <option value="citadine">Citadines uniquement</option>
+      <option value="suv">SUV uniquement</option>
+      <option value="5p">5 portes uniquement</option>
+      <option value="fr">&#127467;&#127479; Fabrication française</option>
+    </select>
+    <span id="vc-count" style="font-size:12px;color:var(--muted);margin-left:8px;"></span>
+  </div>
+
+  <div class="vc-grid" id="vc-grid"></div>
+  <div class="vc-note" style="margin-top:12px;">&#9888;&#65039;&ensp;<strong>Les loyers sont ceux annoncés par les constructeurs au 16 juillet 2026, hors options.</strong> Le loyer définitif varie selon les options choisies, les primes éligibles et le concessionnaire. Certaines offres (notamment Renault) incluent une mensualité d'assurance en option. Les modèles <strong>non-européens</strong> (Dacia Spring, Tesla, BYD, MG…) sont exclus du dispositif. <a href="https://www.ecologie.gouv.fr/sites/default/files/documents/28072026%20Liste%20leasing%20particulier-3.pdf" target="_blank" style="color:var(--dark);border-bottom:1px dashed var(--teal);">Liste officielle PDF</a> &mdash; <a href="https://www.ecologie.gouv.fr/politiques-publiques/faq-leasing-social" target="_blank" style="color:var(--dark);border-bottom:1px dashed var(--teal);">FAQ officielle</a></div>
+
+  <hr style="border:none;border-top:1px solid var(--line);margin:20px 0;">
+
+  <div class="sec-t">&#128203;&ensp;Mes documents à préparer</div>
+  <div class="prog-bg"><div class="prog-fill" id="doc-prog" style="width:0%"></div></div>
+  <div class="prog-label" id="doc-prog-label">0 document sur 7 prêt</div>
+
+  <div class="info-box" style="margin-bottom:14px;">&#128161;&ensp;<strong>Astuce :</strong> tous vos documents doivent être <strong>au même nom</strong> — avis d'imposition, pièce d'identité, justificatif de domicile, RIB et permis de conduire. En cas de discordance (déménagement récent, nom d'usage…), apportez un justificatif complémentaire.</div>
+
+  <div id="doc-list">
+    <div class="doc-item" id="doc1" onclick="toggleDoc(1,7)">
+      <div class="doc-check" id="dcheck1"></div>
+      <div class="doc-txt"><strong>&#128203;&ensp;Avis d'imposition 2025 (revenus 2024)</strong><span>Sur impots.gouv.fr → Mon espace → Documents. Imprimez ou téléchargez le PDF. Vérifiez que le nom correspond à votre pièce d'identité.</span></div>
+    </div>
+    <div class="doc-item" id="doc2" onclick="toggleDoc(2,7)">
+      <div class="doc-check" id="dcheck2"></div>
+      <div class="doc-txt"><strong>&#128100;&ensp;Pièce d'identité</strong><span>Carte nationale d'identité ou passeport en cours de validité. Même nom que l'avis d'imposition.</span></div>
+    </div>
+    <div class="doc-item" id="doc3" onclick="toggleDoc(3,7)">
+      <div class="doc-check" id="dcheck3"></div>
+      <div class="doc-txt"><strong>&#127968;&ensp;Justificatif de domicile</strong><span>Facture EDF, eau, gaz ou avis de taxe d'habitation de moins de 3 mois. <strong>Au même nom que l'avis d'imposition et la pièce d'identité.</strong></span></div>
+    </div>
+    <div class="doc-item" id="doc4" onclick="toggleDoc(4,7)">
+      <div class="doc-check" id="dcheck4"></div>
+      <div class="doc-txt">
+        <strong>&#128207;&ensp;Preuve de distance domicile&ndash;travail</strong>
+        <span>Capture d'écran Google Maps montrant plus de 10&thinsp;km entre votre adresse et votre lieu de travail.<br>
+        <a href="https://www.google.fr/maps/dir/" target="_blank" style="color:var(--dark);border-bottom:1px dashed var(--teal);font-size:12px;">&#128205; Ouvrir Google Maps itinéraires</a>
+        <br>Si votre lieu de travail habituel est différent de celui inscrit sur votre contrat, joignez également une <strong>attestation de votre employeur</strong> précisant votre lieu de travail réel.</span>
       </div>
-      <div class="vblock on" id="tc-dunkerque">&#x1F6AB; <strong>Transports gratuits</strong> dans toute la Communauté Urbaine de Dunkerque — sans abonnement, sans démarche. On monte dans le bus comme dans une boutique.</div>
-      <div class="vblock" id="tc-lille"><strong>Ilévia (MEL)</strong> : abonnements avec prise en charge employeur 50 %. Tarification solidaire disponible. <a class="rl" href="https://www.ilevia.fr" target="_blank">ilevia.fr</a></div>
-       <div class="vblock" id="tc-paris"><strong>Paris / IDF</strong> — pass Navigo, remboursement employeur 50 %. ZTL Paris Centre depuis nov. 2024 : voiture à 16 km/h en heure de pointe contre ~20 km/h pour un vélo électrique. Les transports en commun y sont largement compétitifs.</div>
-      <div class="vblock" id="tc-autre">Renseignez-vous auprès de votre employeur (remboursement 50 % obligatoire) et du réseau local. La plupart des réseaux proposent des abonnements mensuels autour de 30&ndash;70 €/mois, soit 7,50&ndash;15 € après remboursement.</div>
+    </div>
+    <div class="doc-item" id="doc5" onclick="toggleDoc(5,7)">
+      <div class="doc-check" id="dcheck5"></div>
+      <div class="doc-txt"><strong>&#128188;&ensp;Contrat de travail</strong><span>Pour justifier la distance domicile&ndash;travail et votre situation professionnelle. Si le lieu de travail diffère du contrat, joignez une attestation employeur.</span></div>
+    </div>
+    <div class="doc-item" id="doc6" onclick="toggleDoc(6,7)">
+      <div class="doc-check" id="dcheck6"></div>
+      <div class="doc-txt"><strong>&#128178;&ensp;RIB (Relevé d'Identité Bancaire)</strong><span>Pour les prélèvements mensuels du loyer. Même titulaire que la pièce d'identité.</span></div>
+    </div>
+    <div class="doc-item" id="doc7" onclick="toggleDoc(7,7)">
+      <div class="doc-check" id="dcheck7"></div>
+      <div class="doc-txt"><strong>&#128663;&ensp;Permis de conduire</strong><span>En cours de validité. Même nom que les autres documents.</span></div>
     </div>
   </div>
-</div>
-</div><!-- /acc4 -->
 
-<!-- ACC 5 : VÉLO -->
-<div class="acc-head" id="acc5-head" onclick="toggleAcc('acc5')">
-  <span class="acc-title"><span class="acc-ic">&#128690;</span>Le vélo — souplesse et santé<span class="acc-sum"></span></span>
-  <span class="acc-chev">&#9656;</span>
-</div>
-<div class="acc-body" id="acc5-body">
-<div class="acc-inner">
-  <div class="hc"><div class="hc-track" id="hc-track"></div></div>
-  <div class="hc-nav">
-    <button class="hc-btn" onclick="hcMove(-1)">&#8592;</button>
-    <div class="hc-dots" id="hc-dots"></div>
-    <button class="hc-btn" onclick="hcMove(1)">&#8594;</button>
-  </div>
+  <hr style="border:none;border-top:1px solid var(--line);margin:20px 0;">
+  <div class="sec-t">&#127968;&ensp;Chez le concessionnaire — 3 points à vérifier avant de signer</div>
 
-  <p class="sec-t" style="margin-top:4px;">Vélos libre-service — selon votre ville</p>
-  <div class="villes-nav" id="velo-pills">
-    <button class="vpill on" onclick="showVille('velo','nordF',this)">&#127963; Nord-de-France</button>
-    <button class="vpill" onclick="showVille('velo','dunkerque',this)">&#127963; Dunkerque</button>
-    <button class="vpill" onclick="showVille('velo','amiens',this)">&#127963; Amiens</button>
-    <button class="vpill" onclick="showVille('velo','nice',this)">&#127963; Nice</button>
-    <button class="vpill" onclick="showVille('velo','paris',this)">&#127963; Paris / IDF</button>
-  </div>
-  <div class="vblock on" id="velo-nordF">
-    <div class="acard"><div class="ah"><span class="ai">&#128690;</span><span class="at">V'Lille (Ilévia)</span></div><div class="ab">300 stations, 3 000 vélos. Abonnement annuel ~35 €. <a class="rl" href="https://www.ilevia.fr/vlille" target="_blank">ilevia.fr/vlille</a></div></div>
-    <div class="acard"><div class="ah"><span class="ai">&#128690;</span><span class="at">Donkey Republic (Valenciennes et autres)</span></div><div class="ab">Location à la demande. <a class="rl" href="https://www.donkey.bike/fr" target="_blank">donkey.bike/fr</a></div></div>
-  </div>
-  <div class="vblock" id="velo-dunkerque">
-    <div class="acard"><div class="ah"><span class="ai">&#9889;</span><span class="at">ÉCO-VÉLO — Communauté Urbaine de Dunkerque</span><span class="as badge-free">Gratuit</span></div><div class="ab">Prêt gratuit de vélos électriques (cargo, longtail, tricycle). Jusqu'à 2 mois oct.&ndash;mars ou 1 mois avr.&ndash;sept. <span class="badge badge-cond">+18 ans, résidant CUD</span> Lieu de stationnement sécurisé requis. Limité à 1 demande/personne.</div></div>
-  </div>
-  <div class="vblock" id="velo-amiens">
-    <div class="acard"><div class="ah"><span class="ai">&#128690;</span><span class="at">Buscyclette — Amiens</span></div><div class="ab">Location à la journée, au mois ou à l'année. Entretien inclus. <a class="rl" href="https://www.buscyclette.fr/" target="_blank">buscyclette.fr</a></div></div>
-  </div>
-  <div class="vblock" id="velo-nice">
-    <div class="acard"><div class="ah"><span class="ai">&#128690;</span><span class="at">Lime &amp; Pony — Nice Côte d'Azur</span></div><div class="ab">Vélos électriques en libre-service. Usage mensuel : ~31,99 €/mois (Lime) ou 39 €/mois (Pony, 150 trajets). Ces services remplacent les Vélos Bleus. Pour un usage quotidien, préférer un vélo personnel.</div></div>
-  </div>
-  <div class="vblock" id="velo-paris">
-    <div class="acard"><div class="ah"><span class="ai">&#128690;</span><span class="at">Vélib' — Paris et petite couronne</span></div><div class="ab">1 480 stations. <strong>3,10 €/mois</strong> (musculaire) ou <strong>9,30 €/mois</strong> (électrique). Pris en charge à 50 % par l'employeur. <a class="rl" href="https://www.velib-metropole.fr" target="_blank">velib-metropole.fr</a></div></div>
-    <div class="acard"><div class="ah"><span class="ai">&#9889;</span><span class="at">Véligo — Île-de-France</span></div><div class="ab">Abonnement 6 mois : <strong>40 €/mois</strong> (VAE) ou <strong>80 €/mois</strong> (cargo électrique). Pris en charge à 50 % par l'employeur. <a class="rl" href="https://www.veligo-location.fr" target="_blank">veligo-location.fr</a></div></div>
+  <div class="concession-steps">
+    <div class="cs-step">
+      <div class="cs-n">A</div>
+      <div class="cs-body">
+        <div class="cs-title">L'aide de l'État est-elle bien déduite du loyer&thinsp;?</div>
+        <div class="cs-desc">Le loyer affiché doit être <strong>net de l'aide de l'État</strong>. Demandez au concessionnaire de vous confirmer que l'aide est bien répercutée sur le loyer mensuel affiché.</div>
+      </div>
+    </div>
+    <hr class="step-div">
+    <div class="cs-step">
+      <div class="cs-n">B</div>
+      <div class="cs-body">
+        <div class="cs-title">Vérifiez la date, la durée et le kilométrage</div>
+        <div class="cs-desc">Signature <strong>après le 16 juillet 2026</strong> — contrat <strong>LOA ou LLD, 36 mois minimum</strong> — <strong>15&thinsp;000&thinsp;km/an inclus</strong>. <span class="tag tag-warn">Lisez bien avant de signer</span></div>
+      </div>
+    </div>
+    <hr class="step-div">
+    <div class="cs-step">
+      <div class="cs-n">C</div>
+      <div class="cs-body">
+        <div class="cs-title">Prenez une assurance avant la livraison</div>
+        <div class="cs-desc">Comptez <strong>50 à 100&thinsp;€/mois</strong> selon votre profil. Comparez sur LeLynx ou AssurOne. <strong>Certaines offres constructeurs (notamment Renault) incluent une mensualité d'assurance en option</strong> — vérifiez si elle est déjà incluse dans le loyer proposé. <span class="tag tag-teal">Attestation obligatoire pour récupérer la voiture</span></div>
+      </div>
+    </div>
   </div>
 
-  <p class="sec-t" style="margin-top:16px;">Acheter &amp; réparer son vélo</p>
-  <div class="acard">
-    <div class="ah"><span class="ai">&#128293;</span><span class="at">Vélos d'occasion &amp; ateliers</span></div>
-    <div class="ab"><ul>
-      <li><strong>ReCycle-Moi</strong> (Roubaix) : vélos reconditionnés, vente et ateliers — <a class="rl" href="https://www.recyclemoi.org/produits/" target="_blank">recyclemoi.org</a></li>
-      <li><strong>Vélos Égaux</strong> (Lille / Lomme / Hellemmes) : diagnostic mobilité + cours + accès à un vélo — <span class="badge badge-cond">Sous conditions de revenus</span> <a class="rl" href="https://www.veloegaux.fr/devenir-beneficiaire/" target="_blank">veloegaux.fr</a></li>
-      <li><strong>Les Mains dans le Guidon</strong> (Lille / Lomme / Hem) : ateliers autoréparation — <a class="rl" href="https://lesmainsdansleguidon.fr/" target="_blank">lesmainsdansleguidon.fr</a></li>
-      <li><strong>Heureux Cyclage</strong> : carte nationale des ateliers associatifs — <a class="rl" href="https://www.heureux-cyclage.org/" target="_blank">heureux-cyclage.org</a></li>
-      <li><strong>Brocantes vélo</strong> : <a class="rl" href="https://2raventure.com/2026/02/13/evenements-velo-ou-sinformer-tester-et-passer-a-laction/" target="_blank">2raventure.com</a></li>
-    </ul></div>
-  </div>
 </div>
-</div><!-- /acc5 -->
-
-<!-- ACC 6 : COVOITURAGE -->
-<div class="acc-head" id="acc6-head" onclick="toggleAcc('acc6')">
-  <span class="acc-title"><span class="acc-ic">&#128101;</span>Covoiturage &amp; autopartage<span class="acc-sum"></span></span>
-  <span class="acc-chev">&#9656;</span>
 </div>
-<div class="acc-body" id="acc6-body">
-<div class="acc-inner">
-  <div class="acard"><div class="ah"><span class="ai">&#128101;</span><span class="at">PassPass Covoiturage — Hauts-de-France</span></div><div class="ab"><a class="rl" href="https://www.passpasscovoiturage.fr/" target="_blank">passpasscovoiturage.fr</a> — plateforme régionale. En tant que conducteur, récupérez vos frais kilométriques.</div></div>
-  <div class="acard"><div class="ah"><span class="ai">&#128204;</span><span class="at">Microstop</span></div><div class="ab">Covoiturage solidaire et spontané, zones rurales et périurbaines. <a class="rl" href="https://www.microstop.fr" target="_blank">microstop.fr</a></div></div>
-  <div class="acard"><div class="ah"><span class="ai">&#9889;</span><span class="at">Autopartage — pour les trajets ponctuels</span></div><div class="ab"><ul>
-    <li><strong>Citiz Hauts-de-France</strong> — <a class="rl" href="https://hauts-de-france.citiz.coop/" target="_blank">hauts-de-france.citiz.coop</a></li>
-    <li><strong>Mobilize Share</strong> (Nice) : Renault ZOE, Dacia Spring, 52 stations</li>
-    <li><strong>Getaround</strong> (Nice) : 4 à 6 €/jour, ~151 véhicules disponibles</li>
-  </ul></div></div>
-</div>
-</div><!-- /acc6 -->
-
-<!-- ACC 7 : AIDES -->
-<div class="acc-head" id="acc7-head" onclick="toggleAcc('acc7')">
-  <span class="acc-title"><span class="acc-ic">&#128142;</span>Aides &amp; dispositifs<span class="acc-sum"></span></span>
-  <span class="acc-chev">&#9656;</span>
-</div>
-<div class="acc-body" id="acc7-body">
-<div class="acc-inner">
-  <div class="mel-box">&#128204; <strong>MobiliMEL</strong> recense plus de 100 dispositifs locaux dans la Métropole Lilloise pour faciliter la mobilité des salarié·e·s et particuliers.</div>
-  <div class="acard"><div class="ah"><span class="ai elec">&#9889;</span><span class="at">Leasing social véhicule électrique</span><span class="as elec">&lt; 140 €/mois</span></div><div class="ab"><span class="badge badge-cond">Sous conditions de revenus</span> <span class="badge badge-cond">+10 km domicile-travail</span> Louer un véhicule électrique avec aide de l'État dès le 16 juillet 2026. <a class="rl" href="https://www.ecologie.gouv.fr/leasing-social" target="_blank">ecologie.gouv.fr</a> (voir volet dédié)</div></div>
-  <div class="acard"><div class="ah"><span class="ai">&#128176;</span><span class="at">Aides vélo des communes (MEL)</span><span class="as"><span class="badge badge-cond">Selon commune</span></span></div><div class="ab">Subventions à l'achat d'un vélo ou vélo électrique : Lille, Roubaix, Tourcoing, Loos, Faches-Thumesnil, Lomme, Croix, Marcq-en-Barœul… Contactez votre mairie.</div></div>
-  <div class="acard"><div class="ah"><span class="ai">&#128176;</span><span class="at">Microcrédit mobilité (UDAF 59)</span></div><div class="ab">Prêt à taux réduit pour financer vélo, permis ou véhicule. <a class="rl" href="https://www.udaf59.fr/services-aux-familles/point-conseil-budget/microcredit/" target="_blank">udaf59.fr</a></div></div>
-</div>
-</div><!-- /acc7 -->
 
 </div><!-- /widget -->
 
 <script>
-var mode='achat', hcIdx=0;
-
-var HEALTH=[
-  {ic:'&#128690;',txt:'Le vélotaf réduit le risque d\'Alzheimer de <strong>29 %</strong>.',url:'https://ecf.com/policy-areas/cycling-economy/economic-benefits',src:'ECF – Economic Benefits of Cycling'},
-  {ic:'&#128522;',txt:'Le vélotaf réduit le risque de dépression de <strong>17 %</strong>.',url:'https://ecf.com/policy-areas/cycling-economy/economic-benefits',src:'ECF'},
-  {ic:'&#127881;',txt:'Le vélo est le mode de transport qui rend le <strong>plus heureux</strong> pour aller travailler (études à Londres, Montréal, USA).',url:'https://ecf.com/policy-areas/cycling-economy/economic-benefits',src:'ECF'},
-  {ic:'&#129488;',txt:'Le vélotaf réduit de <strong>40 % le niveau de stress</strong>.',url:'https://pubmed.ncbi.nlm.nih.gov/25152507/',src:'PubMed 2014'},
-  {ic:'&#9889;',txt:'Le vélo électrique rend heureux ! Effet positif immédiat même chez les personnes peu sportives.',url:'https://pubmed.ncbi.nlm.nih.gov/35263497/',src:'PubMed 2022'},
-  {ic:'&#127807;',txt:'<strong>40 % des cancers</strong> sont évitables grâce à une activité physique régulière comme le vélo ou la marche.',url:'https://www.youtube.com/watch?v=YPuMtK42H6A&t=38s',src:'Étude santé'},
-  {ic:'&#128694;',txt:'L\'OMS recommande <strong>30 minutes d\'activité quotidienne</strong>. Un trajet à pied ou à vélo, ça compte !',url:'https://www.who.int/fr/news-room/fact-sheets/detail/physical-activity',src:'OMS'},
-  {ic:'&#128516;',txt:'Les personnes venant au travail à pied ou à vélo ont <strong>8 % de concentration en plus</strong> que celles venues en voiture.',url:'#',src:'Étude internationale mobilité'}
+/* ════════ DONNÉES VÉHICULES (liste officielle 28/07/2026) ════════ */
+var VEHICLES=[
+  /* 95 €/mois */
+  {name:'Citroën ë-C3',marque:'Citroën',loyer:95,auto:320,portes:5,places:5,fab:'Slovaquie',fr:false,seg:'Citadine',
+   urlModele:'https://www.citroen.fr/leasing-electrique/landingpage.html',
+   urlConces:'https://www.citroen.fr/trouver-un-concessionnaire.html'},
+  {name:'Fiat Grande Panda',marque:'Fiat',loyer:95,auto:320,portes:5,places:5,fab:'Serbie',fr:false,seg:'Citadine',
+   urlModele:'https://www.fiat.fr/offres-particuliers',
+   urlConces:'https://www.fiat.fr/trouver-un-concessionnaire'},
+  /* 99 €/mois */
+  {name:'Hyundai Inster',marque:'Hyundai',loyer:99,auto:355,portes:5,places:5,fab:'Corée du Sud',fr:false,seg:'Citadine',
+   urlModele:'https://www.hyundai.com/fr/fr/acheter-louer/promotions-financement/leasing-electrique.html',
+   urlConces:'https://www.hyundai.com/fr/fr/trouver-votre-concessionnaire.html'},
+  {name:'Opel Frontera Electric',marque:'Opel',loyer:99,auto:305,portes:5,places:5,fab:'Espagne',fr:false,seg:'SUV compact',
+   urlModele:'https://www.opel.fr/landingpage-leasing-electrique.html',
+   urlConces:'https://www.opel.fr/outils/trouver-un-concessionnaire.html'},
+  /* 114 €/mois */
+  {name:'Citroën ë-C3 Aircross',marque:'Citroën',loyer:114,auto:306,portes:5,places:5,fab:'Espagne',fr:false,seg:'SUV compact',
+   urlModele:'https://www.citroen.fr/leasing-electrique/landingpage.html',
+   urlConces:'https://www.citroen.fr/trouver-un-concessionnaire.html'},
+  /* 119 €/mois */
+  {name:'Opel Corsa Electric',marque:'Opel',loyer:119,auto:359,portes:5,places:5,fab:'Espagne',fr:false,seg:'Citadine',
+   urlModele:'https://www.opel.fr/landingpage-leasing-electrique.html',
+   urlConces:'https://www.opel.fr/outils/trouver-un-concessionnaire.html'},
+  {name:'Opel e-Mokka',marque:'Opel',loyer:119,auto:338,portes:5,places:5,fab:'Espagne',fr:false,seg:'SUV compact',
+   urlModele:'https://www.opel.fr/landingpage-leasing-electrique.html',
+   urlConces:'https://www.opel.fr/outils/trouver-un-concessionnaire.html'},
+  /* 129 €/mois */
+  {name:'Fiat 500e',marque:'Fiat',loyer:129,auto:300,portes:3,places:4,fab:'Italie',fr:false,seg:'Citadine (3 portes)',
+   urlModele:'https://www.fiat.fr/offres-particuliers',
+   urlConces:'https://www.fiat.fr/trouver-un-concessionnaire'},
+  /* 130 €/mois */
+  {name:'Renault Twingo E-Tech Evolution',marque:'Renault',loyer:130,auto:263,portes:5,places:4,fab:'Slovénie',fr:false,seg:'Citadine',
+   urlModele:'https://www.renault.fr/leasing-social-2026.html',
+   urlConces:'https://www.renault.fr/concessionnaires.html',
+   assurNote:'Offre Renault disponible avec assurance incluse selon option'},
+  /* 139 €/mois */
+  {name:'Renault Twingo E-Tech Techno',marque:'Renault',loyer:139,auto:263,portes:5,places:4,fab:'Slovénie',fr:false,seg:'Citadine',
+   urlModele:'https://www.renault.fr/leasing-social-2026.html',
+   urlConces:'https://www.renault.fr/concessionnaires.html',
+   assurNote:'Offre Renault disponible avec assurance incluse selon option'},
+  {name:'Renault 5 E-Tech Evolution',marque:'Renault',loyer:139,auto:416,portes:5,places:5,fab:'France (Douai)',fr:true,seg:'Citadine',
+   urlModele:'https://www.renault.fr/leasing-social-2026.html',
+   urlConces:'https://www.renault.fr/concessionnaires.html',
+   assurNote:'Offre Renault disponible avec assurance incluse selon option'},
+  {name:'Nissan Micra Engage',marque:'Nissan',loyer:139,auto:317,portes:5,places:5,fab:'France (Douai)',fr:true,seg:'Citadine',
+   urlModele:'https://www.nissan.fr/leasing-social-micra.html',
+   urlConces:'https://www.nissan.fr/concessionnaires.html'},
+  {name:'Ford Puma Gen-E',marque:'Ford',loyer:139,auto:392,portes:5,places:5,fab:'Roumanie',fr:false,seg:'SUV compact',
+   urlModele:'https://www.ford.fr/leasing-social',
+   urlConces:'https://www.ford.fr/trouver-un-concessionnaire'},
+  {name:'Volkswagen ID.3',marque:'Volkswagen',loyer:139,auto:425,portes:5,places:5,fab:'Allemagne',fr:false,seg:'Compacte',
+   urlModele:'https://www.volkswagen.fr/fr/vehicules-electriques/id3.html',
+   urlConces:'https://www.volkswagen.fr/fr/outils/concessionnaire.html'},
+  /* 149 €/mois */
+  {name:'Peugeot e-208 Style',marque:'Peugeot',loyer:149,auto:362,portes:5,places:5,fab:'Espagne',fr:false,seg:'Citadine',
+   urlModele:'https://www.peugeot.fr/offres/leasing-electrique.html',
+   urlConces:'https://www.peugeot.fr/concessionnaires.html'},
+  {name:'Citroën ë-Berlingo',marque:'Citroën',loyer:149,auto:280,portes:5,places:5,fab:'Espagne',fr:false,seg:'Familiale/utilitaire',
+   urlModele:'https://www.citroen.fr/leasing-electrique/landingpage.html',
+   urlConces:'https://www.citroen.fr/trouver-un-concessionnaire.html'},
+  {name:'Fiat 600e',marque:'Fiat',loyer:149,auto:400,portes:5,places:5,fab:'Pologne',fr:false,seg:'SUV compact',
+   urlModele:'https://www.fiat.fr/offres-particuliers',
+   urlConces:'https://www.fiat.fr/trouver-un-concessionnaire'},
+  {name:'Skoda Elroq City',marque:'Skoda',loyer:149,auto:370,portes:5,places:5,fab:'Tchéquie',fr:false,seg:'SUV compact',
+   urlModele:'https://www.skoda.fr/modeles/elroq.html',
+   urlConces:'https://www.skoda.fr/trouver-un-revendeur'},
+  /* 155 €/mois */
+  {name:'Peugeot e-Rifter',marque:'Peugeot',loyer:155,auto:320,portes:5,places:5,fab:'Espagne',fr:false,seg:'Familiale/utilitaire',
+   urlModele:'https://www.peugeot.fr/offres/leasing-electrique.html',
+   urlConces:'https://www.peugeot.fr/concessionnaires.html'},
+  /* 159 €/mois */
+  {name:'Peugeot e-208 Allure',marque:'Peugeot',loyer:159,auto:362,portes:5,places:5,fab:'Espagne',fr:false,seg:'Citadine',
+   urlModele:'https://www.peugeot.fr/offres/leasing-electrique.html',
+   urlConces:'https://www.peugeot.fr/concessionnaires.html'},
+  {name:'Ford Explorer',marque:'Ford',loyer:159,auto:602,portes:5,places:5,fab:'Allemagne',fr:false,seg:'Grand SUV',
+   urlModele:'https://www.ford.fr/leasing-social',
+   urlConces:'https://www.ford.fr/trouver-un-concessionnaire'},
+  /* 169 €/mois */
+  {name:'Volkswagen ID.4',marque:'Volkswagen',loyer:169,auto:529,portes:5,places:5,fab:'Allemagne',fr:false,seg:'SUV',
+   urlModele:'https://www.volkswagen.fr/fr/vehicules-electriques/id4.html',
+   urlConces:'https://www.volkswagen.fr/fr/outils/concessionnaire.html'},
+  {name:'Jeep Avenger',marque:'Jeep',loyer:169,auto:403,portes:5,places:5,fab:'Pologne',fr:false,seg:'SUV compact',
+   urlModele:'https://cloud.web.stellantis.com/jeep-fr/preleasing-electrique-jeep',
+   urlConces:'https://www.jeep.fr/trouver-un-concessionnaire'},
+  /* 170 €/mois */
+  {name:'Renault 5 E-Tech Techno',marque:'Renault',loyer:170,auto:416,portes:5,places:5,fab:'France (Douai)',fr:true,seg:'Citadine',
+   urlModele:'https://www.renault.fr/leasing-social-2026.html',
+   urlConces:'https://www.renault.fr/concessionnaires.html',
+   assurNote:'Offre Renault disponible avec assurance incluse selon option'},
+  {name:'Renault 4 E-Tech Evolution',marque:'Renault',loyer:170,auto:410,portes:5,places:5,fab:'France (Douai)',fr:true,seg:'SUV compact',
+   urlModele:'https://www.renault.fr/leasing-social-2026.html',
+   urlConces:'https://www.renault.fr/concessionnaires.html',
+   assurNote:'Offre Renault disponible avec assurance incluse selon option'},
+  /* 179 €/mois */
+  {name:'Citroën ë-C4',marque:'Citroën',loyer:179,auto:360,portes:5,places:5,fab:'Espagne',fr:false,seg:'Berline compacte',
+   urlModele:'https://www.citroen.fr/leasing-electrique/landingpage.html',
+   urlConces:'https://www.citroen.fr/trouver-un-concessionnaire.html'},
+  {name:'Peugeot e-2008 Style',marque:'Peugeot',loyer:179,auto:406,portes:5,places:5,fab:'Slovaquie',fr:false,seg:'SUV compact',
+   urlModele:'https://www.peugeot.fr/offres/leasing-electrique.html',
+   urlConces:'https://www.peugeot.fr/concessionnaires.html'},
+  {name:'Lancia Ypsilon',marque:'Lancia',loyer:195,auto:384,portes:5,places:5,fab:'Pologne',fr:false,seg:'Citadine',
+   urlModele:'https://www.lancia.com/fr/ypsilon.html',
+   urlConces:'https://www.lancia.com/fr/find-a-dealer.html'},
+  /* 189 €/mois */
+  {name:'Peugeot e-2008 Allure',marque:'Peugeot',loyer:189,auto:406,portes:5,places:5,fab:'Slovaquie',fr:false,seg:'SUV compact',
+   urlModele:'https://www.peugeot.fr/offres/leasing-electrique.html',
+   urlConces:'https://www.peugeot.fr/concessionnaires.html'},
+  {name:'Alfa Romeo Junior',marque:'Alfa Romeo',loyer:189,auto:406,portes:5,places:5,fab:'Pologne',fr:false,seg:'SUV compact',
+   urlModele:'https://www.alfaromeo.fr/mobilite-electrique/leasing-electrique',
+   urlConces:'https://www.alfaromeo.fr/trouver-un-concessionnaire'},
+  {name:'Cupra Born',marque:'Cupra',loyer:189,auto:548,portes:5,places:5,fab:'Allemagne',fr:false,seg:'Compacte',
+   urlModele:'https://www.cupraofficial.fr/',
+   urlConces:'https://www.cupraofficial.fr/trouver-un-concessionnaire'},
+  {name:'Kia EV4',marque:'Kia',loyer:189,auto:480,portes:5,places:5,fab:'Corée du Sud',fr:false,seg:'Berline compacte',
+   urlModele:'https://www.kia.com/fr/achat-location/offres-commerciales/ev2/',
+   urlConces:'https://www.kia.com/fr/trouver-un-concessionnaire'},
+  {name:'Skoda Elroq Element',marque:'Skoda',loyer:189,auto:560,portes:5,places:5,fab:'Tchéquie',fr:false,seg:'Grand SUV',
+   urlModele:'https://www.skoda.fr/modeles/elroq.html',
+   urlConces:'https://www.skoda.fr/trouver-un-revendeur'},
+  /* 190 €/mois */
+  {name:'Renault 4 E-Tech Techno',marque:'Renault',loyer:190,auto:410,portes:5,places:5,fab:'France (Douai)',fr:true,seg:'SUV compact',
+   urlModele:'https://www.renault.fr/leasing-social-2026.html',
+   urlConces:'https://www.renault.fr/concessionnaires.html',
+   assurNote:'Offre Renault disponible avec assurance incluse selon option'},
+  {name:'Renault Mégane E-Tech Techno',marque:'Renault',loyer:190,auto:450,portes:5,places:5,fab:'France (Douai)',fr:true,seg:'Berline compacte',
+   urlModele:'https://www.renault.fr/leasing-social-2026.html',
+   urlConces:'https://www.renault.fr/concessionnaires.html',
+   assurNote:'Offre Renault disponible avec assurance incluse selon option'},
+  /* 199 €/mois */
+  {name:'Nissan Micra Advance',marque:'Nissan',loyer:199,auto:416,portes:5,places:5,fab:'France (Douai)',fr:true,seg:'Citadine',
+   urlModele:'https://www.nissan.fr/leasing-social-micra.html',
+   urlConces:'https://www.nissan.fr/concessionnaires.html'},
+  {name:'Peugeot e-308',marque:'Peugeot',loyer:199,auto:415,portes:5,places:5,fab:'Slovaquie',fr:false,seg:'Berline compacte',
+   urlModele:'https://www.peugeot.fr/offres/leasing-electrique.html',
+   urlConces:'https://www.peugeot.fr/concessionnaires.html'}
 ];
 
-function buildCarousel(){
-  var t=document.getElementById('hc-track'),d=document.getElementById('hc-dots');
-  t.innerHTML='';d.innerHTML='';
-  HEALTH.forEach(function(h,i){
-    var s=document.createElement('div');s.className='hc-slide';
-    s.innerHTML='<div class="hc-stat">'+h.ic+' '+h.txt+'</div><div class="hc-src"><a class="rl" href="'+h.url+'" target="_blank">'+h.src+'</a></div>';
-    t.appendChild(s);
-    var dot=document.createElement('div');dot.className='hc-dot'+(i===0?' on':'');
-    dot.onclick=(function(idx){return function(){hcGo(idx);};})(i);
-    d.appendChild(dot);
+function renderVehicles(){
+  var sort=document.getElementById('vc-sort-sel').value;
+  var filter=document.getElementById('vc-filter-sel').value;
+  var list=VEHICLES.filter(function(v){
+    if(filter==='fr')return v.fr;
+    if(filter==='5p')return v.portes===5;
+    if(filter==='citadine')return v.seg==='Citadine'||v.seg==='Citadine (3 portes)';
+    if(filter==='suv')return v.seg.toLowerCase().includes('suv');
+    return true;
   });
-  hcGo(0);
-}
-function hcGo(idx){
-  hcIdx=(idx+HEALTH.length)%HEALTH.length;
-  document.getElementById('hc-track').style.transform='translateX(-'+hcIdx+'00%)';
-  document.querySelectorAll('.hc-dot').forEach(function(d,i){d.classList.toggle('on',i===hcIdx);});
-}
-function hcMove(dir){hcGo(hcIdx+dir);}
-
-function toggleAcc(id){
-  var h=document.getElementById(id+'-head'),b=document.getElementById(id+'-body');
-  var o=b.classList.contains('open');
-  b.classList.toggle('open',!o);h.classList.toggle('open',!o);
-}
-
-function toggleTip(id){
-  var p=document.getElementById(id),w=p.classList.contains('open');
-  document.querySelectorAll('.tip-pop,.tip-btn').forEach(function(x){x.classList.remove('open');});
-  if(!w){p.classList.add('open');document.getElementById(id+'-btn').classList.add('open');}
-}
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.tip-wrap'))
-    document.querySelectorAll('.tip-pop,.tip-btn').forEach(function(x){x.classList.remove('open');});
-});
-
-function showVille(group,id,btn){
-  document.getElementById(group+'-pills').querySelectorAll('.vpill').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');
-  document.querySelectorAll('[id^="'+group+'-"]').forEach(function(el){
-    if(el.classList.contains('vblock'))el.classList.remove('on');
+  list.sort(function(a,b){
+    if(sort==='autonomie')return b.auto-a.auto;
+    if(sort==='marque')return a.marque.localeCompare(b.marque);
+    return a.loyer-b.loyer; /* par défaut : loyer croissant */
   });
-  var t=document.getElementById(group+'-'+id);
-  if(t)t.classList.add('on');
-}
-
-function checkEligibility(){
-  var c=[1,2,3,4,5].map(function(i){return document.getElementById('elig'+i).checked;});
-  var r=document.getElementById('elig-result');
-  var total=c.filter(Boolean).length;
-  r.style.display='';
-  if(total===0){r.style.display='none';return;}
-  if(total===5){
-    r.className='elig-result ok';
-    r.innerHTML='&#9989; Vous semblez <strong>éligible au leasing social 2026</strong>. Rapprochez-vous d\'un concessionnaire proposant des véhicules électriques éligibles et vérifiez les conditions définitives sur <a class="rl" href="https://www.ecologie.gouv.fr/leasing-social" target="_blank">ecologie.gouv.fr</a>.';
-  } else if(!c[0]||!c[1]){
-    r.className='elig-result nok';
-    r.innerHTML='&#10060; Un critère obligatoire (distance domicile-travail <strong>ou</strong> revenu fiscal) n\'est pas rempli. Vous n\'êtes pas éligible dans ces conditions.';
-  } else {
-    r.className='elig-result partial';
-    r.innerHTML='&#128310; Conditions principales remplies ('+total+'/5). Vérifiez les critères non cochés avant de vous engager.';
+  var grid=document.getElementById('vc-grid');
+  grid.innerHTML='';
+  list.forEach(function(v){
+    var card=document.createElement('div');
+    card.className='vc-card'+(v.fr?' vc-fr':'');
+    var badge=v.fr
+      ? '<div class="vc-flag fr">&#127467;&#127479; France</div>'
+      : '<div class="vc-flag">'+v.fab+'</div>';
+    var loyer_cls=v.loyer<=99?'vc-loyer loyer-best':v.loyer<=139?'vc-loyer':'vc-loyer loyer-high';
+    var assurHtml=v.assurNote
+      ? '<div class="vc-assur">&#x2139;&#xfe0f;&ensp;'+v.assurNote+'</div>'
+      : '';
+    var linksHtml=
+      '<div class="vc-links">'+
+        '<a class="vc-link" href="'+v.urlModele+'" target="_blank">&#128269; Voir ce modèle</a>'+
+        '<a class="vc-link" href="'+v.urlConces+'" target="_blank">&#127968; Trouver un concessionnaire</a>'+
+      '</div>';
+    card.innerHTML=
+      badge+
+      '<div class="vc-name">'+v.name+'</div>'+
+      '<div class="vc-seg">'+v.seg+'</div>'+
+      '<div class="vc-specs">'+
+        '<div class="vc-spec">&#9889; <strong>'+v.auto+'</strong>&thinsp;km WLTP</div>'+
+        '<div class="vc-spec">&#128663; <strong>'+v.portes+'</strong> portes</div>'+
+        '<div class="vc-spec">&#128100; <strong>'+v.places+'</strong> places</div>'+
+        '<div class="vc-spec">&#127981; '+v.fab+'</div>'+
+      '</div>'+
+      '<div class="'+loyer_cls+'">'+v.loyer+'&thinsp;€/mois'+
+        '<span style="font-size:11px;font-weight:400;display:block;margin-top:2px;">(aide État déduite &mdash; hors assurance, sauf mention)</span>'+
+      '</div>'+
+      assurHtml+
+      linksHtml;
+    grid.appendChild(card);
+  });
+  document.getElementById('vc-count').textContent=list.length+' véhicule'+(list.length>1?'s':'');
+  if(list.length===0){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:20px;">Aucun véhicule ne correspond à ce filtre.</div>';
   }
 }
 
-function setMode(m){
-  mode=m;
-  ['achat','leasing','none'].forEach(function(x){
-    document.getElementById('tgl-'+x).classList.toggle('on',x===m);
-  });
-  document.getElementById('panel-achat').style.display    = m==='achat'   ?'':'none';
-  document.getElementById('panel-leasing').style.display  = m==='leasing' ?'':'none';
-  document.getElementById('carburant-fields').style.display = (m==='leasing'||m==='none')?'none':'';
-  document.getElementById('voiture-results').style.display  = m==='none'  ?'none':'';
-  document.getElementById('nocar-results').style.display    = m==='none'  ?'':'none';
-  document.getElementById('mg-leasing-detail').style.display= m==='leasing'?'':'none';
-  document.getElementById('mg-standard').style.display      = m==='leasing'?'none':'';
-  document.getElementById('prog-section').style.display     = (m==='leasing'||m==='none')?'none':'';
-  document.getElementById('row-carb').style.display         = m==='leasing'?'none':'';
-  update();
+/* ════════ ÉTAT GLOBAL ════════ */
+var answers={1:null,2:null,3:null,4:null};
+var docState={1:false,2:false,3:false,4:false,5:false,6:false,7:false};
+var currentOutcome=null;
+
+/* ════════ SCROLL ════════ */
+function scrollToStep2(){document.getElementById('step2-wrap').scrollIntoView({behavior:'smooth',block:'start'});}
+function scrollToStep3(){
+  var id=currentOutcome==='ok'?'step3c-wrap':currentOutcome==='nok-dist'?'step3a-wrap':'step3b-wrap';
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function mensualite(c,t,n){
-  if(!n)return 0;if(!t)return c/n;
-  var tm=t/100/12;return c*tm*Math.pow(1+tm,n)/(Math.pow(1+tm,n)-1);
-}
-function fr(n){return Math.round(n).toLocaleString('fr-FR')+' €';}
+/* ════════ SIMULATEUR ÉTAPE 1 ════════ */
+function updateStep1(){
+  var km=parseFloat(document.getElementById('s1-km').value)||18;
+  var jours=parseFloat(document.getElementById('s1-jours').value)||4;
+  var pleins=parseFloat(document.getElementById('s1-pleins').value)||2;
+  var prixPl=parseFloat(document.getElementById('s1-prix-plein').value)||65;
+  var mens=parseFloat(document.getElementById('s1-mensualite').value)||200;
+  var assur=parseFloat(document.getElementById('s1-assurance').value)||75;
 
-function update(){
-  var km    =parseFloat(document.getElementById('km').value)||18;
-  var jours =parseFloat(document.getElementById('jours').value)||4;
-  document.getElementById('out-km').textContent    =km+' km';
-  document.getElementById('out-jours').textContent =jours+' j/sem';
+  document.getElementById('s1-km-v').textContent=km+'\u202fkm';
+  document.getElementById('s1-jours-v').textContent=jours+'\u202fj/sem';
+  document.getElementById('s1-pleins-v').textContent=pleins.toFixed(1).replace('.',',');
+  document.getElementById('s1-prix-v').textContent=Math.round(prixPl)+'\u202f€';
+  document.getElementById('s1-mens-v').textContent=Math.round(mens)+'\u202f€/mois';
+  document.getElementById('s1-assur-v').textContent=Math.round(assur)+'\u202f€/mois';
 
   var kmAn=km*2*jours*40;
-  var entAn=kmAn*0.33*0.26;
-  var autAn=kmAn*0.33*0.21;
-  var acqAn=0,totalE=0,totalAn=0,infoTxt='';
+  var carbMois=pleins*prixPl;
+  var entMois=Math.round(kmAn*0.33*0.26/12);
+  /* Recharge électrique proportionnelle au carburant :
+     même distance en électrique coûte ~15% du carburant (2,5 cts/km vs ~10-12 cts/km) */
+  var rechElec=Math.max(5,Math.round(carbMois*0.15));
 
-  if(mode==='achat'){
-    var pv=parseFloat(document.getElementById('prix-achat').value)||12000;
-    document.getElementById('out-prix-achat').textContent=fr(pv);
-    var petit=pv<2000;
-    document.getElementById('cash-box').style.display=petit?'':'none';
-    document.getElementById('financement-fields').style.display=petit?'none':'';
-    var pleins=parseFloat(document.getElementById('pleins-mois').value)||2;
-    var prixPl=parseFloat(document.getElementById('prix-plein').value)||65;
-    document.getElementById('out-pleins-mois').textContent=pleins.toFixed(1).replace('.',',');
-    document.getElementById('out-prix-plein').textContent=fr(prixPl);
-    var carbAn=pleins*12*prixPl;
-    if(petit){
-      acqAn=pv/10;totalE=pv;
-      infoTxt='Achat comptant de '+fr(pv)+'. Amorti sur 10 ans : '+fr(acqAn)+'/an.';
-    } else {
-      var ap=parseFloat(document.getElementById('apport').value)||2000;
-      var du=parseFloat(document.getElementById('duree-credit').value)||48;
-      var tx=parseFloat(document.getElementById('taux-credit').value)||5;
-      document.getElementById('out-apport').textContent=fr(ap);
-      document.getElementById('out-duree-credit').textContent=du===0?'Comptant':du+' mois';
-      document.getElementById('out-taux-credit').textContent=tx.toFixed(2).replace('.',',')+' %';
-      var cap=Math.max(0,pv-ap);
-      if(du===0){acqAn=pv/10;totalE=pv;infoTxt='Achat comptant de '+fr(pv)+'.';}
-      else{
-        var mens=mensualite(cap,tx,du);
-        totalE=ap+mens*du;acqAn=totalE/(du/12);
-        infoTxt='Mensualité : '+fr(mens)+'/mois \u00d7 '+du+' mois + apport '+fr(ap)+' = '+fr(totalE)+' au total.';
-      }
-    }
-    totalAn=acqAn+carbAn+entAn+autAn;
-    document.getElementById('m-annuel').textContent=fr(totalAn);
-    document.getElementById('m-mensuel').textContent=fr(totalAn/12);
-    document.getElementById('m-engage').textContent=fr(totalE);
-    document.getElementById('ml-engage').textContent='Engagement crédit';
-    var pct=totalAn>0?Math.min(100,Math.round(acqAn/totalAn*100)):0;
-    document.getElementById('prog-bar').style.width=pct+'%';
-    document.getElementById('prog-left').textContent='Acquisition : '+fr(acqAn)+'/an';
-    document.getElementById('prog-right').textContent='Usage : '+fr(carbAn+entAn+autAn)+'/an';
-    document.getElementById('info-acq').textContent=infoTxt;
-    document.getElementById('b-acq').textContent=fr(acqAn);
-    document.getElementById('b-carb').textContent=fr(carbAn);
-    document.getElementById('b-pleins-txt').textContent=pleins.toFixed(1).replace('.',',')+' plein(s)/mois';
-    document.getElementById('b-ent').textContent=fr(entAn);
-    document.getElementById('b-aut').textContent=fr(autAn);
-    document.getElementById('b-tot').textContent=fr(totalAn);
+  var total=Math.round(carbMois+mens+assur+entMois);
+  var leasLoyer=120, leasAssur=60;
+  var leasTotal=leasLoyer+leasAssur+rechElec;
 
-  } else if(mode==='leasing'){
-    var loyer=parseFloat(document.getElementById('loyer-leasing').value)||120;
-    var assur=parseFloat(document.getElementById('assurance-leasing').value)||60;
-    var rech =parseFloat(document.getElementById('recharge-leasing').value)||30;
-    document.getElementById('out-loyer-leasing').textContent=loyer+' \u20ac/mois';
-    document.getElementById('out-assurance-leasing').textContent=assur+' \u20ac/mois';
-    document.getElementById('out-recharge-leasing').textContent=rech+' \u20ac/mois';
-    var totalMois=loyer+assur+rech;
-    totalAn=totalMois*12;
-    document.getElementById('ml-loyer').textContent=loyer+' \u20ac';
-    document.getElementById('ml-assur').textContent=assur+' \u20ac';
-    document.getElementById('ml-rech').textContent=rech+' \u20ac';
-    document.getElementById('ml-total-mois').textContent=totalMois+' \u20ac';
-    document.getElementById('b-acq').textContent=fr(loyer*12)+' (loyers)';
-    document.getElementById('b-carb').textContent=fr(rech*12);
-    document.getElementById('b-ent').textContent='Inclus contrat';
-    document.getElementById('b-aut').textContent=fr(assur*12)+' (assurance)';
-    document.getElementById('b-tot').textContent=fr(totalAn);
-    document.getElementById('b-pleins-txt').textContent='recharge \u00e9lec.';
-    document.getElementById('info-acq').textContent='Leasing social : '+loyer+' \u20ac/mois (loyer aid\u00e9) + '+assur+' \u20ac/mois (assurance) + '+rech+' \u20ac/mois (recharge) = '+totalMois+' \u20ac/mois. Engagement 36 mois minimum.';
-    document.getElementById('acc-ls-sum').textContent=totalMois+' \u20ac/mois tout compris';
+  document.getElementById('s1-therm-total').textContent=total+'\u202f€';
+  document.getElementById('r-credit').textContent=Math.round(mens)+'\u202f€';
+  document.getElementById('r-carb').textContent=Math.round(carbMois)+'\u202f€';
+  document.getElementById('r-assur').textContent=Math.round(assur)+'\u202f€';
+  document.getElementById('r-ent').textContent='~'+entMois+'\u202f€';
+  document.getElementById('r-tot-therm').textContent=total+'\u202f€';
+  document.getElementById('r-rech').textContent='~'+rechElec+'\u202f€';
+  document.getElementById('s1-elec-total').textContent='~'+leasTotal+'\u202f€';
+  document.getElementById('r-tot-elec').textContent='~'+leasTotal+'\u202f€';
+
+  /* Économie potentielle */
+  var eco=total-leasTotal;
+  var ecoEl=document.getElementById('s1-eco');
+  if(eco>30){
+    ecoEl.innerHTML='&#9989;&ensp;Économie potentielle avec le leasing social : <strong>'+Math.round(eco)+'\u202f€/mois</strong> soit <strong>'+Math.round(eco*12)+'\u202f€/an</strong>.';
+    ecoEl.style.display='';
+  } else {
+    ecoEl.style.display='none';
   }
 
-  /* Temps de trajet */
-  var vit=km<10?30.7:50;
-  var minV=Math.round(km/vit*60),minP=Math.round(km/18*60),hAn=Math.round(km*2/vit*jours*40);
-  var timeTxt;
-  if(mode==='none') timeTxt='&#127746; Sans voiture, les trajets \u00e0 v\u00e9lo ou en transport s\'int\u00e8grent \u00e0 votre journ\u00e9e et comptent comme activit\u00e9 physique quotidienne.';
-  else if(km>=40)   timeTxt='&#x23F1; \u00c0 '+km+' km, le train r\u00e9gional (~73,6 km/h) est souvent aussi rapide — avec du temps pour lire, travailler ou se reposer.';
-  else if(mode==='leasing') timeTxt='&#x23F1; En voiture \u00e9lectrique : '+minV+' min par trajet. Vous passez ~'+hAn+' heures/an dans votre v\u00e9hicule. La recharge la nuit \u00e0 domicile r\u00e9duit les contraintes.';
-  else timeTxt='&#x23F1; '+minV+' min en voiture vs '+minP+' min \u00e0 v\u00e9lo ('+km+' km). Vous passez <strong>~'+hAn+' heures/an</strong> dans votre voiture sur ce trajet.';
-  document.getElementById('time-content').innerHTML=timeTxt;
+  /* Mise à jour texte covoiturage dans 3A et 3B */
+  var econoCovoit=Math.round(carbMois/2);
+  var covoitTxt='Avec '+Math.round(pleins)+' plein(s)/mois à '+Math.round(prixPl)+'\u202f€, votre carburant vous coûte ~'+Math.round(carbMois)+'\u202f€/mois. En covoiturage, vous économisez environ <strong>~'+econoCovoit+'\u202f€/mois</strong> soit <strong>~'+Math.round(econoCovoit*12)+'\u202f€/an</strong>.';
+  var el3a=document.getElementById('s3a-covoit-txt');
+  var el3b=document.getElementById('s3b-covoit-txt');
+  if(el3a)el3a.innerHTML=covoitTxt;
+  if(el3b)el3b.innerHTML=covoitTxt;
+  var badgeTxt='~'+econoCovoit+'\u202f€/mois économisés';
+  var b3a=document.getElementById('s3a-covoit-eco');
+  var b3b=document.getElementById('s3b-covoit-eco');
+  if(b3a)b3a.textContent=badgeTxt;
+  if(b3b)b3b.textContent=badgeTxt;
 
-  /* Comparatif */
-  var costTC  =Math.round(360*0.25);
-  var costVelo=300;
-  var leasAn  =(function(){var lo=parseFloat(document.getElementById('loyer-leasing').value)||120,as=parseFloat(document.getElementById('assurance-leasing').value)||60,re=parseFloat(document.getElementById('recharge-leasing').value)||30;return(lo+as+re)*12;})();
-  var minCost=Math.min(costTC,costVelo);
-  var rows='<tr><th>Mode</th><th class="num">Par an</th><th class="num">Par mois</th></tr>';
-  if(mode==='achat') rows+='<tr class="car-row"><td><div class="mode-name">&#128663; Voiture thermique</div></td><td class="num">'+fr(totalAn)+'</td><td class="num">'+fr(totalAn/12)+'</td></tr>';
-  rows+='<tr class="elec-row"><td><div class="mode-name">&#9889; Leasing social tout compris</div></td><td class="num">'+fr(leasAn)+'</td><td class="num">'+Math.round(leasAn/12)+' \u20ac</td></tr>';
-  rows+='<tr'+(costTC===minCost?' class="best"':'')+"><td><div class='mode-name'>&#128653; Transport en commun (75 % remboursé)</div></td><td class='num'>"+fr(costTC)+'</td><td class=\'num\'>'+Math.round(costTC/12)+' \u20ac</td></tr>';
-  rows+='<tr'+(costVelo===minCost?' class="best"':'')+"><td><div class='mode-name'>&#128690; V\u00e9lo (occasion + entretien)</div></td><td class='num'>"+fr(costVelo)+'</td><td class=\'num\'>'+fr(costVelo/12)+'</td></tr>';
-  rows+='<tr><td><div class="mode-name">&#128101; Covoiturage passager</div></td><td class="num">'+fr(Math.max(0,Math.round(totalAn*0.4)))+'</td><td class="num">'+fr(Math.max(0,Math.round(totalAn*0.4/12)))+'</td></tr>';
-  document.getElementById('compare-table').innerHTML=rows;
-
-  /* Résumés */
-  document.getElementById('acc1-sum').textContent=(mode==='achat'?'Achat':mode==='leasing'?'Leasing social':'Sans voiture')+' \u00b7 '+km+' km';
-  document.getElementById('acc2-sum').textContent=mode==='none'?'\u00c9conomies ~'+fr(3500)+'/an':fr(totalAn)+'/an';
-  document.getElementById('acc3-sum').textContent='\u00e0 partir de '+fr(minCost)+'/an';
+  /* Synchroniser la distance dans Q1 */
+  document.getElementById('q1-km-display').textContent=km+'\u202fkm';
+  /* Pré-cocher Q1 automatiquement selon la distance */
+  if(answers[1]===null){
+    if(km>10){setQ(1,true,true);}
+    else{setQ(1,false,true);}
+  }
 }
 
-buildCarousel();
-update();
+/* ════════ QUESTIONS OUI/NON ════════ */
+function setQ(n,val,silent){
+  answers[n]=val;
+  ['yes','no'].forEach(function(s){
+    var el=document.getElementById('q'+n+'-'+s);
+    if(el)el.classList.toggle('on',s==='yes'?val===true:val===false);
+  });
+  var qb=document.getElementById('qb'+n);
+  if(qb){
+    qb.classList.toggle('answered-yes',val===true);
+    qb.classList.toggle('answered-no',val===false);
+  }
+  if(!silent)computeResult();
+  else computeResult();
+}
+
+function showQ(n,show){
+  var el=document.getElementById('qb'+n);
+  if(el)el.classList.toggle('hidden-q',!show);
+}
+
+function computeResult(){
+  var answered=Object.values(answers).filter(function(v){return v!==null;}).length;
+
+  var r=document.getElementById('elig-result');
+  var icon=document.getElementById('elig-icon'),ttl=document.getElementById('elig-ttl');
+  var sub=document.getElementById('elig-sub'),cta=document.getElementById('elig-cta');
+
+  ['step3a-wrap','step3b-wrap','step3c-wrap'].forEach(function(id){
+    document.getElementById(id).classList.add('s3-hidden');
+  });
+
+  /* Masquage progressif selon la première réponse NON */
+  var distNok=answers[1]===false;
+  var revNok=answers[2]===false;
+  var prevNok=answers[3]===false;
+  var contratNok=answers[4]===false;
+
+  /* Afficher/masquer Q2-Q4 selon Q1 */
+  showQ(2, !distNok);
+  showQ(3, !distNok && !revNok);
+  showQ(4, !distNok && !revNok && !prevNok);
+
+  /* Compter les questions visibles répondues */
+  var visibleAnswered;
+  if(distNok) visibleAnswered=1;
+  else if(revNok||prevNok) visibleAnswered=answered;
+  else visibleAnswered=answered;
+  document.getElementById('step2-status').textContent=answered+' question'+(answered>1?'s':'')+' répondue'+(answered>1?'s':'');
+
+  if(answered===0){r.style.display='none';currentOutcome=null;return;}
+
+  var allYes=answers[1]===true&&answers[2]===true&&answers[3]===true&&answers[4]===true;
+  var otherNok=!distNok&&(revNok||prevNok||contratNok);
+
+  r.style.display='';
+
+  if(allYes){
+    currentOutcome='ok';
+    r.className='elig-banner ok';
+    icon.textContent='✅';
+    ttl.textContent='Vous êtes éligible au leasing social 2026 !';
+    sub.textContent='Vous remplissez toutes les conditions. Choisissez votre voiture et préparez vos documents.';
+    cta.textContent='Voir les véhicules et préparer mon dossier →';
+    cta.style.display='';cta.className='elig-cta';
+    document.getElementById('step3c-wrap').classList.remove('s3-hidden');
+    document.getElementById('step2-badge').classList.add('done');
+    renderVehicles();
+
+  } else if(distNok){
+    currentOutcome='nok-dist';
+    r.className='elig-banner nok-dist';
+    icon.textContent='🚲';
+    ttl.textContent='Votre trajet est inférieur à 10 km — le vélo est votre allié !';
+    sub.textContent='Le leasing social nécessite plus de 10 km de trajet. À cette distance, le vélo est souvent plus rapide et bien moins cher.';
+    cta.textContent='Voir les solutions vélo →';
+    cta.style.display='';cta.className='elig-cta blue';
+    document.getElementById('step3a-wrap').classList.remove('s3-hidden');
+    document.getElementById('step2-badge').classList.add('done');
+
+  } else if(otherNok){
+    currentOutcome='nok-other';
+    r.className='elig-banner nok-other';
+    icon.textContent='💡';
+    ttl.textContent='Pas éligible en l\'état — mais d\'autres solutions existent.';
+    var raisons=[];
+    if(revNok)raisons.push('votre revenu fiscal par part dépasse 16\u202f880\u202f€ — vérifiez votre nombre de parts fiscales');
+    if(prevNok)raisons.push('vous avez déjà bénéficié du leasing social');
+    if(contratNok)raisons.push('vous préférez acheter plutôt que louer');
+    sub.textContent='Raison\u00a0: '+raisons.join('\u00a0; ')+'.';
+    cta.textContent='Voir les alternatives →';
+    cta.style.display='';cta.className='elig-cta amber';
+    document.getElementById('step3b-wrap').classList.remove('s3-hidden');
+    document.getElementById('step3b-reason').innerHTML='&#9888;\u00a0<strong>Pourquoi\u00a0:</strong> '+raisons.join('\u00a0; ')+'.';
+    document.getElementById('step2-badge').classList.add('done');
+
+  } else {
+    /* Réponse OUI en cours, pas encore terminé */
+    currentOutcome='partial';
+    r.className='elig-banner partial';
+    icon.textContent='🟡';
+    ttl.textContent='Bonne nouvelle jusqu\'ici ! Continuez…';
+    sub.textContent='Répondez aux questions suivantes pour connaître votre résultat.';
+    cta.style.display='none';
+  }
+}
+
+/* ════════ CHECKLIST DOCUMENTS ════════ */
+function toggleDoc(n,total){
+  total=total||7;
+  docState[n]=!docState[n];
+  document.getElementById('doc'+n).classList.toggle('checked',docState[n]);
+  document.getElementById('dcheck'+n).textContent=docState[n]?'✓':'';
+  var done=Object.values(docState).filter(Boolean).length;
+  document.getElementById('doc-prog').style.width=Math.round(done/total*100)+'%';
+  document.getElementById('doc-prog-label').textContent=done+' document'+(done>1?'s':'')+' sur '+total+' prêt'+(done>1?'s':'');
+  document.getElementById('doc-status').textContent=done+' / '+total+' documents cochés';
+}
+
+/* ════════ INIT ════════ */
+updateStep1();
 </script>
 </body>
 </html>
