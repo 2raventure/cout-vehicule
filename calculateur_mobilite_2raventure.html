@@ -14,10 +14,10 @@ a{color:var(--t);text-decoration:none}a:hover{text-decoration:underline}
 .hdr-p{font-size:.67rem;opacity:.7;text-align:right;line-height:1.6}
 .hdr-p a{color:var(--t)}.hdr-p a+a::before{content:" · ";color:rgba(255,255,255,.3)}
 .stepper{display:flex;background:#fff;border-bottom:2px solid var(--bd);overflow-x:auto}
-.stp{flex:1;min-width:38px;padding:8px 3px;border:none;background:transparent;cursor:pointer;font-family:'Asap',sans-serif;font-size:.68rem;color:var(--tx);opacity:.4;border-bottom:3px solid transparent;font-weight:500;white-space:nowrap;transition:all .2s}
-.stp.active{opacity:1;color:var(--v);border-bottom-color:var(--t);background:var(--vc)}
-.stp.done{opacity:.7;color:var(--v)}
-.sn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--bd);color:var(--v);font-size:.64rem;font-weight:700;margin-right:3px}
+.stp{flex:1;min-width:38px;padding:10px 6px;border:none;background:transparent;cursor:pointer;font-family:'Asap',sans-serif;font-size:.72rem;color:var(--tx);opacity:.55;border-bottom:3px solid transparent;font-weight:500;white-space:nowrap;transition:all .2s}
+.stp.active{opacity:1;color:var(--v);border-bottom-color:var(--t);background:var(--vc);font-weight:700}
+.stp.done{opacity:.8;color:var(--v);font-weight:600}
+.sn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--bd);color:var(--v);font-size:.66rem;font-weight:700;margin-right:4px}
 .stp.active .sn{background:var(--t);color:#fff}.stp.done .sn{background:var(--v);color:#fff}
 .scr{display:none;padding:18px 15px;max-width:840px;margin:0 auto}
 .scr.active{display:block}
@@ -27,6 +27,10 @@ a{color:var(--t);text-decoration:none}a:hover{text-decoration:underline}
 .ct{font-size:.92rem;font-weight:700;color:var(--v);margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .ct-sub{font-size:.68rem;font-weight:400;color:#999}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:10px}
+@media(min-width:601px){
+  .stp{min-width:90px;padding:10px 6px}
+  .stp-txt{display:inline}
+}
 @media(max-width:600px){
   .hdr-p{display:none}
   .stp-txt{display:none}
@@ -207,7 +211,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
   <div class="hdr-title">🏢 Calculateur Mobilité Employeur</div>
   <div class="hdr-p">
     <a href="https://2raventure.com/" target="_blank">2R Aventure</a>
-    <a href="https://www.ademe.fr/" target="_blank">ADEME</a>
     <a href="https://www.ecologie.gouv.fr/" target="_blank">DGITM</a>
     <a href="https://www.cerema.fr/" target="_blank">CEREMA</a>
     <a href="https://www.1kmapied.com/" target="_blank">1kmàpied</a>
@@ -384,7 +387,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
 <div class="pbw"><div class="pb" style="width:45%"></div></div>
 
 <div class="card">
-  <div class="ct">🚗 Véhicules de service <span class="ct-sub">(déplacements professionnels)</span></div>
+  <div class="ct">🚗 Flotte de véhicules <span class="ct-sub">(véhicules de fonction + service)</span></div>
   <div class="sg">
     <div class="sl"><span>Nombre de véhicules</span><span class="sv" id="nb_veh_v">5</span></div>
     <input type="range" id="nb_veh_r" min="0" max="200" value="5" step="1" oninput="syncVeh()">
@@ -1385,7 +1388,7 @@ function doPrint(){
   "<div class='card'><div class='card-label'>Salaire moyen brut</div><div class='card-val'>"+sal_moy.toLocaleString("fr-FR")+" €/mois</div></div>"+
   "<div class='card'><div class='card-label'>Code postal</div><div class='card-val'>"+(cp_val||"Non renseigné")+"</div></div>"+
   "<div class='card'><div class='card-label'>Autorité organisatrice</div><div class='card-val'>"+(cp_aom?cp_aom.name:"Non détectée")+"</div></div>"+
-  "<div class='card'><div class='card-label'>Véhicules de service</div><div class='card-val'>"+nb_veh+"</div></div>"+
+  "<div class='card'><div class='card-label'>Flotte de véhicules</div><div class='card-val'>"+nb_veh+"</div></div>"+
   "<div class='card'><div class='card-label'>Places de parking</div><div class='card-val'>"+nb_park+"</div></div>"+
   "</div>"+
   "<h2>Coûts de mobilité estimés</h2>"+
@@ -1409,7 +1412,7 @@ function doPrint(){
   (nb_sal>=11?"<div class='oblig'>ℹ️ <strong>Versement mobilité</strong> (dès 11 salariés) — "+tautxt+"</div>":"")+
   (nb_sal>=50?"<div class='oblig'>⚖️ <strong>Accord de mobilité</strong> (dès 50 salariés) — Négociations Annuelles Obligatoires</div>":"")+
   (nb_veh>=100?"<div class='oblig'>🟡 <strong>Verdissement de flotte</strong> (+100 véhicules) — 20% électriques en 2024, 40% en 2027</div>":"")+
-  "<footer>Généré par le Calculateur Mobilité Employeur — 2R Aventure · ADEME · DGITM · CEREMA · 1kmàpied | 2raventure.com</footer>"+
+  "<footer>Généré par le Calculateur Mobilité Employeur — 2R Aventure · DGITM · CEREMA · 1kmàpied | 2raventure.com</footer>"+
   "<"+"script>window.onload=function(){setTimeout(function(){window.print();},400);}<"+"/script>"+
   "</body></html>";
   var blob=new Blob([html],{type:"text/html;charset=utf-8"});
