@@ -345,7 +345,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
 <div class="pbw"><div class="pb" style="width:28%"></div></div>
 <div class="card">
   <div class="ct">🚗 Parts modales domicile → travail</div>
-  <p style="font-size:.75rem;color:#999;margin-bottom:10px">Curseurs auto-rééquilibrés à 100%. <em>Données nationales 2024.</em></p>
+  <div class="al al-i" style="font-size:.76rem;margin-bottom:8px"><strong>💡 C'est quoi ?</strong> Proportion de déplacements utilisant un mode de transport particulier (voiture, vélo, transports en commun, marche…) par rapport au nombre total de déplacements — ici pour les trajets domicile/travail et les déplacements professionnels.</div>
+  <p style="font-size:.75rem;color:#999;margin-bottom:10px">Curseurs auto-rééquilibrés à 100%. <em>Données nationales 2024 — <a href="https://www.insee.fr/fr/outil-interactif/5367857/tableau/80_AMN/84_MOB" target="_blank" style="color:inherit;text-decoration:underline dotted" title="Enquête INSEE — Mobilités des personnes">source INSEE ↗</a></em></p>
   <div class="fl-row"><span class="fl-lbl">🚗 Voiture seule</span><input type="range" id="pm_voit" min="0" max="100" value="70" step="1" oninput="onModal('voit')"><span class="fl-pct" id="pm_voit_v">70%</span></div>
   <div class="fl-row"><span class="fl-lbl">🚌 Transport en commun</span><input type="range" id="pm_tc" min="0" max="100" value="20" step="1" oninput="onModal('tc')"><span class="fl-pct" id="pm_tc_v">20%</span></div>
   <div class="fl-row"><span class="fl-lbl">🚲 Vélo</span><input type="range" id="pm_velo" min="0" max="100" value="4" step="1" oninput="onModal('velo')"><span class="fl-pct" id="pm_velo_v">4%</span></div>
@@ -387,7 +388,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
 <div class="pbw"><div class="pb" style="width:45%"></div></div>
 
 <div class="card">
-  <div class="ct">🚗 Flotte de véhicules <span class="ct-sub">(véhicules de fonction + service)</span></div>
+  <div class="ct">🚗 Flotte de véhicules <span class="ct-sub">(fonctions + service)</span></div>
   <div class="sg">
     <div class="sl"><span>Nombre de véhicules</span><span class="sv" id="nb_veh_v">5</span></div>
     <input type="range" id="nb_veh_r" min="0" max="200" value="5" step="1" oninput="syncVeh()">
@@ -428,6 +429,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
     <div class="fg">
       <label>Type de parking</label>
       <select id="type_park" onchange="onParkType()">
+        <option value="none">Pas de parking voiture</option>
         <option value="surface">Stationnement en surface</option>
         <option value="silo">Parking silo</option>
         <option value="souterrain">Parking souterrain</option>
@@ -436,11 +438,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
     </div>
   </div>
   <div class="sg">
-    <div class="sl"><span>Nombre de places</span><span class="sv" id="nb_park_v">30</span></div>
-    <input type="range" id="nb_park_r" min="0" max="500" value="30" step="1" oninput="syncPark()">
+    <div class="sl"><span>Nombre de places</span><span class="sv" id="nb_park_v">0</span></div>
+    <input type="range" id="nb_park_r" min="0" max="500" value="0" step="1" oninput="syncPark()">
     <div style="margin-top:4px;display:flex;align-items:center;gap:8px">
       <span class="ns">Valeur précise :</span>
-      <input type="number" id="nb_park_n" value="30" min="0" style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif" oninput="syncPark('n')">
+      <input type="number" id="nb_park_n" value="0" min="0" style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif" oninput="syncPark('n')">
     </div>
   </div>
   <div id="park_loue_row" style="display:none" class="fr">
@@ -451,10 +453,34 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
     </div>
   </div>
   <div id="park_info" class="al al-i" style="font-size:.75rem;margin-top:5px"></div>
-  <div id="huwart_ob" class="ob" style="display:none;margin-top:6px;font-size:.76rem">
-    <strong>⚖️ Loi Huwart (oct. 2025) — Parking extérieur en surface &gt;1 500 m² (~100 places) :</strong><br>
-    Obligation de couvrir 50% de la surface (panneaux photovoltaïques + végétalisation). Échéances 2026/2028, report possible jusqu'en jan. 2030.<br>
-    <a href="https://www.ecologie.gouv.fr/politiques-publiques/parcs-stationnement" target="_blank">→ Détail obligations parkings (ecologie.gouv.fr)</a>
+  <div id="huwart_ob" style="display:none;margin-top:6px"></div>
+</div>
+
+<div class="card">
+  <div class="ct">🚲 Stationnement vélo
+    <span class="tw"><span class="ti">?</span><span class="tb">Arceaux extérieurs : ~80€/arceau (2 places). Abri sécurisé (local vélos) : 600–1 200€/place selon équipements. Cofinancement possible à 40% (ADEME, AOM, Région).</span></span>
+  </div>
+  <div class="fr">
+    <div class="fg">
+      <label>Type de stationnement vélo</label>
+      <select id="type_park_velo" onchange="onVeloParkType()">
+        <option value="none">Pas de stationnement vélo</option>
+        <option value="arceau">Arceaux extérieurs</option>
+        <option value="abri">Abri sécurisé / local vélos</option>
+      </select>
+    </div>
+  </div>
+  <div class="sg" id="velo_park_sg" style="display:none">
+    <div class="sl"><span>Nombre de places vélo</span><span class="sv" id="nb_park_velo_v">0</span></div>
+    <input type="range" id="nb_park_velo_r" min="0" max="200" value="0" step="1" oninput="syncVeloPark()">
+    <div style="margin-top:4px;display:flex;align-items:center;gap:8px">
+      <span class="ns">Valeur précise :</span>
+      <input type="number" id="nb_park_velo_n" value="0" min="0" style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif" oninput="syncVeloPark('n')">
+    </div>
+  </div>
+  <div id="velo_park_info" class="al al-i" style="font-size:.75rem;margin-top:5px;display:none">
+    <span class="al-ico">ℹ️</span>
+    <span><strong>Dérogation PLU</strong> — Art. L 152-6-1 C. urb. : la création de 6 places vélo sécurisées permet de supprimer l'obligation de réaliser 1 place de stationnement motorisé. Levier utile pour optimiser un projet immobilier ou réduire les coûts de construction d'un parking voiture.</span>
   </div>
 </div>
 
@@ -498,7 +524,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
 
 <div class="card">
   <div class="ct">🛴 Forfait Mobilité Durable
-    <span class="tw"><span class="ti">?</span><span class="tb">Jusqu'à 600€/an par salarié, exonéré de charges sociales. Pour vélo, trottinette, covoiturage, engins de déplacement personnel motorisés. Facultatif secteur privé, obligatoire fonction publique. ROI moyen : productivité +6-9%, absentéisme -15%.</span></span>
+    <span class="tw"><span class="ti">?</span><span class="tb">Jusqu'à 600€/an par salarié — prime non soumise à cotisation sociale patronale ni salariale (dans la limite du plafond). Pour vélo, trottinette, covoiturage, engins de déplacement personnel motorisés. Facultatif secteur privé, obligatoire fonction publique. ROI moyen : productivité +6-9%, absentéisme -15%.</span></span>
   </div>
   <div class="fr">
     <div class="fg">
@@ -643,6 +669,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
   </div>
   <div class="st">💰 Coûts directs de mobilité</div>
   <div class="bg" id="kpi_direct"></div>
+  <div id="simouv_banner" style="display:none;margin:8px 0"></div>
   <div class="st">👥 Coûts liés aux ressources humaines</div>
   <div class="bg" id="kpi_rh"></div>
   <div class="gtb">
@@ -726,7 +753,9 @@ var fmd_mt=0, fmd_adh=20, dep_bgt=300, dep_nb=5;
 var to_tx=15, to_mob=20, abs_tx=4;
 var C={};
 var ECO_ITEMS=[];  // built once, reused
-var PARK_COSTS={surface:{invest:3500,entretien:150},silo:{invest:13000,entretien:250},souterrain:{invest:25000,entretien:400}};
+// Vélo : moyenne pondérée arceaux couverts 80€ / abris 650€ / consignes 1200€ — cofinancement moyen 40%
+// Déductibilité IS 25% si mise à disposition vélos salariés (bofip 10630)
+var PARK_COSTS={none:{invest:0,entretien:0},velo:{invest:600,entretien:40,cofin:0.40,isded:0.25},surface:{invest:3500,entretien:150},silo:{invest:13000,entretien:250},souterrain:{invest:25000,entretien:400}};
 
 // ─── SYNC ─────────────────────────────────────────────────────────────────
 function syncSal(src){
@@ -749,7 +778,7 @@ function syncVeh(src){
 function syncPark(src){
   var v=src==="n"?parseInt(document.getElementById("nb_park_n").value)||0:parseInt(document.getElementById("nb_park_r").value)||0;
   if(src==="n")document.getElementById("nb_park_r").value=Math.min(v,500);else document.getElementById("nb_park_n").value=v;
-  nb_park=v;document.getElementById("nb_park_v").textContent=v;updateParkInfo();calc();
+  nb_park=v;document.getElementById("nb_park_v").textContent=v;updateParkInfo();updateHuwart();calc();
 }
 
 // ─── AOM ──────────────────────────────────────────────────────────────────
@@ -848,17 +877,60 @@ function onFleet(changed){
 function onParkType(){
   type_park=document.getElementById("type_park").value;
   document.getElementById("park_loue_row").style.display=type_park==="loue"?"":"none";
-  updateParkInfo();calc();
+  document.getElementById("park_nb_row").style.display=type_park==="none"?"none":"";
+  if(type_park==="none"){nb_park=0;document.getElementById("nb_park_r").value=0;document.getElementById("nb_park_n").value=0;document.getElementById("nb_park_v").textContent="0";}
+  updateParkInfo();updateHuwart();calc();
+}
+function syncVeloPark(src){
+  var v=src==="n"?parseInt(document.getElementById("nb_park_velo_n").value)||0:parseInt(document.getElementById("nb_park_velo_r").value)||0;
+  if(src==="n")document.getElementById("nb_park_velo_r").value=Math.min(v,200);else document.getElementById("nb_park_velo_n").value=v;
+  document.getElementById("nb_park_velo_v").textContent=v;
+  var tvp=document.getElementById("type_park_velo").value;
+  var info=document.getElementById("velo_park_info");
+  if(tvp!=="none"&&v>0)info.style.display="flex";else info.style.display="none";
+  calc();
+}
+function onVeloParkType(){
+  var tvp=document.getElementById("type_park_velo").value;
+  var sg=document.getElementById("velo_park_sg");var info=document.getElementById("velo_park_info");
+  if(tvp==="none"){sg.style.display="none";info.style.display="none";}
+  else{sg.style.display="";var v=parseInt(document.getElementById("nb_park_velo_r").value)||0;info.style.display=v>0?"flex":"none";}
+  calc();
 }
 function updateParkInfo(){
   var el=document.getElementById("park_info");
+  if(type_park==="none"){el.innerHTML="<small>Aucun stationnement voiture.</small>";return;}
   var lp=parseFloat((document.getElementById("loyer_park")||{value:"130"}).value)||130;
   loyer_park=lp;
-  var hEl=document.getElementById("huwart_ob");
-  if(hEl)hEl.style.display=(type_park==="surface"&&nb_park>=100)?"block":"none";
-  if(type_park==="loue")el.innerHTML="<span class='al-ico'>🅿️</span><span>Coût annuel : <strong>"+fmt(nb_park*lp*12)+"</strong></span>";
-  else{var pc=PARK_COSTS[type_park]||PARK_COSTS.surface;el.innerHTML="<span class='al-ico'>🅿️</span><span>Coût annuel : <strong>"+fmt(nb_park*(pc.invest/20+pc.entretien))+"</strong> (amort. 20 ans)</span>";}
+  if(type_park==="loue")el.innerHTML="<span class='al-ico'>🅿️</span><span>Co\xfbt annuel\xa0: <strong>"+fmt(nb_park*lp*12)+"</strong></span>";
+  else{var pc=PARK_COSTS[type_park]||PARK_COSTS.surface;el.innerHTML="<span class='al-ico'>🅿️</span><span>Co\xfbt annuel\xa0: <strong>"+fmt(nb_park*(pc.invest/20+pc.entretien))+"</strong> (amort. 20\xa0ans)</span>";}
 }
+function updateHuwart(){
+  var hEl=document.getElementById("huwart_ob");if(!hEl)return;
+  if(type_park!=="surface"||nb_park<100){hEl.style.display="none";return;}
+  var sMin=nb_park*15,sMax=nb_park*20;
+  var assuj=sMin>=1500;
+  if(!assuj){hEl.style.display="none";return;}
+  hEl.style.display="block";
+  var deadline=sMax>10000?"<strong style='color:#C62828'>1ᵉʳ juillet 2026</strong> (parc &gt;10 000 m²)":"<strong>1ᵉʳ juillet 2028</strong> (report possible jusqu\'en 2030 — contrat sign\xe9 avant juin 2027)";
+  var pvMin=Math.round(sMin*0.175),pvMax=Math.round(sMax*0.175);
+  var vegMin=Math.round(sMin*0.325),vegMax=Math.round(sMax*0.325);
+  var pvCostMin=pvMin*700,pvCostMax=pvMax*1000;
+  var pv100Min=Math.round(sMin*0.5)*700,pv100Max=Math.round(sMax*0.5)*1000;
+  var html="<div style='background:#FFF8E1;border:1.5px solid #F9A825;border-radius:8px;padding:10px 12px;font-size:.76rem'>"+
+    "<strong>⚖️ Loi APER / Huwart — Obligation ombrières</strong><br>"+
+    "<span style='color:#555'>Surface estim\xe9e : <strong>"+fmt(sMin)+"–"+fmt(sMax)+" m²</strong> (15–20 m²/place) · Éch\xe9ance : "+deadline+"</span>"+
+    "<table style='width:100%;margin-top:7px;border-collapse:collapse;font-size:.74rem'>"+
+    "<tr style='background:#FFF3CD'><th style='text-align:left;padding:4px 6px;font-weight:700'>Option</th><th style='padding:4px 6px'>Surface PV</th><th style='padding:4px 6px'>Surface v\xe9g\xe9tale</th><th style='padding:4px 6px'>Co\xfbt invest. HT</th></tr>"+
+    "<tr><td style='padding:4px 6px'>🌿 Mixte (Loi Huwart)</td><td style='padding:4px 6px;text-align:center'>"+pvMin+"–"+pvMax+" m²</td><td style='padding:4px 6px;text-align:center'>"+vegMin+"–"+vegMax+" m²</td><td style='padding:4px 6px;font-weight:700;text-align:center'>"+fmt(pvCostMin)+"–"+fmt(pvCostMax)+"</td></tr>"+
+    "<tr style='background:#FFF3CD'><td style='padding:4px 6px'>⚡ 100% PV</td><td style='padding:4px 6px;text-align:center'>"+(Math.round(sMin*0.5))+"–"+(Math.round(sMax*0.5))+" m²</td><td style='padding:4px 6px;text-align:center'>—</td><td style='padding:4px 6px;font-weight:700;text-align:center'>"+fmt(pv100Min)+"–"+fmt(pv100Max)+"</td></tr>"+
+    "</table>"+
+    "<div style='margin-top:6px;color:#C62828'><strong>⚠️ Risque d\'inaction :</strong> 20 000–140 000 €/an par parc non conforme (sanction pr\xe9fectorale).</div>"+
+    "<div style='margin-top:4px;font-size:.72rem;color:#777'>Tiers-investissement possible (op\xe9rateur finance l\'ombrière, se r\xe9mun\xe8re sur l\'électricit\xe9) — hors chiffrage. <a href='https://www.ecologie.gouv.fr/politiques-publiques/parcs-stationnement' target='_blank' style='color:var(--v)'>→ ecologie.gouv.fr</a></div>"+
+    "</div>";
+  hEl.innerHTML=html;
+}
+
 function calcPark(){
   var lp=parseFloat((document.getElementById("loyer_park")||{value:"130"}).value)||130;
   if(type_park==="loue")return nb_park*lp*12;
@@ -890,7 +962,7 @@ function calc(){
   type_park=document.getElementById("type_park").value;
   rbt_tc=parseFloat(document.getElementById("rbt_tc").value)||50;
   abo_tc=parseFloat(document.getElementById("abo_tc").value)||65;
-  pct_ik=parseFloat(document.getElementById("pct_ik").value)||15;
+  pct_ik=parseFloat(document.getElementById("pct_ik").value.trim())||0;
   km_ik=parseFloat(document.getElementById("km_ik").value)||3000;
   tx_ik=parseFloat(document.getElementById("tx_ik").value)||0.32;
   fmd_mt=parseFloat(document.getElementById("fmd_mt").value)||0;
@@ -978,6 +1050,9 @@ function renderBilan(){
       "Missions, voyages d’affaires hors indemnités kilométriques.",pctT(d.c_dep,d.grand))+
     mkbc("💰","Total mobilité directe",fmt(d.c_mob),"","",true,null,pctMS(d.c_mob));
 
+  var sb=document.getElementById("simouv_banner");
+  if(isSIMOUV(cp_val)){sb.style.display="";sb.innerHTML="<div class='al al-i' style='font-size:.79rem;border:1.5px solid var(--t)'><span class='al-ico'>🎉</span><span><strong>Réseau Transvilles GRATUIT</strong> — Depuis septembre 2026, les transports en commun SIMOUV sont entièrement gratuits sur votre territoire (Valenciennes Métropole + Porte du Hainaut). Vos salariés n'ont plus à financer leur abonnement. <a href='https://www.simouv.fr/le-syndicat/lactualite/2026-septembre/3096-reseau-transvilles-gratuit' target='_blank' style='color:var(--v)'>→ Voir l'annonce</a></span></div>";}
+  else sb.style.display="none";
   document.getElementById("kpi_rh").innerHTML=
     mkbc("📉","Turn-over lié à la mobilité",fmt(d.c_to_mob),to_mob+"% des départs · "+d.nb_dep+" départs/an","rd",false,
       "Nombre de départs × part liée mobilité × coût remplacement (7,5 mois salaire brut).",pctT(d.c_to_mob,d.grand),"Nat. : 6–9 mois/remplacement")+
@@ -1012,7 +1087,7 @@ function buildEcoItems(){
      cur:cc,max:30,unit:"%",
      saving:function(v){var dl=Math.max(0,v-cc);if(dl<=0)return 0;var pl=Math.round(nb_park*(dl/100)*0.5);var pc=PARK_COSTS[type_park]||PARK_COSTS.surface;return pl*(type_park==="loue"?loyer_park*12:pc.invest/20+pc.entretien);},
      cost:function(v){return v>cc?(nb_sal<50?3000:nb_sal<200?6000:12000):0;},
-     tools:[{l:"Karos",u:"https://www.karos.fr/"},{l:"BlaBlaCar Daily",u:"https://www.blablacardaily.com/"},{l:"Ecov — lignes de covoiturage",u:"https://www.ecov.fr/"},{l:"PassPass Covoiturage",u:"https://www.passpasscovoiturage.fr/"},{l:"Mobicoop",u:"https://www.mobicoop.fr/"}]},
+     tools:[{l:"Karos",u:"https://www.karos.fr/"},{l:"Ecov — lignes de covoiturage",u:"https://www.ecov.fr/"},{l:"PassPass Covoiturage",u:"https://www.passpasscovoiturage.fr/"},{l:"Mobicoop",u:"https://www.mobicoop.fr/"}]},
     {id:"sl_elec",ico:"⚡",name:"Électrifier la flotte de véhicules",
      detail:"% de véhicules électriques dans la flotte cible. Réduit le coût d’usage.",
      impl:["Audit de flotte (MobiliPro — ADEME)","Bornes de recharge (~1 500€/borne)","Aides à l’achat de véhicules électriques"],
@@ -1060,52 +1135,73 @@ function curV(item){
 
 // BUILD HTML ONCE — called only from calc()
 function renderEcoHTML(){
-  var html="";
-  ECO_ITEMS.forEach(function(item){
-    var v=Math.min(item.cur+10,item.max);
+  // Sort items: items with saving > 0 first (by saving desc), then optional (saving == 0)
+  var defaultVals=ECO_ITEMS.map(function(item){return Math.min(item.cur+10,item.max);});
+  var sorted=ECO_ITEMS.slice().map(function(item,i){return{item:item,v:defaultVals[ECO_ITEMS.indexOf(item)]};});
+  sorted.sort(function(a,b){
+    var sa=a.item.saving(a.v),sb=b.item.saving(b.v);
+    if(sa<=0&&sb<=0)return 0;
+    if(sa<=0)return 1;
+    if(sb<=0)return -1;
+    return sb-sa;
+  });
+
+  var mainHtml="",optHtml="";
+  sorted.forEach(function(s){
+    var item=s.item,v=s.v;
+    var saving=item.saving(v);
+    var isOptional=saving<=0;
     var implH=item.impl.map(function(i){return "<span class='eco-impl-tag'>"+i+"</span>";}).join("");
     var toolsH=item.tools.map(function(t){return "<a href='"+t.u+"' target='_blank' class='eco-tool-link'><span>→</span>"+t.l+"</a>";}).join("");
     var toolsSec=item.tools.length?"<div class='eco-tools-section'><div class='eco-impl-title'>Outils et ressources</div><div class='eco-tools-links'>"+toolsH+"</div></div>":"";
-    html+=
-      "<div class='eco-item' id='wi_"+item.id+"'>"+
+    var optStyle=isOptional?"opacity:.65;":"";
+    var optBadge=isOptional?"<span style='display:inline-block;background:#e0e0e0;color:#666;border-radius:10px;padding:1px 8px;font-size:.68rem;margin-left:6px;vertical-align:middle'>optionnel</span>":"";
+    var card=
+      "<div class='eco-item' id='wi_"+item.id+"' style='"+optStyle+"'>"+
         "<div class='eco-header' data-id='"+ item.id +"' onclick='toggleEco(this.dataset.id)'>"+
           "<div class='eco-ico-wrap'>"+item.ico+"</div>"+
           "<div class='eco-title-wrap'>"+
-            "<div class='eco-n'>"+item.name+"</div>"+
+            "<div class='eco-n'>"+item.name+optBadge+"</div>"+
             "<div class='eco-d'>"+item.detail+"</div>"+
             "<div class='eco-summary-badges' id='badges_"+item.id+"'>"+
-              "<span class='eco-badge eco-badge-sav' id='sav_"+item.id+"'>+0 €</span>"+
-              "<span class='eco-badge eco-badge-cost' id='cost_"+item.id+"'>Coût : 0 €</span>"+
-              "<span class='eco-badge eco-badge-net-pos' id='net_"+item.id+"'>Net : 0 €</span>"+
+              "<span class='eco-badge eco-badge-sav' id='sav_"+item.id+"'>+0 €</span>"+
+              "<span class='eco-badge eco-badge-cost' id='cost_"+item.id+"'>Co\xfbt\xa0: 0 €</span>"+
+              "<span class='eco-badge eco-badge-net-pos' id='net_"+item.id+"'>Net\xa0: 0 €</span>"+
             "</div>"+
           "</div>"+
           "<div class='eco-arr' id='arr_"+item.id+"'>▼</div>"+
         "</div>"+
         "<div class='eco-body' id='body_"+item.id+"'>"+
           "<div class='eco-slider-row'>"+
-            "<label>Cible :</label>"+
+            "<label>Cible\xa0:</label>"+
             "<input type='range' id='"+item.id+"' min='"+item.cur+"' max='"+item.max+"' value='"+v+"' step='1' data-unit='"+item.unit+"' oninput='updEco(this.id)'>"+
             "<span id='"+item.id+"_v'>"+v+item.unit+"</span>"+
           "</div>"+
           "<div class='eco-balance'>"+
             "<div class='eco-bal-card eco-bal-sav'>"+
               "<div class='eco-bal-label'>💰 Économies potentielles</div>"+
-              "<div class='eco-bal-val' id='bsav_"+item.id+"'>+0 €</div>"+
+              "<div class='eco-bal-val' id='bsav_"+item.id+"'>+0 €</div>"+
               "<div class='eco-bal-sub'>par an</div>"+
             "</div>"+
             "<div class='eco-bal-card eco-bal-cost'>"+
-              "<div class='eco-bal-label'>🛠 Coût de mise en oeuvre</div>"+
-              "<div class='eco-bal-val' id='bcost_"+item.id+"'>0 €</div>"+
+              "<div class='eco-bal-label'>🛠 Co\xfbt de mise en oeuvre</div>"+
+              "<div class='eco-bal-val' id='bcost_"+item.id+"'>0 €</div>"+
               "<div class='eco-bal-sub'>par an</div>"+
             "</div>"+
           "</div>"+
-          "<div class='eco-net-row' id='bnet_"+item.id+"'>Solde net : 0 € / an</div>"+
+          "<div class='eco-net-row' id='bnet_"+item.id+"'>Solde net\xa0: 0 € / an</div>"+
           "<div class='eco-impl-section'><div class='eco-impl-title'>Ce que cela implique</div><div class='eco-impl-tags'>"+implH+"</div></div>"+
           toolsSec+
         "</div>"+
       "</div>";
+    if(isOptional)optHtml+=card;else mainHtml+=card;
   });
-  document.getElementById("eco_actions").innerHTML=html;
+
+  var finalHtml=mainHtml;
+  if(optHtml){
+    finalHtml+="<div style='margin-top:12px;padding:8px 12px;background:#f5f5f5;border-radius:8px;font-size:.76rem;color:#666;font-weight:600'>□ Actions optionnelles (\xe9conomies n\xe9gligeables ou n\xe9gatives)</div>"+optHtml;
+  }
+  document.getElementById("eco_actions").innerHTML=finalHtml;
   renderEcoValues(); // populate with current values
 }
 
@@ -1240,8 +1336,18 @@ function renderAOMDirCard(entries){
   h+="</div>";
   return h;
 }
+function isSIMOUV(cp){
+  // Réseau Transvilles gratuit depuis sept. 2026 — SIMOUV (Valenciennois + Porte du Hainaut)
+  // AOM indices 44 et 455 dans d_aom
+  if(!cp||cp.length<2)return false;
+  var entry=CP_MAP[cp];
+  if(!entry)return false;
+  var idx=entry[0];
+  return idx===44||idx===455;
+}
 function renderRes(){
   var mel=cp_aom&&cp_aom.name&&cp_aom.name.indexOf("Lille")>=0;
+  var simouv=isSIMOUV(cp_val);
   var paris=isParis(cp_val),idf=isIDF(cp_val),paca=isPACA(cp_val),marseille=isMar(cp_val);
   var bordeaux=isBdx(cp_val),lyon=isLyon(cp_val),nantes=isNts(cp_val),grenoble=isGrn(cp_val);
   var hdf=isHdF(cp_val),isSm=nb_sal<20;
@@ -1272,6 +1378,7 @@ function renderRes(){
   if(nantes)aides.push({l:"Packs Mobilité — Nantes Métropole",u:"https://pro.naolib.fr/#decouvertepro"});
   if(grenoble)aides.push({l:"Démarche M'PRO — accompagnement gratuit (Syndicat des Mobilités de l'Aire Grenobloise)",u:"https://www.mobilites-m.fr/demarche-mpro"});
   if(mel)aides.push({l:"Diagnostic accessibilité gratuit — ilévia (Métropole Européenne de Lille)",u:"https://www.ilevia.fr/"});
+  if(simouv)aides.push({raw:"<div style='background:#E8F5F4;border-radius:8px;padding:10px 12px;border:1.5px solid var(--t);font-size:.79rem;margin:3px 0'><strong>🎉 Réseau Transvilles GRATUIT sur votre territoire</strong><br>Depuis septembre 2026, le réseau de transport en commun SIMOUV (Valenciennes Métropole + Porte du Hainaut) est <strong>entièrement gratuit</strong> pour tous les usagers. Levier fort pour réduire les coûts de mobilité de vos salariés et votre versement mobilité. <a href='https://www.simouv.fr/le-syndicat/lactualite/2026-septembre/3096-reseau-transvilles-gratuit' target='_blank' style='color:var(--v)'>→ Voir l'annonce SIMOUV</a></div>"});
   if(hdf)aides.push({l:"Booster REV3 (jusqu’à 10 000€ — Hauts-de-France, <250 salariés)",u:"https://www.rev3.fr/"});
   if(isSm)aides.push({l:"Programme Marguerite (<20 salariés) — mobilité et logistique durables",u:"https://www.programme-marguerite.fr/"});
   aides.push({l:"ADEME — aides à la transition écologique pour les employeurs",u:"https://agirpourlatransition.ademe.fr/entreprises/"});
@@ -1279,31 +1386,41 @@ function renderRes(){
   var sections="";
   var _aom=getAOMDirEntry(cp_val,cp_aom?cp_aom.name:null);
   if(_aom&&_aom.length)sections+=renderAOMDirCard(_aom);
+  aides.push({l:"mesaidesvelo.fr — toutes les aides à l'achat d'un vélo",u:"https://mesaidesvelo.fr/"});
+  aides.push({l:"Leasing social véhicule électrique",u:"https://2raventure.com/2026/08/17/leasing-social/"});
   sections+=sec("💰 Aides financières et accompagnements sur votre territoire",aides);
   sections+=sec("🎓 Se former et s'initier",[
     {l:"Parcours Déclic Mobilités — Réseau Alliances",u:"https://www.declic-mobilites.org/"},
     {l:"Réseau Alliances — formations et webinaires",u:"https://www.reseau-alliances.org/"},
     {l:"Newsletter Déclic Mobilités",u:"https://www.declic-mobilites.org/inscription-newsletter"},
     {l:"Newsletter 2R Aventure",u:"https://2raventure.com/newsletter/"},
+    {l:"Newsletter employeurs pro-vélo (FUB — Fédération des usagers de la bicyclette)",u:"https://447a20d1.sibforms.com/serve/MUIFAGaaNTlpIxrXYWljinKjb-Xx2TV7p5rFA12II_V9OPsTB1NY2vEV_QJRlRwDi7MgdCBJ1RwEeV5Amc_b6Y31Jj1GwCAmvAJDWjjoqwCARg8AYZZTKTiVl78PpP06mTxhgxgo013Kn0XUFjZ-RVVMauYFQWt2esC0dXpp7X7pYESNS8VlDZ9IGCXawdKGOdEaYEGcR6Z2yV-x"},
+    {l:"Livre blanc FAVE — conversion de salaire en mobilité",u:"https://lnkd.in/p/e4ZZkSiS"},
   ]);
   sections+=sec("📋 Réaliser un Plan de mobilité employeur",[
     {l:"Outils et templates — 2R Aventure",u:"https://2raventure.com/plan-de-mobilite/"},
     {l:"ADEME — centre de ressources Plan de mobilité employeur",u:"https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/"},
-    {l:"Guide Plan de mobilité employeur — 1kmàpied",u:"https://www.1kmapied.com/post/plan-mobilite-employeur-5"},
     {l:"Accords de mobilité signés — Légifrance",u:"https://www.legifrance.gouv.fr/search?fonds=ACCO&searchField=ALL&query=v%C3%A9lo+forfait+mobilit%C3%A9&page=1&init=true"},
     {l:"Portail RSE — obligations extra-financières",u:"https://portail-rse.beta.gouv.fr/"},
   ]);
   sections+=sec("🚴 Animer la démarche mobilité",[
+    {l:"Plan vélo en entreprise — 2R Aventure",u:"https://2raventure.com/2026/05/05/mettre-en-place-un-plan-velo-en-entreprise/"},
     {l:"Challenge Mobilité Hauts-de-France",u:"https://challenge-mobilite-hdf.fr/"},
+    {l:"Heureux Cyclage — ateliers vélo participatifs (FUB)",u:"https://www.heureux-cyclage.org/les-ateliers-en-france.html"},
     {l:"Mai à Vélo 2026",u:"https://maiavelo.fr/"},
     {l:"Jeu des 7 familles de la mobilité durable (2R Aventure)",u:"https://2raventure.com/produit/jeu-des-7-familles-de-la-mobilite-durable/"},
     {l:"Citiz — autopartage (réseau national)",u:"https://www.citiz.coop/"},
     {l:"Karos — covoiturage domicile-travail",u:"https://www.karos.fr/"},
-    {l:"BlaBlaCar Daily",u:"https://www.blablacardaily.com/"},
     {l:"Ecov — lignes de covoiturage",u:"https://www.ecov.fr/"},
     {l:"Mobicoop — covoiturage associatif",u:"https://www.mobicoop.fr/"},
     (mel?{l:"MobiliMEL — dispositifs sociaux mobilité (Métropole Européenne de Lille)",u:"https://mobilimel.fr/"}:null),
   ].filter(Boolean));
+  sections+=sec("🛠️ Outils gratuits",[
+    {l:"Leasing social — explications et simulateur ",u:"https://2raventure.com/2026/08/17/leasing-social/"},
+    {l:"Simulateur leasing social — pour vos salariés",u:"https://2raventure.github.io/cout-vehicule/calculateur_mobilite_LS"},
+    {l:"Livre blanc FAVE — conversion de salaire en mobilité",u:"https://lnkd.in/p/e4ZZkSiS"},
+    {l:"Calculateur conversion salariale vélo (2R Aventure)",u:"https://2raventure.github.io/calcul-cout-velo/conversion-salariale.html"},
+  ]);
   sections+=sec("🏷️ Labellisation et réseaux professionnels",[
     {l:"Label Employeur pro-Vélo",u:"https://employeurprovelo.fr/"},
     {l:"Bipiz — entreprises responsables",u:"https://www.bipiz.org/fr/"},
@@ -1326,7 +1443,7 @@ function renderFAQ(){
     {q:"Qu’est-ce qu’un Plan de mobilité employeur ?",a:"Le Plan de mobilité employeur optimise les déplacements liés au travail en termes de coût, qualité de vie et impact carbone. Il comprend un diagnostic, une enquête, un plan d’actions et un suivi. Obligatoire dans certaines zones (Métropole Européenne de Lille +250 salariés), recommandé partout. <a href='https://2raventure.com/plan-de-mobilite/' target='_blank'>→ Outils 2R Aventure</a>"},
     {q:"Qu’est-ce qu’un accord de mobilité ?",a:"Négocié lors des Négociations Annuelles Obligatoires pour les structures de plus de 50 salariés. Définit les engagements (Forfait Mobilité Durable, transports en commun, covoiturage…). <a href='https://www.1kmapied.com/post/accord-mobilite-entreprise' target='_blank'>→ Exemples d’accords</a>"},
     {q:"Le Forfait Mobilité Durable est-il obligatoire ?",a:isPub?"<strong>Oui pour la fonction publique</strong>. <a href='https://www.fonction-publique.gouv.fr/etre-agent-public/ma-remuneration/les-elements-accessoires-de-remuneration/forfait-mobilite-durable-fmd' target='_blank'>→ Détail</a>":"<strong>Facultatif pour le secteur privé</strong>, fortement recommandé. Jusqu’à 600 €/an exonéré de charges. <a href='https://www.francemobilites.fr/actualites/barometre-fmd-edition-2025' target='_blank'>→ Baromètre 2025</a> · <a href='https://entreprendre.service-public.gouv.fr/vosdroits/F33808' target='_blank'>→ Conditions</a>"},
-    {q:"Qu’est-ce que le leasing social ?",a:"Permet à des personnes à revenus modestes d’accéder à un véhicule électrique à moins de 100 €/mois. Levier pour l’accès à l’emploi. <a href='https://www.ecologie.gouv.fr/leasing-social' target='_blank'>→ Leasing social</a>"},
+    {q:"Qu’est-ce que le leasing social ?",a:"Permet à des personnes à revenus modestes d’accéder à un véhicule électrique à moins de 100 €/mois. Levier fort pour l’accès à l’emploi. Mobilisez vos salariés éligibles avec un kit de com’ clé en main. <a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank'>→ Kit employeur 2R Aventure</a> · <a href='https://2raventure.github.io/cout-vehicule/calculateur_mobilite_LS' target='_blank'>→ Simulateur salarié</a>"},
     {q:"Quelles sont les limites de ce calculateur ?",a:"Ratios de simplification basés sur les statistiques nationales 2024. Intègre flotte, parking, transports en commun, indemnités kilométriques, Forfait Mobilité Durable, versement mobilité, frais de déplacement et coûts de ressources humaines. Ne couvre pas l’accidentologie. <strong>Pour des chiffres précis, réalisez un Plan de mobilité employeur complet.</strong>"},
     {q:"Comment la CARSAT peut-elle aider ?",a:"La CARSAT accompagne sur la prévention des risques routiers. Faites un bilan des accidents de trajet (obligatoire) et rapprochez-vous de la CARSAT régionale si besoin."},
   ];
