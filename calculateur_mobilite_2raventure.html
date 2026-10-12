@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Asap:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--v:#004A4F;--t:#3ECDC5;--cr:#FBF7F3;--tx:#4D4D4D;--rd:#E05252;--or:#F08030;--gn:#2e7d32;--vc:#E8F5F4;--bd:#D0E8E6;--sh:0 2px 14px rgba(0,74,79,.09)}
+:root{--v:#004A4F;--t:#3ECDC5;--cr:#FBF7F3;--tx:#4D4D4D;--rd:#E05252;--or:#F08030;--gn:#2e7d32;--vc:#E8F5F4;--bd:#D0E8E6;--sh:0 2px 14px rgba(0,74,79,.09);color-scheme:light}
 body{font-family:'Asap',sans-serif;background:var(--cr);color:var(--tx);font-size:15px;line-height:1.55}
 a{color:var(--t);text-decoration:none}a:hover{text-decoration:underline}
 .hdr{background:var(--v);color:#fff;padding:11px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.2)}
@@ -50,10 +51,10 @@ a{color:var(--t);text-decoration:none}a:hover{text-decoration:underline}
 }
 .fg{display:flex;flex-direction:column;gap:4px}
 .fg label{font-size:.73rem;font-weight:600;color:var(--v);text-transform:uppercase;letter-spacing:.3px}
-.fg input,.fg select{border:1.5px solid var(--bd);border-radius:7px;padding:7px 9px;font-family:'Asap',sans-serif;font-size:.87rem;background:#fff;transition:border .2s}
+.fg input,.fg select{border:1.5px solid var(--bd);border-radius:7px;padding:7px 9px;font-family:'Asap',sans-serif;font-size:.87rem;background:#fff;color:var(--tx);transition:border .2s}
 .fg input:focus,.fg select:focus{outline:none;border-color:var(--t)}
-.hint{font-size:.7rem;color:#aaa;font-style:italic}
-.ns{font-size:.67rem;color:#c0c0c0;font-style:italic}
+.hint{font-size:.7rem;color:#777;font-style:italic}
+.ns{font-size:.67rem;color:#888;font-style:italic}
 .sg{margin-bottom:11px}
 .sl{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
 .sl span:first-child{font-size:.8rem;font-weight:500}
@@ -262,18 +263,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
       </span>
       <span class="sv" id="nb_sal_v">50</span>
     </div>
-    <input type="range" id="nb_sal_r" min="1" max="500" value="50" step="1" oninput="syncSal('r')">
+    <input type="range" id="nb_sal_r" min="0" max="500" value="50" step="1" oninput="syncSal('r')">
     <div style="margin-top:5px;display:flex;align-items:center;gap:8px">
       <span class="ns">Valeur précise :</span>
-      <input type="number" id="nb_sal_n" value="50" min="1" max="5000" style="width:78px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.83rem;font-family:'Asap',sans-serif" oninput="syncSal('n')">
+      <input type="number" id="nb_sal_n" value="50" min="0" max="5000" style="width:78px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.83rem;font-family:'Asap',sans-serif;color:#4D4D4D;background:#fff" oninput="syncSal('n')">
     </div>
   </div>
   <div class="sg">
     <div class="sl"><span>Salaire brut moyen mensuel</span><span class="sv" id="sal_moy_v">2 400 €</span></div>
-    <input type="range" id="sal_moy_r" min="1200" max="8000" value="2400" step="50" oninput="syncSalMoy('r')">
+    <input type="range" id="sal_moy_r" min="500" max="8000" value="2400" step="50" oninput="syncSalMoy('r')">
     <div style="margin-top:4px;display:flex;align-items:center;gap:8px">
       <span class="ns">Valeur précise :</span>
-      <input type="number" id="sal_moy_n" value="2400" min="1200" max="20000" step="50" style="width:88px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.83rem;font-family:'Asap',sans-serif" oninput="syncSalMoy('n')">
+      <input type="number" id="sal_moy_n" value="2400" min="500" max="20000" step="50" style="width:88px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.83rem;font-family:'Asap',sans-serif;color:#4D4D4D;background:#fff" oninput="syncSalMoy('n')">
       <span class="ns">€/mois brut — Nationale 2024 : 2 400 €</span>
     </div>
   </div>
@@ -358,7 +359,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
   <div class="ct">📍 Distance domicile–travail</div>
   <div class="sg">
     <div class="sl"><span>Distance moyenne aller (km)</span><span class="sv" id="dist_v">12 km</span></div>
-    <input type="range" id="dist_r" min="1" max="60" value="12" step="1" oninput="onDist()">
+    <input type="range" id="dist_r" min="0" max="60" value="12" step="1" oninput="onDist()">
     <div class="ns" style="margin-top:3px">📊 Moyenne nationale 2024 : 12 km (aller)</div>
   </div>
   <div id="dist_tip" class="al al-i" style="font-size:.75rem"></div>
@@ -371,7 +372,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
   </div>
   <div class="sg">
     <div class="sl"><span>Jours télétravail / semaine / personne</span><span class="sv" id="tt_j_v">1 j</span></div>
-    <input type="range" id="tt_j_r" min="1" max="5" value="1" step="1" oninput="calc()">
+    <input type="range" id="tt_j_r" min="0" max="5" value="1" step="1" oninput="calc()">
   </div>
   <div class="al al-i" style="font-size:.75rem">
     <span class="al-ico">💡</span>
@@ -394,7 +395,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
     <input type="range" id="nb_veh_r" min="0" max="200" value="5" step="1" oninput="syncVeh()">
     <div style="margin-top:4px;display:flex;align-items:center;gap:8px">
       <span class="ns">Valeur précise :</span>
-      <input type="number" id="nb_veh_n" value="5" min="0" style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif" oninput="syncVeh('n')">
+      <input type="number" id="nb_veh_n" value="5" min="0" style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif;color:#4D4D4D;background:#fff" oninput="syncVeh('n')">
       <span class="ns">📊 Référence : ~1 véhicule / 10 salariés</span>
     </div>
   </div>
@@ -442,7 +443,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
     <input type="range" id="nb_park_r" min="0" max="500" value="0" step="1" oninput="syncPark()">
     <div style="margin-top:4px;display:flex;align-items:center;gap:8px">
       <span class="ns">Valeur précise :</span>
-      <input type="number" id="nb_park_n" value="0" min="0" style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif" oninput="syncPark('n')">
+      <input type="number" id="nb_park_n" value="0" min="0" style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif;color:#4D4D4D;background:#fff" oninput="syncPark('n')">
     </div>
   </div>
   <div id="park_loue_row" style="display:none" class="fr">
@@ -475,7 +476,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
     <input type="range" id="nb_park_velo_r" min="0" max="200" value="0" step="1" oninput="syncVeloPark()">
     <div style="margin-top:4px;display:flex;align-items:center;gap:8px">
       <span class="ns">Valeur précise :</span>
-      <input type="number" id="nb_park_velo_n" value="0" min="0" style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif" oninput="syncVeloPark('n')">
+      <input type="number" id="nb_park_velo_n" value="0" min="0" style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif;color:#4D4D4D;background:#fff" oninput="syncVeloPark('n')">
     </div>
   </div>
   <div id="velo_park_info" class="al al-i" style="font-size:.75rem;margin-top:5px;display:none">
@@ -576,8 +577,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
     <span class="tw"><span class="ti">?</span><span class="tb">Le turn-over mesure le taux de renouvellement des salariés dans une année. Il comprend les départs volontaires, les licenciements et fins de contrat. Un turn-over élevé génère des coûts de recrutement et de formation importants. On estime qu'un remplacement coûte 6 à 9 mois de salaire brut.</span></span>
   </div>
   <div class="sg">
-    <div class="sl"><span>Taux de turn-over actuel (%/an)</span><span class="sv" id="to_v">15%</span></div>
-    <input type="range" id="to_tx" min="0" max="60" value="15" step="0.5" oninput="onTO()">
+    <div class="sl"><span>Taux de turn-over actuel (%/an)</span><span class="sv" id="to_v">0%</span></div>
+    <input type="range" id="to_tx" min="0" max="60" value="0" step="0.5" oninput="onTO()">
     <div class="ns" style="margin-top:3px">📊 Turn-over naturel : 10–15%/an. Seuil d'alerte : 20%.</div>
   </div>
   <div id="to_alert" style="display:none;margin-top:5px"></div>
@@ -594,8 +595,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
 <div class="card">
   <div class="ct">🏥 Absentéisme</div>
   <div class="sg">
-    <div class="sl"><span>Taux d'absentéisme (%/an)</span><span class="sv" id="abs_v">4%</span></div>
-    <input type="range" id="abs_tx" min="0" max="20" value="4" step="0.5" oninput="calc()">
+    <div class="sl"><span>Taux d'absentéisme (%/an)</span><span class="sv" id="abs_v">0%</span></div>
+    <input type="range" id="abs_tx" min="0" max="20" value="0" step="0.5" oninput="calc()">
     <div class="ns" style="margin-top:3px">📊 Moyenne nationale : 4–5%/an</div>
   </div>
   <div class="al al-i" style="font-size:.75rem">
@@ -745,12 +746,12 @@ function isGrn(cp){return dp(cp)==="38";}
 var nb_sal=50, sal_moy=2400, secteur="gen", cp_val="", cp_aom=null;
 var vm_taux_custom=null;
 var pm_voit=70, pm_tc=20, pm_velo=4, pm_cov=4, pm_aut=2;
-var dist_val=12, tt_pct=0, tt_j=1;
+var dist_val=0, tt_pct=0, tt_j=0;
 var nb_veh=5, km_an=11600, pct_e=46.7, pct_d=48.3, pct_el=5.0;
 var nb_park=30, type_park="surface", loyer_park=130;
 var rbt_tc=50, abo_tc=65, pct_ik=15, km_ik=3000, tx_ik=0.32;
 var fmd_mt=0, fmd_adh=20, dep_bgt=300, dep_nb=5;
-var to_tx=15, to_mob=20, abs_tx=4;
+var to_tx=0, to_mob=20, abs_tx=0;
 var C={};
 var ECO_ITEMS=[];  // built once, reused
 // Vélo : moyenne pondérée arceaux couverts 80€ / abris 650€ / consignes 1200€ — cofinancement moyen 40%
@@ -853,7 +854,7 @@ function updateModalTips(){
   if(t.length)el.innerHTML="<span class='al-ico'>💡</span><span>"+t.join(" ")+"</span>";
 }
 function onDist(){
-  dist_val=parseInt(document.getElementById("dist_r").value)||12;
+  dist_val=parseInt(document.getElementById("dist_r").value)||0;
   document.getElementById("dist_v").textContent=dist_val+" km";
   var tip=document.getElementById("dist_tip");
   if(dist_val<=12)tip.innerHTML="<span class='al-ico'>🚲</span><span>Distance ≤12 km : <strong>le vélo est pertinent</strong>.</span>";
@@ -953,7 +954,7 @@ function updateOblig0(){
 
 // ─── MAIN CALC ────────────────────────────────────────────────────────────
 function calc(){
-  nb_sal=Math.max(1,parseInt(document.getElementById("nb_sal_r").value)||50);
+  nb_sal=Math.max(0,parseInt(document.getElementById("nb_sal_r").value)||0);
   sal_moy=parseFloat(document.getElementById("sal_moy_n").value)||2400;
   secteur=document.getElementById("secteur").value;
   nb_veh=parseInt(document.getElementById("nb_veh_r").value)||0;
@@ -969,12 +970,12 @@ function calc(){
   fmd_adh=parseFloat(document.getElementById("fmd_adh").value)||20;
   dep_bgt=parseFloat(document.getElementById("dep_bgt").value)||300;
   dep_nb=parseInt(document.getElementById("dep_nb").value)||0;
-  to_tx=parseFloat(document.getElementById("to_tx").value)||15;
-  to_mob=parseFloat(document.getElementById("to_mob").value)||20;
-  abs_tx=parseFloat(document.getElementById("abs_tx").value)||4;
+  to_tx=parseFloat(document.getElementById("to_tx").value)||0;
+  to_mob=parseFloat(document.getElementById("to_mob").value)||0;
+  abs_tx=parseFloat(document.getElementById("abs_tx").value)||0;
   tt_pct=parseFloat(document.getElementById("tt_pct_r").value)||0;
-  tt_j=parseInt(document.getElementById("tt_j_r").value)||1;
-  dist_val=parseInt(document.getElementById("dist_r").value)||12;
+  tt_j=parseInt(document.getElementById("tt_j_r").value)||0;
+  dist_val=parseInt(document.getElementById("dist_r").value)||0;
 
   document.getElementById("nb_sal_v").textContent=nb_sal;
   document.getElementById("sal_moy_v").textContent=sal_moy.toLocaleString("fr-FR")+" €";
@@ -1387,7 +1388,7 @@ function renderRes(){
   var _aom=getAOMDirEntry(cp_val,cp_aom?cp_aom.name:null);
   if(_aom&&_aom.length)sections+=renderAOMDirCard(_aom);
   aides.push({l:"mesaidesvelo.fr — toutes les aides à l'achat d'un vélo",u:"https://mesaidesvelo.fr/"});
-  aides.push({l:"Leasing social véhicule électrique",u:"https://2raventure.com/2026/08/17/leasing-social/"});
+  aides.push({l:"Leasing social véhicule électrique — kit de com' employeur (2R Aventure)",u:"https://2raventure.com/2026/08/17/leasing-social/"});
   sections+=sec("💰 Aides financières et accompagnements sur votre territoire",aides);
   sections+=sec("🎓 Se former et s'initier",[
     {l:"Parcours Déclic Mobilités — Réseau Alliances",u:"https://www.declic-mobilites.org/"},
@@ -1416,7 +1417,7 @@ function renderRes(){
     (mel?{l:"MobiliMEL — dispositifs sociaux mobilité (Métropole Européenne de Lille)",u:"https://mobilimel.fr/"}:null),
   ].filter(Boolean));
   sections+=sec("🛠️ Outils gratuits",[
-    {l:"Leasing social — explications et simulateur ",u:"https://2raventure.com/2026/08/17/leasing-social/"},
+    {l:"Leasing social — kit de communication employeur (2R Aventure)",u:"https://2raventure.com/2026/08/17/leasing-social/"},
     {l:"Simulateur leasing social — pour vos salariés",u:"https://2raventure.github.io/cout-vehicule/calculateur_mobilite_LS"},
     {l:"Livre blanc FAVE — conversion de salaire en mobilité",u:"https://lnkd.in/p/e4ZZkSiS"},
     {l:"Calculateur conversion salariale vélo (2R Aventure)",u:"https://2raventure.github.io/calcul-cout-velo/conversion-salariale.html"},
@@ -1543,10 +1544,12 @@ function doPrint(){
 (function(){
   document.getElementById("vm_taux_r").value=2.0;
   document.getElementById("vm_taux_custom_v").textContent="2.00%";
-  onDist();updateModalTips();onParkType();calc();
+  onDist();updateModalTips();onParkType();onTO();calc();
 })();
 
 </script>
 
 </body>
 </html>
+
+</body></html>
