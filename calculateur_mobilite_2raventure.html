@@ -3,8 +3,9 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Calculateur Mobilité Employeur — 2R Aventure</title>
-<link href="https://fonts.googleapis.com/css2?family=Asap:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>CalMob — Calculateur Mobilité Employeur</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiI+PHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9IiMwMDRBNEYiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCAxOCkiPjxwYXRoIGQ9Ik05LjIyIDQyIEEyNCAyNCAwIDEgMSA1MC43OCA0MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM0VDREM1IiBzdHJva2Utd2lkdGg9IjExIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iMzAiIHkxPSIzMCIgeDI9IjQzIiB5Mj0iMjAiIHN0cm9rZT0iI0YwODAzMCIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9zdmc+">
+<link href="https://fonts.googleapis.com/css2?family=Asap:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--v:#004A4F;--t:#3ECDC5;--cr:#FBF7F3;--tx:#4D4D4D;--rd:#E05252;--or:#F08030;--gn:#2e7d32;--vc:#E8F5F4;--bd:#D0E8E6;--sh:0 2px 14px rgba(0,74,79,.09);color-scheme:light}
@@ -205,11 +206,29 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
 .dir-cov{background:#fff8e1;color:#e65100}
 .dir-pdme{background:var(--vc);color:var(--v)}
 .dir-anim{background:#f3e5f5;color:#6a1b9a}
+@font-face{font-family:'Marianne';src:url(data:font/woff2;base64,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) format('woff2');font-weight:400;font-style:normal;font-display:swap}
+.cm-logo{display:inline-flex;align-items:baseline;font-family:'Asap',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1;color:#FBF7F3}
+.cm-logo svg{width:.59em;height:.59em;margin:0 .02em;flex-shrink:0;overflow:visible}
+.hdr-title{display:flex;align-items:center;gap:12px}
+.hdr-sub{font-size:.68rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.hero-sub{font-size:.78rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--t);margin-bottom:12px}
+.ftr{background:#f5f5f5;border-top:2px solid var(--bd);padding:22px 20px 18px;margin-top:32px;font-family:'Asap',sans-serif;color:#555;font-size:.83rem}
+.ftr-grid{max-width:840px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:24px;align-items:center}
+.ftr-who strong{display:block;color:var(--v);font-size:.93rem;margin-bottom:4px}
+.ftr-who p{line-height:1.6}
+.ftr-who p a{color:var(--v);font-weight:600}
+.ftr-res{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 12px;border-radius:20px;background:var(--vc);border:1.5px solid var(--bd);color:var(--v);font-weight:600;font-size:.78rem}
+.ftr-res:hover{background:var(--t);border-color:var(--t);color:#fff;text-decoration:none}
+.ftr-fund{display:flex;justify-content:flex-end}
+.ftr-fund a{display:inline-flex;flex-direction:column;align-items:flex-start;gap:6px;text-decoration:none;background:#fff;border:1.5px solid var(--bd);border-radius:10px;padding:10px 16px;transition:box-shadow .2s}
+.ftr-fund a:hover{box-shadow:0 2px 10px rgba(0,74,79,.15);text-decoration:none}
+.ftr-fund-lbl{font-family:'Marianne',Arial,sans-serif;font-weight:400;font-size:.8rem;color:#161616;border-bottom:1px solid #161616;padding-bottom:5px;width:100%;display:block}
+@media(max-width:600px){.hdr-sub{display:none}.ftr-grid{grid-template-columns:1fr;text-align:center;gap:16px}.ftr-fund{justify-content:center}}
 </style>
 </head>
 <body>
 <div class="hdr">
-  <div class="hdr-title">🏢 Calculateur Mobilité Employeur</div>
+  <div class="hdr-title"><span class="cm-logo" role="img" aria-label="CalMob" style="font-size:1.6rem"><span aria-hidden="true">CalM</span><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M9.22 42 A24 24 0 1 1 50.78 42" fill="none" stroke="#FBF7F3" stroke-width="8" stroke-linecap="round"/><path d="M30 6 A24 24 0 0 1 50.78 42" fill="none" stroke="#3ECDC5" stroke-width="8" stroke-linecap="round"/><line x1="38.5" y1="23.8" x2="46.5" y2="18" stroke="#FBF7F3" stroke-width="5" stroke-linecap="round"/><circle cx="30" cy="30" r="10" fill="#F08030"/><text x="30" y="35" text-anchor="middle" font-family="Asap, sans-serif" font-weight="800" font-size="14.5" fill="#004A4F">€</text></svg><span aria-hidden="true">b</span></span><span class="hdr-sub">Calculateur mobilité employeur</span></div>
 </div>
 <div class="stepper">
   <button class="stp active" id="sb0" onclick="goTo(0)"><span class="sn">0</span><span class="stp-txt">Accueil</span></button>
@@ -224,7 +243,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;heigh
 <div class="scr active" id="sc0">
 <div class="pbw"><div class="pb" style="width:0%"></div></div>
 <div class="landing-hero">
-  <h1>Calculateur Mobilité Employeur</h1>
+  <h1 style="margin-bottom:4px"><span class="cm-logo" role="img" aria-label="CalMob" style="font-size:3.3rem"><span aria-hidden="true">CalM</span><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M9.22 42 A24 24 0 1 1 50.78 42" fill="none" stroke="#FBF7F3" stroke-width="8" stroke-linecap="round"/><path d="M30 6 A24 24 0 0 1 50.78 42" fill="none" stroke="#3ECDC5" stroke-width="8" stroke-linecap="round"/><line x1="38.5" y1="23.8" x2="46.5" y2="18" stroke="#FBF7F3" stroke-width="5" stroke-linecap="round"/><circle cx="30" cy="30" r="10" fill="#F08030"/><text x="30" y="35" text-anchor="middle" font-family="Asap, sans-serif" font-weight="800" font-size="14.5" fill="#004A4F">€</text></svg><span aria-hidden="true">b</span></span></h1>
+  <div class="hero-sub">Calculateur mobilité employeur</div>
   <p>Combien vous coûte vraiment la mobilité ? Quelles économies pouvez-vous réaliser ? En 5 minutes, obtenez un diagnostic personnalisé et les ressources adaptées à votre territoire.</p>
   <button class="btn btn-t" onclick="goTo(1)" style="font-size:.98rem;padding:11px 28px">Démarrer mon diagnostic →</button>
 </div>
@@ -1545,15 +1565,16 @@ function doPrint(){
 
 </script>
 
-<footer style="background:#f5f5f5;border-top:2px solid var(--bd);padding:28px 20px 20px;margin-top:40px;text-align:center;font-family:'Asap',sans-serif;color:#555;font-size:.85rem">
-  <div style="max-width:820px;margin:0 auto">
-    <div style="margin-bottom:18px">
-      <strong style="color:var(--v);font-size:.95rem">Qui a conçu cet outil ?</strong><br>
-      <span style="line-height:1.7">CalMob est conçu par <a href="https://2raventure.com/" target="_blank" style="color:var(--v);font-weight:600">2R Aventure</a>, <a href="https://www.ecologie.gouv.fr/" target="_blank" style="color:var(--v);font-weight:600">la DGITM</a>, <a href="https://www.cerema.fr/" target="_blank" style="color:var(--v);font-weight:600">le CEREMA</a>, <a href="https://www.1kmapied.com/" target="_blank" style="color:var(--v);font-weight:600">1kmàpied</a> et l'ADEME dans le cadre d'un commun soutenu par l'ADEME.</span>
+<footer class="ftr">
+  <div class="ftr-grid">
+    <div class="ftr-who">
+      <strong>Qui a conçu cet outil ?</strong>
+      <p>CalMob est conçu par <a href="https://2raventure.com/" target="_blank">2R Aventure</a>, <a href="https://www.ecologie.gouv.fr/" target="_blank">la DGITM</a>, <a href="https://www.cerema.fr/" target="_blank">le CEREMA</a>, <a href="https://www.1kmapied.com/" target="_blank">1kmàpied</a> et l'ADEME dans le cadre d'un commun soutenu par l'ADEME.</p>
+      <a class="ftr-res" href="https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/" target="_blank">📚 Centre de ressources ADEME →</a>
     </div>
-    <div style="margin-top:16px">
-      <a href="https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/" target="_blank" style="display:inline-flex;flex-direction:column;align-items:flex-start;gap:6px;text-decoration:none;color:#333;background:#fff;border:1.5px solid var(--bd);border-radius:10px;padding:12px 18px;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 2px 10px rgba(0,74,79,.15)'" onmouseout="this.style.boxShadow='none'">
-        <span style="font-size:.72rem;color:#888;font-family:'Asap',sans-serif;border-bottom:1px solid #ddd;padding-bottom:6px;width:100%;display:block">Financé par</span>
+    <div class="ftr-fund">
+      <a href="https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/" target="_blank" aria-label="Financé par la République française et l'ADEME">
+        <span class="ftr-fund-lbl">Financé par</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="132" height="117" viewBox="0 0 132 117" fill="none" style="display:block;flex-shrink:0">
   <rect width="55" height="20" fill="white"/>
   <path d="M17.7649 17.5888C17.7716 17.5888 17.7782 17.579 17.7782 17.579C17.8313 17.5397 17.8844 17.4907 17.9309 17.4319C17.9243 17.4319 17.9176 17.4319 17.911 17.422C17.8645 17.4711 17.8114 17.5299 17.7649 17.5888Z" fill="#000091"/>
