@@ -801,6 +801,8 @@ function showAOM(aom){
 }
 function showTC(cp){
   var tc=TC_DATA[dp(cp)];var box=document.getElementById("tc_box");
+  // Exception CASA : réseau Envibus (et non Lignes d'Azur qui est le réseau de Nice Métropole)
+  if(cp_aom&&cp_aom.name==="CA de Sophia Antipolis"){tc={name:"Envibus",url:"https://www.envibus.fr/"};}
   if(tc){box.classList.add("vis");document.getElementById("tc_name").textContent=tc.name;document.getElementById("tc_url").href=tc.url;}
   else box.classList.remove("vis");
 }
@@ -1327,7 +1329,7 @@ function renderAOMDirCard(entries){
     }
     h+="</div>";
   });
-  h+="<div style='font-size:.7rem;color:#aaa;font-style:italic;margin-top:4px'>Source\u00a0: annuaire des autorit\u00e9s organisatrices de mobilit\u00e9 \u2014 1km\u00e0pied &amp; 2R Aventure (2024)</div>";
+  h+="<div style='font-size:.7rem;color:#aaa;font-style:italic;margin-top:4px'>Source\u00a0: 2R Aventure (2024)</div>";
   h+="</div>";
   return h;
 }
