@@ -7,11 +7,18 @@ Collection of standalone, self-contained HTML widgets (vanilla JS + inline CSS, 
 | File | Purpose |
 |------|---------|
 | `calculateur_mobilite_2raventure.html` | **Main tool — "CalMob / Bilan Mobilité Employeur"**. 7-step wizard (Accueil → Structure → Déplacements → Flotte & Budget → RH → Contact → Bilan) producing an employer mobility assessment: estimated mobility costs, a savings action plan, and regulatory obligations (PDME). Embeds French reference datasets as JSON: postal codes, departments, AOM/intercommunalités (BANATIC) and public transport networks. |
-| `calculateur_mobilite_LS.html` | **Social leasing ("leasing social") wizard**. Eligibility check for the ~95 €/month EV leasing scheme, alternatives for short trips (bike), and guided dossier preparation. |
-| `calculateur_mobilite_salaries.html` | **Employee mobility budget calculator**. Simulates the real cost of a personal vehicle, compares alternatives (transit, bike, carpooling/car-sharing), checks social-leasing eligibility and available subsidies. |
-| `mobilite_etudiante_parents.html` | **Student mobility variant**, aimed at students and their parents: cost of a student car vs. alternatives, plus a pros/cons section for parents. |
+
+### Archived (`archives/`)
+
+Older single-purpose widgets kept for reference — no longer maintained.
+
+| File | Purpose |
+|------|---------|
+| `archives/calculateur_mobilite_LS.html` | **Social leasing ("leasing social") wizard**. Eligibility check for the ~95 €/month EV leasing scheme, alternatives for short trips (bike), and guided dossier preparation. |
+| `archives/calculateur_mobilite_salaries.html` | **Employee mobility budget calculator**. Simulates the real cost of a personal vehicle, compares alternatives (transit, bike, carpooling/car-sharing), checks social-leasing eligibility and available subsidies. |
+| `archives/mobilite_etudiante_parents.html` | **Student mobility variant**, aimed at students and their parents: cost of a student car vs. alternatives, plus a pros/cons section for parents. |
 | `archives/calculateur_mobilite_salarie_v2.html` | Minimal mode-comparison widget: annual cost across modes (solo car at 0.33 €/km, carpooling, transit, shared EV, classic/e-bike/cargo bike) driven by distance and work-days sliders. |
-| `calculateur_mobilite_v4.html` | Identical duplicate of `archives/calculateur_mobilite_salarie_v2.html`. |
+| `archives/calculateur_mobilite_v4.html` | Identical duplicate of `archives/calculateur_mobilite_salarie_v2.html`. |
 
 ## Tech notes
 
