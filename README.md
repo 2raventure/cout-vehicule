@@ -10,8 +10,8 @@ Collection of standalone, self-contained HTML widgets (vanilla JS + inline CSS, 
 | `calculateur_mobilite_LS.html` | **Social leasing ("leasing social") wizard**. Eligibility check for the ~95 €/month EV leasing scheme, alternatives for short trips (bike), and guided dossier preparation. |
 | `calculateur_mobilite_salaries.html` | **Employee mobility budget calculator**. Simulates the real cost of a personal vehicle, compares alternatives (transit, bike, carpooling/car-sharing), checks social-leasing eligibility and available subsidies. |
 | `mobilite_etudiante_parents.html` | **Student mobility variant**, aimed at students and their parents: cost of a student car vs. alternatives, plus a pros/cons section for parents. |
-| `calculateur_mobilite_salarie_v2.html` | Minimal mode-comparison widget: annual cost across modes (solo car at 0.33 €/km, carpooling, transit, shared EV, classic/e-bike/cargo bike) driven by distance and work-days sliders. |
-| `calculateur_mobilite_v4.html` | Identical duplicate of `calculateur_mobilite_salarie_v2.html`. |
+| `archives/calculateur_mobilite_salarie_v2.html` | Minimal mode-comparison widget: annual cost across modes (solo car at 0.33 €/km, carpooling, transit, shared EV, classic/e-bike/cargo bike) driven by distance and work-days sliders. |
+| `calculateur_mobilite_v4.html` | Identical duplicate of `archives/calculateur_mobilite_salarie_v2.html`. |
 
 ## Tech notes
 
