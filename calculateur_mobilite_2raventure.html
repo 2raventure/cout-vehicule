@@ -1822,25 +1822,26 @@
               <option value="loue">Loué / externalisé</option>
             </select>
           </div>
-          <div class="fg" id="park_proprio_row" style="display:none">
-            <label>L'entreprise est-elle propriétaire du parking ?
-              <span class="tw"><span class="ti">?</span><span class="tb">Si le parking est totalement amorti (construction ancienne), seuls les coûts d'entretien courant sont retenus (espaces verts, barrières, entretien du sol…). Si non amorti, le coût d'investissement est intégré sur 20 ans.</span></span>
-            </label>
-            <select id="park_proprio" onchange="calc()">
-              <option value="non">Non — loué ou à charge de tiers</option>
-              <option value="oui_actif">Oui — investissement non encore amorti</option>
-              <option value="oui_amorti">Oui — parking entièrement amorti</option>
-            </select>
-          </div>
         </div>
-        <div class="sg">
-          <div class="sl"><span>Nombre de places</span><span class="sv" id="nb_park_v">0</span></div>
+        <div class="sg" id="park_nb_row">
+          <div class="sl"><span>Nombre de places automobiles</span><span class="sv" id="nb_park_v">0</span></div>
           <input type="range" id="nb_park_r" min="0" max="500" value="0" step="1" oninput="syncPark()">
           <div style="margin-top:4px;display:flex;align-items:center;gap:8px">
             <span class="ns">Valeur précise :</span>
             <input type="number" id="nb_park_n" value="0" min="0"
               style="width:73px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.82rem;font-family:'Asap',sans-serif;color:#4D4D4D;background:#fff"
               oninput="syncPark('n')">
+          </div>
+        </div>
+        <div id="park_proprio_row" style="display:none;margin-top:8px">
+          <div class="fg">
+            <label>Le parking est-il amorti ?
+              <span class="tw"><span class="ti">?</span><span class="tb">Si le parking est totalement amorti (construction ancienne), seuls les coûts d'entretien courant sont retenus : espaces verts, barrières, entretien du sol. Si non amorti, l'investissement est intégré sur 20 ans.</span></span>
+            </label>
+            <select id="park_proprio" onchange="updateParkInfo();calc()">
+              <option value="oui_actif">Non amorti — investissement à intégrer (÷ 20 ans)</option>
+              <option value="oui_amorti">Totalement amorti — entretien forfaitaire uniquement</option>
+            </select>
           </div>
         </div>
         <div id="park_loue_row" style="display:none" class="fr">
@@ -1952,7 +1953,7 @@
         <div class="ct">✈️ Frais de déplacement <span class="ct-sub">(missions, voyages d'affaires)</span></div>
         <div class="al al-i" style="font-size:.76rem;margin-bottom:8px">
           <span class="al-ico">💡</span>
-          <span>La comptabilité de votre entreprise trace ce poste précisément. Renseignez directement le budget annuel total à l'échelle du site.</span>
+          <span>La comptabilité de votre entreprise trace ce poste précisément. Renseignez directement le budget annuel total à l'échelle du site — <strong>indemnités kilométriques incluses</strong>.</span>
         </div>
         <div class="fr">
           <div class="fg">
@@ -1966,26 +1967,10 @@
         <input type="hidden" id="dep_nb" value="0">
       </div>
 
-      <div class="card">
-        <div class="ct">🚗 Indemnités kilométriques <span class="ct-sub">(déplacements professionnels en véhicule personnel)</span></div>
-        <div class="sg">
-          <div class="sl"><span>% de salariés remboursés en indemnité kilométrique voiture
-              <span class="tw"><span class="ti">?</span><span class="tb">Salariés utilisant leur véhicule personnel pour des déplacements professionnels, remboursés via indemnité kilométrique (IK). Distinct du trajet domicile-travail.</span></span>
-            </span><span class="sv" id="pct_ik_v">15%</span></div>
-          <input type="range" id="pct_ik" min="0" max="100" value="15" step="1" oninput="calc()">
-        </div>
-        <div class="fr">
-          <div class="fg">
-            <label>Km / salarié / an (indemnité kilométrique)</label>
-            <input type="number" id="km_ik" value="3000" step="100" oninput="calc()">
-          </div>
-          <div class="fg">
-            <label>Taux indemnité kilométrique (€/km)</label>
-            <input type="number" id="tx_ik" value="0.32" step="0.01" oninput="calc()">
-            <span class="ns">📊 Barème fiscal 2024</span>
-          </div>
-        </div>
-      </div>
+      <!-- IK fields hidden — included in dep_total -->
+      <input type="hidden" id="pct_ik" value="0">
+      <input type="hidden" id="km_ik" value="0">
+      <input type="hidden" id="tx_ik" value="0">
 
       <div class="br">
         <button class="btn btn-o" onclick="goTo(2)">← Retour</button>
@@ -2395,7 +2380,7 @@
         var lp = parseFloat((document.getElementById("loyer_park") || { value: "130" }).value) || 130;
         loyer_park = lp;
         if (type_park === "loue") el.innerHTML = "<span class='al-ico'>🅿️</span><span>Co\xfbt annuel\xa0: <strong>" + fmt(nb_park * lp * 12) + "</strong></span>";
-        else { var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; el.innerHTML = "<span class='al-ico'>🅿️</span><span>Co\xfbt annuel\xa0: <strong>" + fmt(nb_park * (pc.invest / 20 + pc.entretien)) + "</strong> (amort. 20\xa0ans)</span>"; }
+        else { var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio2 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; var cAnn = proprio2 === "oui_amorti" ? nb_park * pc.entretien : nb_park * (pc.invest / 20 + pc.entretien); var lblAmo = proprio2 === "oui_amorti" ? "amorti — entretien forfaitaire" : "amort. 20 ans + entretien"; el.innerHTML = "<span class='al-ico'>🅿️</span><span>Coût annuel\xa0: <strong>" + fmt(cAnn) + "</strong> (" + lblAmo + ")</span>"; }
       }
       function updateHuwart() {
         var hEl = document.getElementById("huwart_ob"); if (!hEl) return;
@@ -2429,7 +2414,7 @@
         var pc = PARK_COSTS[type_park] || PARK_COSTS.surface;
         // If amortized: only maintenance costs (green spaces, barriers, floor upkeep)
         var proprio = (document.getElementById("park_proprio") || {}).value || "oui_actif";
-        if (proprio === "oui_amorti") return nb_park * pc.entretien;
+        if (proprio === "oui_amorti") return nb_park * pc.entretien; // entretien forfaitaire uniquement
         return nb_park * (pc.invest / 20 + pc.entretien);
       }
       function onTO() {
@@ -2585,7 +2570,7 @@
             detail: "Part modale du covoiturage cible. Libère des places de stationnement et fidélise.",
             impl: ["Convention avec une plateforme de covoiturage", "Communication interne", "Incitation au premier trajet"],
             cur: cc, max: 30, unit: "%",
-            saving: function (v) { var dl = Math.max(0, v - cc); if (dl <= 0) return 0; var pl = Math.round(nb_park * (dl / 100) * 0.5); var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; return pl * (type_park === "loue" ? loyer_park * 12 : pc.invest / 20 + pc.entretien); },
+            saving: function (v) { var dl = Math.max(0, v - cc); if (dl <= 0) return 0; var pl = Math.round(nb_park * (dl / 100) * 0.5); var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio3 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; var cppl = type_park === "loue" ? loyer_park * 12 : (proprio3 === "oui_amorti" ? pc.entretien : pc.invest / 20 + pc.entretien); return pl * cppl; },
             cost: function (v) { return v > cc ? (nb_sal < 50 ? 3000 : nb_sal < 200 ? 6000 : 12000) : 0; },
             tools: [{ l: "Karos", u: "https://www.karos.fr/" }, { l: "Ecov — lignes de covoiturage", u: "https://www.ecov.fr/" }, { l: "PassPass Covoiturage", u: "https://www.passpasscovoiturage.fr/" }, { l: "Mobicoop", u: "https://www.mobicoop.fr/" }]
           },
@@ -2604,7 +2589,7 @@
             detail: "Nombre de places libérées via report modal (Plan de mobilité employeur).",
             impl: ["Réalisation d’un Plan de mobilité employeur", "Animation mobilité interne", "Communication"],
             cur: 0, max: Math.max(1, nb_park), unit: " places",
-            saving: function (v) { var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; return v * (type_park === "loue" ? loyer_park * 12 : pc.invest / 20 + pc.entretien); },
+            saving: function (v) { var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio4 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; return v * (type_park === "loue" ? loyer_park * 12 : (proprio4 === "oui_amorti" ? pc.entretien : pc.invest / 20 + pc.entretien)); },
             cost: function (v) { return v > 0 ? (nb_sal >= 250 ? 20000 : 10000) / 5 : 0; },
             tools: [{ l: "2R Aventure — outils Plan de mobilité employeur", u: "https://2raventure.com/plan-de-mobilite/" }, { l: "ADEME — mettre en place un Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }]
           },
@@ -2613,7 +2598,7 @@
             detail: "% du temps de travail en télétravail cible. Réduit stationnement, absentéisme et turn-over.",
             impl: ["Accord ou charte de télétravail", "Organisation des présences sur site", "Équipement des salariés"],
             cur: ttc, max: 80, unit: "%",
-            saving: function (v) { var dl = Math.max(0, v - ttc) / 100; var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var ps = Math.round(nb_park * dl * 0.3) * (type_park === "loue" ? loyer_park * 12 : pc.entretien); var rs = dl * nb_sal * (C.c_abs_mob || 0) / Math.max(1, nb_sal) * 0.2; return ps + rs; },
+            saving: function (v) { var dl = Math.max(0, v - ttc) / 100; var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio5 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; var cppl2 = type_park === "loue" ? loyer_park * 12 : (proprio5 === "oui_amorti" ? pc.entretien : pc.invest / 20 + pc.entretien); var ps = Math.round(nb_park * dl * 0.3) * cppl2; var rs = dl * nb_sal * (C.c_abs_mob || 0) / Math.max(1, nb_sal) * 0.2; return ps + rs; },
             cost: function (v) { return v > ttc ? 2000 : 0; },
             tools: []
           },
