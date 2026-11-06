@@ -1127,12 +1127,16 @@
         border: 1.5px solid var(--bd);
         border-radius: 10px;
         overflow: hidden;
-        margin-bottom: 12px
+        margin-bottom: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: 0 2px 8px rgba(0,74,79,.10)
       }
 
       .tab-btn {
         flex: 1;
-        padding: 8px 3px;
+        padding: 9px 3px;
         border: none;
         background: transparent;
         cursor: pointer;
@@ -1153,13 +1157,28 @@
         font-weight: 600
       }
 
-      .tab-pnl {
-        display: none
+      .tab-pnl { display: block; margin-bottom: 4px }
+
+      .bilan-section { scroll-margin-top: 56px }
+
+      .bilan-section-hdr {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: .82rem;
+        font-weight: 700;
+        color: var(--v);
+        padding: 10px 0 6px;
+        border-top: 2px solid var(--bd);
+        margin-top: 4px;
+        cursor: pointer;
+        user-select: none
       }
 
-      .tab-pnl.active {
-        display: block
-      }
+      .bilan-section-body { overflow: hidden; transition: max-height .35s ease }
+      .bilan-section-body.collapsed { max-height: 0 }
+      .bilan-chev { margin-left: auto; transition: transform .25s; font-size:.8rem }
+      .bilan-chev.up { transform: rotate(180deg) }
 
       .tsb {
         background: var(--v);
@@ -1249,6 +1268,7 @@
         .br,
         .np,
         .tab-bar,
+        .bilan-section-hdr,
         .eco-slider-row,
         .eco-tools-links {
           display: none !important
@@ -1261,8 +1281,10 @@
         }
 
         .tab-pnl,
+        .bilan-section-body,
         .eco-body {
-          display: block !important
+          display: block !important;
+          max-height: none !important
         }
 
         .card,
@@ -1710,20 +1732,17 @@
           déplacements utilisant un mode de transport particulier (voiture, vélo, transports en commun, marche…) par
           rapport au nombre total de déplacements — ici pour les trajets domicile/travail et les déplacements
           professionnels.</div>
-        <p style="font-size:.75rem;color:#999;margin-bottom:10px">Curseurs auto-rééquilibrés à 100%. <em>Données
-            nationales 2024 — <a href="https://www.insee.fr/fr/outil-interactif/5367857/tableau/80_AMN/84_MOB"
-              target="_blank" style="color:inherit;text-decoration:underline dotted"
-              title="Enquête INSEE — Mobilités des personnes">source INSEE ↗</a></em></p>
-        <div class="fl-row"><span class="fl-lbl">🚗 Voiture seule</span><input type="range" id="pm_voit" min="0"
-            max="100" value="70" step="1" oninput="onModal('voit')"><span class="fl-pct" id="pm_voit_v">70%</span></div>
-        <div class="fl-row"><span class="fl-lbl">🚌 Transport en commun</span><input type="range" id="pm_tc" min="0"
-            max="100" value="20" step="1" oninput="onModal('tc')"><span class="fl-pct" id="pm_tc_v">20%</span></div>
-        <div class="fl-row"><span class="fl-lbl">🚲 Vélo</span><input type="range" id="pm_velo" min="0" max="100"
-            value="4" step="1" oninput="onModal('velo')"><span class="fl-pct" id="pm_velo_v">4%</span></div>
-        <div class="fl-row"><span class="fl-lbl">🤝 Covoiturage</span><input type="range" id="pm_cov" min="0" max="100"
-            value="4" step="1" oninput="onModal('cov')"><span class="fl-pct" id="pm_cov_v">4%</span></div>
-        <div class="fl-row"><span class="fl-lbl">🚶 Autres</span><input type="range" id="pm_aut" min="0" max="100"
-            value="2" step="1" oninput="onModal('aut')"><span class="fl-pct" id="pm_aut_v">2%</span></div>
+        <p style="font-size:.75rem;color:#999;margin-bottom:10px">Saisissez vos parts modales — le total reste automatiquement à 100%. <em>Données nationales 2024 — <a href="https://www.insee.fr/fr/outil-interactif/5367857/tableau/80_AMN/84_MOB" target="_blank" style="color:inherit;text-decoration:underline dotted" title="Enquête INSEE — Mobilités des personnes">source INSEE ↗</a></em></p>
+        <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:8px;gap:6px;font-size:.76rem">
+          <span style="color:#888">Total&nbsp;:</span>
+          <span id="pm_total_badge" style="font-weight:700;padding:2px 10px;border-radius:12px;background:var(--vc);color:var(--v)">100%</span>
+        </div>
+        <style>.fl-num{width:52px;border:1.5px solid var(--bd);border-radius:7px;padding:3px 6px;font-size:.82rem;font-family:Asap,sans-serif;text-align:right;color:var(--v);font-weight:600;background:#fff}.fl-num:focus{outline:2px solid var(--t);border-color:var(--t)}</style>
+        <div class="fl-row"><span class="fl-lbl">🚗 Voiture seule</span><input type="range" id="pm_voit" min="0" max="100" value="70" step="1" oninput="onModalRange('voit')"><input type="number" class="fl-num" id="pm_voit_n" min="0" max="100" value="70" oninput="onModalNum('voit')"><span style="font-size:.8rem">%</span></div>
+        <div class="fl-row"><span class="fl-lbl">🚌 Transport en commun</span><input type="range" id="pm_tc" min="0" max="100" value="20" step="1" oninput="onModalRange('tc')"><input type="number" class="fl-num" id="pm_tc_n" min="0" max="100" value="20" oninput="onModalNum('tc')"><span style="font-size:.8rem">%</span></div>
+        <div class="fl-row"><span class="fl-lbl">🚲 Vélo</span><input type="range" id="pm_velo" min="0" max="100" value="4" step="1" oninput="onModalRange('velo')"><input type="number" class="fl-num" id="pm_velo_n" min="0" max="100" value="4" oninput="onModalNum('velo')"><span style="font-size:.8rem">%</span></div>
+        <div class="fl-row"><span class="fl-lbl">🤝 Covoiturage</span><input type="range" id="pm_cov" min="0" max="100" value="4" step="1" oninput="onModalRange('cov')"><input type="number" class="fl-num" id="pm_cov_n" min="0" max="100" value="4" oninput="onModalNum('cov')"><span style="font-size:.8rem">%</span></div>
+        <div class="fl-row"><span class="fl-lbl">🚶 Autres</span><input type="range" id="pm_aut" min="0" max="100" value="2" step="1" oninput="onModalRange('aut')"><input type="number" class="fl-num" id="pm_aut_n" min="0" max="100" value="2" oninput="onModalNum('aut')"><span style="font-size:.8rem">%</span></div>
         <div id="modal_tips" class="al al-i" style="display:none;margin-top:7px;font-size:.75rem"></div>
       </div>
       <div class="card">
@@ -1783,14 +1802,14 @@
             <span class="ns">📊 Nationale : 11 600 km/an</span>
           </div>
         </div>
-        <div style="font-size:.73rem;font-weight:600;color:var(--v);margin-bottom:6px">Répartition de la flotte <span
-            style="font-weight:400;color:#bbb">— auto-rééquilibrée</span></div>
-        <div class="fl-row"><span class="fl-lbl">⛽ Essence</span><input type="range" id="pct_e" min="0" max="100"
-            value="46.7" step="0.1" oninput="onFleet('e')"><span class="fl-pct" id="pct_e_v">46.7%</span></div>
-        <div class="fl-row"><span class="fl-lbl">🛢️ Diesel</span><input type="range" id="pct_d" min="0" max="100"
-            value="48.3" step="0.1" oninput="onFleet('d')"><span class="fl-pct" id="pct_d_v">48.3%</span></div>
-        <div class="fl-row"><span class="fl-lbl">⚡ Électrique</span><input type="range" id="pct_el" min="0" max="100"
-            value="5.0" step="0.1" oninput="onFleet('el')"><span class="fl-pct" id="pct_el_v">5.0%</span></div>
+        <div style="font-size:.73rem;font-weight:600;color:var(--v);margin-bottom:6px">Répartition de la flotte <span style="font-weight:400;color:#bbb">— mode suivant ajusté</span></div>
+        <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:8px;gap:6px;font-size:.76rem">
+          <span style="color:#888">Total&nbsp;:</span>
+          <span id="fl_total_badge" style="font-weight:700;padding:2px 10px;border-radius:12px;background:var(--vc);color:var(--v)">100%</span>
+        </div>
+        <div class="fl-row"><span class="fl-lbl">⛽ Essence</span><input type="range" id="pct_e" min="0" max="100" value="46.7" step="0.1" oninput="onFleetRange('e')"><input type="number" class="fl-num" id="pct_e_n" min="0" max="100" value="47" oninput="onFleetNum('e')"><span style="font-size:.8rem">%</span></div>
+        <div class="fl-row"><span class="fl-lbl">🛢️ Diesel</span><input type="range" id="pct_d" min="0" max="100" value="48.3" step="0.1" oninput="onFleetRange('d')"><input type="number" class="fl-num" id="pct_d_n" min="0" max="100" value="48" oninput="onFleetNum('d')"><span style="font-size:.8rem">%</span></div>
+        <div class="fl-row"><span class="fl-lbl">⚡ Électrique</span><input type="range" id="pct_el" min="0" max="100" value="5.0" step="0.1" oninput="onFleetRange('el')"><input type="number" class="fl-num" id="pct_el_n" min="0" max="100" value="5" oninput="onFleetNum('el')"><span style="font-size:.8rem">%</span></div>
         <div style="font-size:.7rem;color:#999;margin-top:4px;font-style:italic">Référence : Peugeot 208 — coût réel
           +35% vs barème kilométrique (péages, amendes, gestion)</div>
         <div id="vtfe_ob" class="ob" style="display:none;margin-top:7px;font-size:.76rem">
@@ -2087,14 +2106,17 @@
         <div class="pb" style="width:100%"></div>
       </div>
       <div class="tab-bar np">
-        <button id="tb0" class="tab-btn active" onclick="showTab(0)">📊 Bilan</button>
-        <button id="tb1" class="tab-btn" onclick="showTab(1)">⚖️ Obligations</button>
-        <button id="tb2" class="tab-btn" onclick="showTab(2)">🎯 Plan d'action</button>
-        <button id="tb3" class="tab-btn" onclick="showTab(3)">🛠️ Ressources</button>
-        <button id="tb4" class="tab-btn" onclick="showTab(4)">❓ FAQ</button>
+        <button id="tb0" class="tab-btn active" onclick="scrollToSection('bs0')">📊 Bilan</button>
+        <button id="tb1" class="tab-btn" onclick="scrollToSection('bs1')">⚖️ Obligations</button>
+        <button id="tb2" class="tab-btn" onclick="scrollToSection('bs2')">🎯 Plan</button>
+        <button id="tb3" class="tab-btn" onclick="scrollToSection('bs3')">🛠️ Ressources</button>
+        <button id="tb4" class="tab-btn" onclick="scrollToSection('bs4')">❓ FAQ</button>
       </div>
 
-      <div class="tab-pnl active" id="tp0">
+      <div class="tab-pnl" id="tp0">
+      <div class="bilan-section" id="bs0">
+        <div class="bilan-section-hdr" onclick="toggleBilanSection('bs0')">📊 Bilan financier <span class="bilan-chev up" id="chev_bs0">▼</span></div>
+        <div class="bilan-section-body" id="body_bs0">
         <div class="al al-i" style="font-size:.73rem;margin-bottom:8px">
           <span class="al-ico">ℹ️</span>
           <span>Ratios de simplification — statistiques nationales 2024. Pour des chiffres précis, réalisez un
@@ -2117,7 +2139,7 @@
             <div style="font-size:.77rem;color:var(--tx)">Potentiel d'économies annuelles identifié</div>
             <div class="eco-teaser-val" id="eco_teaser_val">— €</div>
           </div>
-          <button class="btn btn-p np" onclick="showTab(2)">Voir le plan d'action →</button>
+          <button class="btn btn-p np" onclick="scrollToSection('bs2')">Voir le plan d'action →</button>
         </div>
         <div class="csb">
           <strong>⚠️ Accidentologie :</strong> Faites un bilan des accidents de trajet (obligatoire) et si besoin
@@ -2125,28 +2147,35 @@
         </div>
       </div>
 
-      <div class="tab-pnl" id="tp1">
-        <div id="oblig_box"></div>
-        <div class="ob" style="margin-top:8px;font-size:.77rem"><strong>📋 Toutes vos obligations extra-financières
-            :</strong> <a href="https://portail-rse.beta.gouv.fr/" target="_blank">→ Portail RSE (beta.gouv.fr)</a>
+        </div><!-- /body_bs0 -->
+      </div><!-- /bs0 -->
+
+      <div class="bilan-section" id="bs1">
+        <div class="bilan-section-hdr" onclick="toggleBilanSection('bs1')">⚖️ Obligations légales <span class="bilan-chev" id="chev_bs1">▼</span></div>
+        <div class="bilan-section-body collapsed" id="body_bs1">
+          <div id="oblig_box"></div>
+          <div class="ob" style="margin-top:8px;font-size:.77rem"><strong>📋 Toutes vos obligations extra-financières :</strong> <a href="https://portail-rse.beta.gouv.fr/" target="_blank">→ Portail RSE (beta.gouv.fr)</a></div>
         </div>
       </div>
 
-      <div class="tab-pnl" id="tp2">
-        <div class="tsb">
-          <div style="font-size:.78rem;opacity:.8;margin-bottom:3px">Potentiel d'économies annuelles (leviers
-            sélectionnés)</div>
-          <div class="tsv" id="total_eco">— €</div>
+      <div class="bilan-section" id="bs2">
+        <div class="bilan-section-hdr" onclick="toggleBilanSection('bs2')">🎯 Plan d'action <span class="bilan-chev" id="chev_bs2">▼</span></div>
+        <div class="bilan-section-body collapsed" id="body_bs2">
+          <div class="tsb"><div style="font-size:.78rem;opacity:.8;margin-bottom:3px">Potentiel d'économies annuelles (leviers sélectionnés)</div><div class="tsv" id="total_eco">— €</div></div>
+          <div id="eco_actions"></div>
         </div>
-        <div id="eco_actions"></div>
       </div>
 
-      <div class="tab-pnl" id="tp3">
-        <div id="res_acc"></div>
+      <div class="bilan-section" id="bs3">
+        <div class="bilan-section-hdr" onclick="toggleBilanSection('bs3')">🛠️ Ressources <span class="bilan-chev" id="chev_bs3">▼</span></div>
+        <div class="bilan-section-body collapsed" id="body_bs3"><div id="res_acc"></div></div>
       </div>
-      <div class="tab-pnl" id="tp4">
-        <div id="faq_acc"></div>
+
+      <div class="bilan-section" id="bs4">
+        <div class="bilan-section-hdr" onclick="toggleBilanSection('bs4')">❓ FAQ <span class="bilan-chev" id="chev_bs4">▼</span></div>
+        <div class="bilan-section-body collapsed" id="body_bs4"><div id="faq_acc"></div></div>
       </div>
+      </div><!-- /tp0 -->
 
       <div class="br np">
         <button class="btn btn-o" onclick="goTo(5)">← Retour</button>
@@ -2305,23 +2334,63 @@
 
       // ─── MODAL ────────────────────────────────────────────────────────────────
       var lockM = false; var MK = ["voit", "tc", "velo", "cov", "aut"];
+      function syncModalUI(v) {
+        MK.forEach(function(k) {
+          var x = Math.max(0, Math.min(100, v[k]));
+          document.getElementById("pm_" + k).value = x.toFixed(1);
+          var nEl = document.getElementById("pm_" + k + "_n");
+          if (nEl) nEl.value = Math.round(x);
+        });
+        var tot = MK.reduce(function(a,k){ return a + (parseFloat(document.getElementById("pm_"+k).value)||0); }, 0);
+        var badge = document.getElementById("pm_total_badge");
+        if (badge) {
+          var totR = Math.round(tot);
+          badge.textContent = totR + "%";
+          badge.style.background = (totR === 100) ? "var(--vc)" : "#FEE2E2";
+          badge.style.color = (totR === 100) ? "var(--v)" : "#B91C1C";
+        }
+      }
       function onModal(changed) {
         if (lockM) return; lockM = true;
-        var v = {}; MK.forEach(function (k) { v[k] = parseFloat(document.getElementById("pm_" + k).value) || 0; });
-        var rest = 100 - v[changed]; var oth = MK.filter(function (k) { return k !== changed; });
-        var ss = oth.reduce(function (a, k) { return a + v[k]; }, 0);
-        if (ss > 0) oth.forEach(function (k) { v[k] = v[k] / ss * rest; });
-        else { var eq = rest / oth.length; oth.forEach(function (k) { v[k] = eq; }); }
-        MK.forEach(function (k) { var x = Math.max(0, Math.min(100, v[k])); document.getElementById("pm_" + k).value = x.toFixed(1); document.getElementById("pm_" + k + "_v").textContent = Math.round(x) + "%"; });
-        pm_voit = parseFloat(document.getElementById("pm_voit").value); pm_tc = parseFloat(document.getElementById("pm_tc").value);
-        pm_velo = parseFloat(document.getElementById("pm_velo").value); pm_cov = parseFloat(document.getElementById("pm_cov").value);
-        pm_aut = parseFloat(document.getElementById("pm_aut").value);
+        var v = {}; MK.forEach(function (k) { v[k] = Math.max(0, parseFloat(document.getElementById("pm_" + k).value) || 0); });
+        // Ajuste uniquement le mode suivant pour maintenir 100%
+        var idx = MK.indexOf(changed);
+        var total = MK.reduce(function(a,k){ return a+v[k]; }, 0);
+        var diff = total - 100;
+        if (Math.abs(diff) > 0.01) {
+          // Cherche le premier mode suivant (cyclique) différent du mode modifié
+          for (var i = 1; i < MK.length; i++) {
+            var nextK = MK[(idx + i) % MK.length];
+            var newVal = v[nextK] - diff;
+            if (newVal >= 0) { v[nextK] = newVal; break; }
+            // Si le suivant ne peut pas absorber tout l'écart, on le met à 0 et on continue
+            diff -= v[nextK]; v[nextK] = 0;
+          }
+        }
+        // S'assure que tout est dans [0,100]
+        MK.forEach(function(k){ v[k] = Math.max(0, Math.min(100, v[k])); });
+        syncModalUI(v);
+        pm_voit = v["voit"]; pm_tc = v["tc"];
+        pm_velo = v["velo"]; pm_cov = v["cov"];
+        pm_aut = v["aut"];
         lockM = false; updateModalTips(); calc();
+      }
+      function onModalRange(k) { onModal(k); }
+      function onModalNum(k) {
+        if (lockM) return;
+        var nEl = document.getElementById("pm_" + k + "_n");
+        var val = Math.max(0, Math.min(100, parseInt(nEl.value) || 0));
+        document.getElementById("pm_" + k).value = val;
+        onModal(k);
       }
       function updateModalTips() {
         var t = [];
         if (pm_voit > 60) t.push("Voiture seule dominante (" + Math.round(pm_voit) + "%). Un plan de mobilité peut réduire ce ratio.");
-        if (pm_velo < 5) t.push("Part vélo faible : Forfait Mobilité Durable + abris + ateliers peuvent atteindre 40% de part modale.");
+        if (dist_val > 25) {
+          t.push("Distance > 25 km : le covoiturage et le télétravail sont les leviers prioritaires.");
+        } else if (pm_velo < 5) {
+          t.push("Part vélo faible : Forfait Mobilité Durable + abris + ateliers peuvent atteindre 40% de part modale.");
+        }
         if (pm_cov < 5) t.push("Covoiturage sous-exploité : une plateforme libère des places de stationnement.");
         var el = document.getElementById("modal_tips");
         el.style.display = t.length ? "flex" : "none";
@@ -2338,16 +2407,49 @@
       }
       function onTT() { tt_pct = parseInt(document.getElementById("tt_pct_r").value) || 0; document.getElementById("tt_pct_v").textContent = tt_pct + "%"; calc(); }
       var lockF = false;
+      var FK = ["e", "d", "el"];
+      function syncFleetUI(fv) {
+        FK.forEach(function(k) {
+          var x = Math.max(0, Math.min(100, fv[k]));
+          document.getElementById("pct_" + k).value = x.toFixed(1);
+          var nEl = document.getElementById("pct_" + k + "_n");
+          if (nEl) nEl.value = Math.round(x);
+        });
+        var tot = FK.reduce(function(a,k){ return a + (parseFloat(document.getElementById("pct_"+k).value)||0); }, 0);
+        var badge = document.getElementById("fl_total_badge");
+        if (badge) {
+          var totR = Math.round(tot);
+          badge.textContent = totR + "%";
+          badge.style.background = (totR === 100) ? "var(--vc)" : "#FEE2E2";
+          badge.style.color = (totR === 100) ? "var(--v)" : "#B91C1C";
+        }
+      }
       function onFleet(changed) {
         if (lockF) return; lockF = true;
-        var e = parseFloat(document.getElementById("pct_e").value) || 0;
-        var dd = parseFloat(document.getElementById("pct_d").value) || 0;
-        var el = parseFloat(document.getElementById("pct_el").value) || 0;
-        if (changed === "e") { var r = 100 - e; var ss = dd + el; if (ss > 0) { dd = dd / ss * r; el = el / ss * r; } else { dd = r * .9; el = r * .1; } }
-        else if (changed === "d") { var r2 = 100 - dd; var s2 = e + el; if (s2 > 0) { e = e / s2 * r2; el = el / s2 * r2; } else { e = r2 * .9; el = r2 * .1; } }
-        else { var r3 = 100 - el; var s3 = e + dd; if (s3 > 0) { e = e / s3 * r3; dd = dd / s3 * r3; } else { e = r3 * .5; dd = r3 * .5; } }
-        function sf(k, v) { v = Math.max(0, Math.min(100, v)); document.getElementById("pct_" + k).value = v.toFixed(1); document.getElementById("pct_" + k + "_v").textContent = v.toFixed(1) + "%"; }
-        sf("e", e); sf("d", dd); sf("el", el); pct_e = e; pct_d = dd; pct_el = el; lockF = false; calc();
+        var fv = {}; FK.forEach(function(k){ fv[k] = Math.max(0, parseFloat(document.getElementById("pct_"+k).value)||0); });
+        var idx = FK.indexOf(changed);
+        var total = FK.reduce(function(a,k){ return a+fv[k]; }, 0);
+        var diff = total - 100;
+        if (Math.abs(diff) > 0.01) {
+          for (var i = 1; i < FK.length; i++) {
+            var nextK = FK[(idx + i) % FK.length];
+            var newVal = fv[nextK] - diff;
+            if (newVal >= 0) { fv[nextK] = newVal; break; }
+            diff -= fv[nextK]; fv[nextK] = 0;
+          }
+        }
+        FK.forEach(function(k){ fv[k] = Math.max(0, Math.min(100, fv[k])); });
+        syncFleetUI(fv);
+        pct_e = fv["e"]; pct_d = fv["d"]; pct_el = fv["el"];
+        lockF = false; calc();
+      }
+      function onFleetRange(k) { onFleet(k); }
+      function onFleetNum(k) {
+        if (lockF) return;
+        var nEl = document.getElementById("pct_" + k + "_n");
+        var val = Math.max(0, Math.min(100, parseInt(nEl.value) || 0));
+        document.getElementById("pct_" + k).value = val;
+        onFleet(k);
       }
       function onParkType() {
         type_park = document.getElementById("type_park").value;
@@ -2464,7 +2566,7 @@
         document.getElementById("tt_pct_v").textContent = tt_pct + "%";
         document.getElementById("tt_j_v").textContent = tt_j + " j";
         document.getElementById("dist_v").textContent = dist_val + " km";
-        document.getElementById("pct_ik_v").textContent = pct_ik + "%";
+        var pct_ik_vEl = document.getElementById("pct_ik_v"); if (pct_ik_vEl) pct_ik_vEl.textContent = pct_ik + "%";
         document.getElementById("nb_veh_v").textContent = nb_veh;
         document.getElementById("nb_park_v").textContent = nb_park;
 
@@ -2558,9 +2660,12 @@
         ECO_ITEMS = [
           {
             id: "sl_velo", ico: "🚲", name: "Encourager le vélo",
-            detail: "Part modale du vélo cible. Réduit l’absentéisme (−15%), le stationnement, le turn-over.",
+            hidden: dist_val > 25,
+            detail: dist_val > 25
+              ? "⚠️ Distance moyenne > 25 km : le vélo seul n’est pas adapté sur ces distances. Privilégiez le covoiturage et le télétravail."
+              : "Part modale du vélo cible. Réduit l’absentéisme (−15%), le stationnement, le turn-over.",
             impl: ["Forfait Mobilité Durable (jusqu’à 600€/an, exonéré de charges)", "Abris vélo sécurisés", "Ateliers vélo / marquage", "Label Employeur pro-Vélo"],
-            cur: vc, max: 40, unit: "%",
+            cur: vc, max: dist_val > 25 ? vc : 40, unit: "%",
             saving: function (v) { var dl = Math.max(0, v - vc); return dl > 0 ? dl / 100 * nb_sal * (200 + (C.c_abs_mob || 0) / Math.max(1, nb_sal) * 0.15 + (C.c_park || 0) / Math.max(1, Math.max(1, nb_park)) * 0.08) : 0; },
             cost: function (v) { var dl = Math.max(0, v - vc); return dl > 0 ? Math.round(nb_sal * v / 100) * 300 : 0; },
             tools: [{ l: "Label Employeur pro-Vélo", u: "https://employeurprovelo.fr/" }, { l: "ADEME — ressources Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "1kmàpied — guide Plan de mobilité employeur", u: "https://www.1kmapied.com/post/plan-mobilite-employeur-5" }]
@@ -2586,8 +2691,19 @@
           },
           {
             id: "sl_park", ico: "🅿️", name: "Libérer des places de stationnement",
-            detail: "Nombre de places libérées via report modal (Plan de mobilité employeur).",
-            impl: ["Réalisation d’un Plan de mobilité employeur", "Animation mobilité interne", "Communication"],
+            detail: (function() {
+              if (pm_voit > 50 && pm_tc > 15) return "Voiture solo dominante (" + Math.round(pm_voit) + "%) et bonne desserte TC (" + Math.round(pm_tc) + "%) : réduire l’offre de stationnement est un levier puissant de report modal — et libère du foncier pour végétalisation, espaces conviviaux ou extension du bâti.";
+              if (pm_voit > 50) return "Voiture solo dominante (" + Math.round(pm_voit) + "%) : limiter le stationnement gratuit encourage le changement de comportement et libère du foncier (végétalisation, espaces partagés).";
+              return "Nombre de places libérées via report modal. Chaque place récupérée représente une économie directe et un potentiel de réaffectation foncière.";
+            })(),
+            impl: (function() {
+              var base = ["Réalisation d’un Plan de mobilité employeur", "Animation mobilité interne", "Communication"];
+              if (pm_voit > 50 && pm_tc > 15) {
+                base.push("Politique de stationnement différenciée (priorité covoiturage, PMR, véhicules propres)");
+                base.push("Réaffectation du foncier libéré : végétalisation, espace de vie, extension");
+              }
+              return base;
+            })(),
             cur: 0, max: Math.max(1, nb_park), unit: " places",
             saving: function (v) { var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio4 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; return v * (type_park === "loue" ? loyer_park * 12 : (proprio4 === "oui_amorti" ? pc.entretien : pc.invest / 20 + pc.entretien)); },
             cost: function (v) { return v > 0 ? (nb_sal >= 250 ? 20000 : 10000) / 5 : 0; },
@@ -2645,12 +2761,15 @@
         sorted.forEach(function (s) {
           var item = s.item, v = s.v;
           var saving = item.saving(v);
+          var isHidden = item.hidden === true;
           var isOptional = saving <= 0;
           var implH = item.impl.map(function (i) { return "<span class='eco-impl-tag'>" + i + "</span>"; }).join("");
           var toolsH = item.tools.map(function (t) { return "<a href='" + t.u + "' target='_blank' class='eco-tool-link'><span>→</span>" + t.l + "</a>"; }).join("");
           var toolsSec = item.tools.length ? "<div class='eco-tools-section'><div class='eco-impl-title'>Outils et ressources</div><div class='eco-tools-links'>" + toolsH + "</div></div>" : "";
           var optStyle = isOptional ? "opacity:.65;" : "";
+          if (isHidden) optStyle += "border-left:3px solid #F08030;";
           var optBadge = isOptional ? "<span style='display:inline-block;background:#e0e0e0;color:#666;border-radius:10px;padding:1px 8px;font-size:.68rem;margin-left:6px;vertical-align:middle'>optionnel</span>" : "";
+          if (isHidden) optBadge += "<span style='display:inline-block;background:#FEF3C7;color:#92400E;border-radius:10px;padding:1px 8px;font-size:.68rem;margin-left:6px;vertical-align:middle'>distance > 25 km</span>";
           var card =
             "<div class='eco-item' id='wi_" + item.id + "' style='" + optStyle + "'>" +
             "<div class='eco-header' data-id='" + item.id + "' onclick='toggleEco(this.dataset.id)'>" +
@@ -3144,9 +3263,29 @@
         if (n === 6 && fv("c_email")) sendBrevo();
         navTo(n);
       }
+      function scrollToSection(id) {
+        var ids = ['bs0','bs1','bs2','bs3','bs4'];
+        var idx = ids.indexOf(id);
+        var body = document.getElementById('body_' + id);
+        var chev = document.getElementById('chev_' + id);
+        if (body && body.classList.contains('collapsed')) {
+          body.classList.remove('collapsed');
+          if (chev) chev.classList.add('up');
+        }
+        document.querySelectorAll('.tab-btn').forEach(function(b,i){ b.classList.toggle('active', i === idx); });
+        var el = document.getElementById(id);
+        if (el) setTimeout(function(){ el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
+      }
+      function toggleBilanSection(id) {
+        var body = document.getElementById('body_' + id);
+        var chev = document.getElementById('chev_' + id);
+        if (!body) return;
+        body.classList.toggle('collapsed');
+        if (chev) chev.classList.toggle('up');
+      }
       function showTab(n) {
-        document.querySelectorAll(".tab-btn").forEach(function (b, i) { b.classList.toggle("active", i === n); });
-        document.querySelectorAll(".tab-pnl").forEach(function (p, i) { p.classList.toggle("active", i === n); });
+        var ids = ['bs0','bs1','bs2','bs3','bs4'];
+        if (ids[n]) scrollToSection(ids[n]);
       }
       function togAcc(h) { h.classList.toggle("open"); h.nextElementSibling.classList.toggle("open"); }
 
