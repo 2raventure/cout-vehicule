@@ -2877,7 +2877,7 @@
       // ─── OBLIGATIONS ──────────────────────────────────────────────────────────
       function renderOblig() {
         var taux = getVMTaux(); var h = "";
-        if (nb_sal >= 11) h += "<div class='ob'>ℹ️ <strong>Versement mobilité (dès 11 salariés)</strong> : cotisation patronale obligatoire qui finance les transports en commun. " + (taux ? "Taux : " + taux.toFixed(2) + "%." : "Renseignez votre code postal.") + " <a href='https://www.urssaf.fr/accueil/employeur/calculer-les-cotisations/taux-cotisations-charges-patrona/versement-mobilite.html' target='_blank'>→ URSSAF</a> · <a href='https://annuaireaom.softr.app/' target='_blank'>→ Contacter votre autorité organisatrice de mobilité</a></div>";
+        if (nb_sal >= 11) h += "<div class='ob'>ℹ️ <strong>Versement mobilité (dès 11 salariés)</strong> : cotisation patronale obligatoire qui finance les transports en commun. " + (taux ? "Taux : " + taux.toFixed(2) + "%." : "Renseignez votre code postal.") + " <a href='https://www.urssaf.fr/accueil/employeur/calculer-les-cotisations/taux-cotisations-charges-patrona/versement-mobilite.html' target='_blank'>→ URSSAF</a>→ Contacter votre autorité organisatrice de mobilité</a></div>";
         if (nb_sal >= 50) h += "<div class='ob'>⚖️ <strong>Accord de mobilité (dès 50 salariés)</strong> : négocié lors des Négociations Annuelles Obligatoires. <a href='https://travail-emploi.gouv.fr/les-negociations-obligatoires-dans-lentreprise-theme-periodicite-et-deroulement' target='_blank'>→ Détail</a></div>";
         if (cp_aom && cp_aom.name && cp_aom.name.indexOf("Lille") >= 0 && nb_sal >= 250) h += "<div class='ob'>⚖️ <strong>Plan de mobilité employeur obligatoire — Métropole Européenne de Lille (+250 salariés)</strong>. <a href='https://www.nord.gouv.fr/Actions-de-l-Etat/Environnement/Air-climat-energie/Plan-de-protection-de-l-atmosphere-des-agglomerations-de-Lille-et-du-bassin-minier' target='_blank'>→ Plan de protection de l’atmosphère</a></div>";
         if (nb_veh >= 100) h += "<div class='ob'>⚖️ <strong>Obligation de verdissement de flotte (+100 véhicules)</strong> :<br>🟡 10% depuis jan. 2022 · 🟠 20% depuis 2024 · 🔴 40% en 2027 · 🔴 70% en 2030. <a href='https://www.ecologie.gouv.fr/politiques-publiques/verdissement-du-parc-automobile' target='_blank'>→ Détail</a></div>";
@@ -2971,7 +2971,6 @@
           return "<div class='acc'><div class='ach' onclick='togAcc(this)'><span>" + t + "</span><span class='aar'>▼</span></div><div class='acb'><div class='rl'>" + inner + "</div></div></div>";
         }
         var aides = [];
-        aides.push({ l: "Annuaire des autorités organisatrices de mobilité", u: "https://annuaireaom.softr.app/" });
         if (paris) {
           aides.push({ l: "Aides écomobilité Ville de Paris (vélo cargo, utilitaire électrique, Mobilib’, abri vélo)", u: "https://www.paris.fr/pages/lutte-contre-la-pollution-les-aides-a-la-mobilite-5373" });
           aides.push({ l: "Véligo Location — location vélo à assistance électrique longue durée (50-100% employeur)", u: "https://www.veligo-location.fr/professionnels/comment-s-abonnner" });
