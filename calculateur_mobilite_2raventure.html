@@ -391,7 +391,7 @@
 
       .fl-row {
         display: grid;
-        grid-template-columns: 90px 1fr 55px;
+        grid-template-columns: 90px 1fr 52px auto;
         gap: 7px;
         align-items: center;
         margin-bottom: 6px
@@ -2147,7 +2147,10 @@
         </div>
       </div>
 
-        </div><!-- /body_bs0 -->
+          <div style="margin-top:12px;text-align:right">
+          <button class="btn btn-g" onclick="doPrint()">🖨️ Exporter en PDF</button>
+        </div>
+      </div><!-- /body_bs0 -->
       </div><!-- /bs0 -->
 
       <div class="bilan-section" id="bs1">
@@ -2177,10 +2180,6 @@
       </div>
       </div><!-- /tp0 -->
 
-      <div class="br np">
-        <button class="btn btn-o" onclick="goTo(5)">← Retour</button>
-        <button class="btn btn-g" onclick="doPrint()">🖨️ Exporter en PDF</button>
-      </div>
     </div>
 
 
@@ -2686,7 +2685,7 @@
             cur: ec, max: 70, unit: "%",
             saving: function (v) { var dl = Math.max(0, v - ec) / 100; return dl * nb_veh * km_an * (0.397 - 0.357); },
             cost: function (v) { return Math.max(0, v - ec) / 100 * nb_veh * 1500 / 7; },
-            tools: [{ l: "MobiliPro — audit flotte (ADEME)", u: "https://www.mobilipro.fr/" }, { l: "Programme Marguerite (<20 salariés)", u: "https://www.programme-marguerite.fr/" },
+            tools: [{ l: "MobiliPro — audit flotte (ADEME)", u: "https://www.mobilipro.fr/" },
             ...(isIDF(cp_val) ? [{ l: "Véligo pro (Ile-de-France) — location vélo à assistance électrique", u: "https://www.veligo-location.fr/professionnels/comment-s-abonnner" }] : [])]
           },
           {
@@ -2815,8 +2814,99 @@
         if (optHtml) {
           finalHtml += "<div style='margin-top:12px;padding:8px 12px;background:#f5f5f5;border-radius:8px;font-size:.76rem;color:#666;font-weight:600'>□ Actions optionnelles (\xe9conomies n\xe9gligeables ou n\xe9gatives)</div>" + optHtml;
         }
+        // ─── AXES D'ACTION CIBLÉS — logique conditionnelle ─────────────────────
+        var axesHtml = buildAxesCibles();
+        if (axesHtml) finalHtml = axesHtml + finalHtml;
+
         document.getElementById("eco_actions").innerHTML = finalHtml;
         renderEcoValues(); // populate with current values
+      }
+
+      // Génère un encart "Axes d'action ciblés" basé sur distance, salaire, absentéisme et CP
+      function buildAxesCibles() {
+        var SAL_BAS = 2200;      // seuil bas salaire brut mensuel
+        var DIST_VELO = 25;      // km max pour plan vélo
+        var DIST_GRANDE = 30;    // km à partir de laquelle la distance est "importante"
+        var ABS_ELEVE = 5;       // % d'absentéisme considéré élevé (variable globale : abs_tx)
+        var isCambraisis = /^59/.test(cp_val || ""); // CC du Cambraisis et zone 59
+
+        var axes = [];
+
+        // 1. Distance courte → plan vélo + label Employeur Pro-Vélo
+        if (dist_val <= DIST_VELO) {
+          var veloDetail = "<p style='margin-bottom:8px'>La distance moyenne domicile–travail de vos salariés (" + dist_val + " km) est <strong>favorable au vélo</strong>. C'est le levier le plus rentable à court terme.</p>";
+          veloDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
+            + "<li><strong>Plan vélo entreprise</strong> : stationnement sécurisé, Forfait Mobilités Durables (jusqu'à 600 €/an exonéré), ateliers d'entretien</li>"
+            + "<li><strong>Label Employeur pro-Vélo</strong> (FUB) : reconnaissance externe, recrutement différenciant, kit de communication clé en main</li>"
+            + (dist_val <= 15 ? "<li>Distance très courte (≤ 15 km) : pensez au vélo cargo pour les déplacements professionnels inter-sites</li>" : "")
+            + "</ul>";
+          veloDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://employeurprovelo.fr/' target='_blank' class='aom-lnk'>🏅 Label Employeur pro-Vélo</a>"
+            + "<a href='https://2raventure.com/2026/05/05/mettre-en-place-un-plan-velo-en-entreprise/' target='_blank' class='aom-lnk'>🚲 Guide plan vélo 2R Aventure</a>"
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com' employeur</a>"
+            + "</div>";
+          axes.push({ ico: "🚲", titre: "Plan vélo : votre levier prioritaire", contenu: veloDetail, couleur: "#e8f5e9", bordure: "#2e7d32" });
+        }
+
+        // 2. Distance importante ET salaire bas → covoiturage + leasing social + Solimob si 59
+        if (dist_val >= DIST_GRANDE && sal_moy <= SAL_BAS) {
+          var covDetail = "<p style='margin-bottom:8px'>Avec une distance moyenne de <strong>" + dist_val + " km</strong> et un salaire moyen de <strong>" + sal_moy.toLocaleString("fr-FR") + " € brut/mois</strong>, la mobilité représente une charge significative pour vos salariés. Plusieurs leviers permettent de réduire cette pression sans investissement lourd.</p>";
+          covDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
+            + "<li><strong>Covoiturage domicile-travail</strong> : Karos, Ecov, Mobicoop — libère des places de stationnement et crée du lien social</li>"
+            + "<li><strong>Leasing social véhicule électrique</strong> : informez vos salariés éligibles (revenus ≤ 23 400 €/an) — moins de 100 €/mois tout compris</li>"
+            + "<li><strong>Garages solidaires locaux</strong> : entretien à petit prix pour les salariés contraints à la voiture</li>"
+            + (isCambraisis ? "<li><strong>Solimob</strong> : location courte durée de voiture (y compris électrique et sans permis), VAE — spécifiquement actif sur votre territoire <a href='https://solimob.fr/' target='_blank' style='color:var(--v)'>→ solimob.fr</a></li>" : "")
+            + "</ul>";
+          covDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.karos.fr/' target='_blank' class='aom-lnk'>🤝 Karos covoiturage</a>"
+            + "<a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank' class='aom-lnk'>⚡ Kit leasing social</a>"
+            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk'>🚗 Solimob</a>" : "")
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com' employeur</a>"
+            + "</div>";
+          axes.push({ ico: "🤝", titre: "Trajets longs + bas salaires : cap sur le covoiturage et les alternatives solidaires", contenu: covDetail, couleur: "#fff8e1", bordure: "#F08030" });
+        }
+
+        // 3. Absentéisme élevé ET salaire bas → dispositifs solidaires
+        if (abs_tx >= ABS_ELEVE && sal_moy <= SAL_BAS) {
+          var absDetail = "<p style='margin-bottom:8px'>Un absentéisme de <strong>" + abs_tx + " %</strong> combiné à des salaires bas (moy. " + sal_moy.toLocaleString("fr-FR") + " €/mois) est souvent le signe de <strong>difficultés de mobilité</strong> : pannes, coût de l'entretien, absence de permis ou de véhicule. Les dispositifs solidaires permettent un accompagnement individuel là où les incitations collectives ne suffisent pas.</p>";
+          absDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
+            + "<li><strong>Ateliers d'autoréparation vélo : Heureux Cyclages (FUB)</strong> : permettre à vos salariés d'entretenir leur vélo gratuitement ou à petit prix, dans un cadre convivial</li>"
+            + "<li><strong>Plateformes de mobilité inclusive</strong> : accompagnement individuel à la mobilité (diagnostic, formation, accès au permis, prêt de véhicule), disponibles sur de nombreux territoires</li>"
+            + (isCambraisis ? "<li><strong>Solimob</strong> (Cambraisis) : location de voiture courte durée, VAE, voiture sans permis électrique pour les salariés en situation précaire <a href='https://solimob.fr/' target='_blank' style='color:var(--v)'>→ solimob.fr</a></li>" : "")
+            + "</ul>";
+          absDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.heureux-cyclage.org/les-ateliers-en-france.html' target='_blank' class='aom-lnk'>🔧 Ateliers Heureux Cyclages</a>"
+            + "<a href='https://www.mobiliteinclusive.com/cartographie-des-plateformes/' target='_blank' class='aom-lnk'>🗺️ Carte plateformes mobilité inclusive</a>"
+            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk'>🚗 Solimob</a>" : "")
+            + "</div>";
+          axes.push({ ico: "🤲", titre: "Absentéisme + précarité mobilité : miser sur l'accompagnement individuel", contenu: absDetail, couleur: "#f3e5f5", bordure: "#9c27b0" });
+        }
+
+        // 4. Toujours : kit de com' (encart discret si aucun axe ci-dessus, intégré sinon)
+        var kitBlock = "<div style='margin-top:10px;padding:8px 12px;background:#E8F5F4;border-radius:8px;border:1px solid var(--bd);font-size:.79rem'>"
+          + "📦 <strong>Kit de com' employeur clé en main</strong> : affiches, posts réseaux sociaux, messages internes — tout pour sensibiliser vos salariés sans partir de zéro."
+          + " <a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' style='color:var(--v);font-weight:600'>→ Accéder au kit (Notion)</a>"
+          + "</div>";
+
+        if (!axes.length) {
+          // Pas d'axe prioritaire détecté : encart générique + kit de com'
+          return "<div style='background:#fff;border-radius:12px;border:1.5px solid var(--bd);padding:14px 16px;margin-bottom:12px'>"
+            + "<div style='font-weight:700;color:var(--v);font-size:.88rem;margin-bottom:6px'>💡 Axes d'action personnalisés</div>"
+            + "<p style='font-size:.82rem;color:#666;margin-bottom:8px'>Aucun signal fort identifié sur votre profil. Les leviers ci-dessous sont classés par potentiel d'économies estimé pour votre structure.</p>"
+            + kitBlock
+            + "</div>";
+        }
+
+        var html = "<div style='background:#fff;border-radius:12px;border:2px solid var(--t);padding:16px;margin-bottom:14px;box-shadow:var(--sh)'>"
+          + "<div style='font-weight:700;color:var(--v);font-size:.9rem;margin-bottom:12px;display:flex;align-items:center;gap:7px'><span style='background:var(--t);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0'>!</span>Axes d'action prioritaires pour votre profil</div>";
+        axes.forEach(function(ax) {
+          html += "<div style='margin-bottom:12px;padding:12px 14px;background:" + ax.couleur + ";border-radius:10px;border-left:4px solid " + ax.bordure + "'>"
+            + "<div style='font-weight:700;color:var(--v);font-size:.85rem;margin-bottom:7px'>" + ax.ico + " " + ax.titre + "</div>"
+            + "<div style='font-size:.81rem;color:var(--tx)'>" + ax.contenu + "</div>"
+            + "</div>";
+        });
+        html += kitBlock + "</div>";
+        return html;
       }
 
       // UPDATE VALUES ONLY — no HTML rebuild, called by updEco and renderEcoHTML
@@ -2877,10 +2967,10 @@
       // ─── OBLIGATIONS ──────────────────────────────────────────────────────────
       function renderOblig() {
         var taux = getVMTaux(); var h = "";
-        if (nb_sal >= 11) h += "<div class='ob'>ℹ️ <strong>Versement mobilité (dès 11 salariés)</strong> : cotisation patronale obligatoire qui finance les transports en commun. " + (taux ? "Taux : " + taux.toFixed(2) + "%." : "Renseignez votre code postal.") + " <a href='https://www.urssaf.fr/accueil/employeur/calculer-les-cotisations/taux-cotisations-charges-patrona/versement-mobilite.html' target='_blank'>→ URSSAF</a>→ Contacter votre autorité organisatrice de mobilité</a></div>";
+        if (nb_sal >= 11) h += "<div class='ob'>ℹ️ <strong>Versement mobilité (dès 11 salariés)</strong> : cotisation patronale obligatoire qui finance les transports en commun. " + (taux ? "Taux : " + taux.toFixed(2) + "%." : "Renseignez votre code postal.") + " <a href='https://www.urssaf.fr/accueil/employeur/calculer-les-cotisations/taux-cotisations-charges-patrona/versement-mobilite.html' target='_blank'>→ URSSAF</a></div>";
         if (nb_sal >= 50) h += "<div class='ob'>⚖️ <strong>Accord de mobilité (dès 50 salariés)</strong> : négocié lors des Négociations Annuelles Obligatoires. <a href='https://travail-emploi.gouv.fr/les-negociations-obligatoires-dans-lentreprise-theme-periodicite-et-deroulement' target='_blank'>→ Détail</a></div>";
         if (cp_aom && cp_aom.name && cp_aom.name.indexOf("Lille") >= 0 && nb_sal >= 250) h += "<div class='ob'>⚖️ <strong>Plan de mobilité employeur obligatoire — Métropole Européenne de Lille (+250 salariés)</strong>. <a href='https://www.nord.gouv.fr/Actions-de-l-Etat/Environnement/Air-climat-energie/Plan-de-protection-de-l-atmosphere-des-agglomerations-de-Lille-et-du-bassin-minier' target='_blank'>→ Plan de protection de l’atmosphère</a></div>";
-        if (nb_veh >= 100) h += "<div class='ob'>⚖️ <strong>Obligation de verdissement de flotte (+100 véhicules)</strong> :<br>🟡 10% depuis jan. 2022 · 🟠 20% depuis 2024 · 🔴 40% en 2027 · 🔴 70% en 2030. <a href='https://www.ecologie.gouv.fr/politiques-publiques/verdissement-du-parc-automobile' target='_blank'>→ Détail</a></div>";
+        if (nb_veh >= 100) h += "<div class='ob'>⚖️ <strong>Obligation de verdissement de flotte (+100 véhicules)</strong> : 🟡 10% depuis jan. 2022 · 🟠 20% depuis 2024 · 🔴 40% en 2027 · 🔴 70% en 2030. <a href='https://www.ecologie.gouv.fr/politiques-publiques/verdissement-du-parc-automobile' target='_blank'>→ Détail</a></div>";
         if (!h) h = "<p style='font-size:.83rem;color:#888'>Aucune obligation spécifique détectée. Vous pouvez néanmoins engager une démarche volontaire.</p>";
         document.getElementById("oblig_box").innerHTML = h;
       }
@@ -2993,12 +3083,9 @@
         if (mel) aides.push({ l: "Diagnostic accessibilité gratuit — ilévia (Métropole Européenne de Lille)", u: "https://www.ilevia.fr/" });
         if (simouv) aides.push({ raw: "<div style='background:#E8F5F4;border-radius:8px;padding:10px 12px;border:1.5px solid var(--t);font-size:.79rem;margin:3px 0'><strong>🎉 Réseau Transvilles GRATUIT sur votre territoire</strong><br>Depuis septembre 2026, le réseau de transport en commun SIMOUV (Valenciennes Métropole + Porte du Hainaut) est <strong>entièrement gratuit</strong> pour tous les usagers. Levier fort pour réduire les coûts de mobilité de vos salariés et votre versement mobilité. <a href='https://www.simouv.fr/le-syndicat/lactualite/2026-septembre/3096-reseau-transvilles-gratuit' target='_blank' style='color:var(--v)'>→ Voir l'annonce SIMOUV</a></div>" });
         if (hdf) aides.push({ l: "Booster REV3 (jusqu’à 10 000€ — Hauts-de-France, <250 salariés)", u: "https://www.rev3.fr/" });
-        if (isSm) aides.push({ l: "Programme Marguerite (<20 salariés) — mobilité et logistique durables", u: "https://www.programme-marguerite.fr/" });
         aides.push({ l: "ADEME — aides à la transition écologique pour les employeurs", u: "https://agirpourlatransition.ademe.fr/entreprises/" });
 
         var sections = "";
-        var _aom = getAOMDirEntry(cp_val, cp_aom ? cp_aom.name : null);
-        if (_aom && _aom.length) sections += renderAOMDirCard(_aom);
         aides.push({ l: "mesaidesvelo.fr — toutes les aides à l'achat d'un vélo", u: "https://mesaidesvelo.fr/" });
         aides.push({ l: "Leasing social véhicule électrique — kit de com' employeur (2R Aventure)", u: "https://2raventure.com/2026/08/17/leasing-social/" });
         sections += sec("💰 Aides financières et accompagnements sur votre territoire", aides);
