@@ -2409,9 +2409,10 @@
         dist_val = parseInt(document.getElementById("dist_r").value) || 0;
         document.getElementById("dist_v").textContent = dist_val + " km";
         var tip = document.getElementById("dist_tip");
-        if (dist_val <= 12) tip.innerHTML = "<span class='al-ico'>🚲</span><span>Distance ≤12 km : <strong>le vélo est pertinent</strong>.</span>";
-        else if (dist_val <= 25) tip.innerHTML = "<span class='al-ico'>⚡</span><span>Le <strong>vélo à assistance électrique</strong> ou le <strong>covoiturage</strong> sont de bonnes alternatives.</span>";
-        else tip.innerHTML = "<span class='al-ico'>🤝</span><span><strong>Le covoiturage</strong> et les aides au rapprochement géographique sont à privilégier.</span>";
+        if (dist_val <= 15) tip.innerHTML = "<span class='al-ico'>🚲</span><span>Distance ≤ 15 km : <strong>le vélo est le levier prioritaire</strong>.</span>";
+        else if (dist_val <= 20) tip.innerHTML = "<span class='al-ico'>⚡</span><span>Distance 15–20 km : le <strong>VAE</strong> est pertinent, combiné aux transports en commun.</span>";
+        else if (dist_val <= 30) tip.innerHTML = "<span class='al-ico'>🤝</span><span>Distance 20–30 km : misez sur <strong>les TC et le covoiturage</strong>.</span>";
+        else tip.innerHTML = "<span class='al-ico'>🚗</span><span>Distance &gt; 30 km : <strong>covoiturage organisé</strong> et leviers organisationnels (semaine 4j, télétravail selon secteur).</span>";
         tip.style.display = "flex"; calc();
       }
       function onTT() { tt_pct = parseInt(document.getElementById("tt_pct_r").value) || 0; document.getElementById("tt_pct_v").textContent = tt_pct + "%"; calc(); }
