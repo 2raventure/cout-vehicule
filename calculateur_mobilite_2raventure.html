@@ -1684,7 +1684,7 @@
           <span class="tw"><span class="ti">?</span><span class="tb">Le versement mobilité est une cotisation patronale
               obligatoire dès 11 salariés. Il finance les transports en commun de votre autorité organisatrice de
               mobilité. Calcul : Masse salariale brute annuelle × taux. Même si vous êtes peu desservi par les
-              transports en commun, vous le versez.</span></span>
+              transports en commun, vous le versez. Cette somme est prélevée au fil des mois sur chaque fiche de paie.</span></span>
           — <span id="vm_aom_s" style="font-weight:400;font-size:.79rem"></span>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;margin-bottom:9px">
@@ -1732,17 +1732,17 @@
           déplacements utilisant un mode de transport particulier (voiture, vélo, transports en commun, marche…) par
           rapport au nombre total de déplacements — ici pour les trajets domicile/travail et les déplacements
           professionnels.</div>
-        <p style="font-size:.75rem;color:#999;margin-bottom:10px">Saisissez vos parts modales — le total reste automatiquement à 100%. <em>Données nationales 2024 — <a href="https://www.insee.fr/fr/outil-interactif/5367857/tableau/80_AMN/84_MOB" target="_blank" style="color:inherit;text-decoration:underline dotted" title="Enquête INSEE — Mobilités des personnes">source INSEE ↗</a></em></p>
+        <p style="font-size:.75rem;color:#999;margin-bottom:10px">Saisissez vos parts modales — le total reste automatiquement à 100%. <em>Données nationales INSEE RP2022 — <a href="https://mobilites-durables.transports.gouv.fr/indicateurs/deplacements-domicile-travail/" target="_blank" style="color:inherit;text-decoration:underline dotted" title="Ministère des Transports — Indicateurs déplacements domicile-travail">source Ministère des Transports ↗</a></em></p>
         <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:8px;gap:6px;font-size:.76rem">
           <span style="color:#888">Total&nbsp;:</span>
           <span id="pm_total_badge" style="font-weight:700;padding:2px 10px;border-radius:12px;background:var(--vc);color:var(--v)">100%</span>
         </div>
         <style>.fl-num{width:52px;border:1.5px solid var(--bd);border-radius:7px;padding:3px 6px;font-size:.82rem;font-family:Asap,sans-serif;text-align:right;color:var(--v);font-weight:600;background:#fff}.fl-num:focus{outline:2px solid var(--t);border-color:var(--t)}</style>
-        <div class="fl-row"><span class="fl-lbl">🚗 Voiture seule</span><input type="range" id="pm_voit" min="0" max="100" value="70" step="1" oninput="onModalRange('voit')"><input type="number" class="fl-num" id="pm_voit_n" min="0" max="100" value="70" oninput="onModalNum('voit')"><span style="font-size:.8rem">%</span></div>
-        <div class="fl-row"><span class="fl-lbl">🚌 Transport en commun</span><input type="range" id="pm_tc" min="0" max="100" value="20" step="1" oninput="onModalRange('tc')"><input type="number" class="fl-num" id="pm_tc_n" min="0" max="100" value="20" oninput="onModalNum('tc')"><span style="font-size:.8rem">%</span></div>
+        <div class="fl-row"><span class="fl-lbl">🚗 Voiture seule</span><input type="range" id="pm_voit" min="0" max="100" value="69" step="1" oninput="onModalRange('voit')"><input type="number" class="fl-num" id="pm_voit_n" min="0" max="100" value="69" oninput="onModalNum('voit')"><span style="font-size:.8rem">%</span></div>
+        <div class="fl-row"><span class="fl-lbl">🚌 Transport en commun</span><input type="range" id="pm_tc" min="0" max="100" value="15" step="1" oninput="onModalRange('tc')"><input type="number" class="fl-num" id="pm_tc_n" min="0" max="100" value="15" oninput="onModalNum('tc')"><span style="font-size:.8rem">%</span></div>
         <div class="fl-row"><span class="fl-lbl">🚲 Vélo</span><input type="range" id="pm_velo" min="0" max="100" value="4" step="1" oninput="onModalRange('velo')"><input type="number" class="fl-num" id="pm_velo_n" min="0" max="100" value="4" oninput="onModalNum('velo')"><span style="font-size:.8rem">%</span></div>
         <div class="fl-row"><span class="fl-lbl">🤝 Covoiturage</span><input type="range" id="pm_cov" min="0" max="100" value="4" step="1" oninput="onModalRange('cov')"><input type="number" class="fl-num" id="pm_cov_n" min="0" max="100" value="4" oninput="onModalNum('cov')"><span style="font-size:.8rem">%</span></div>
-        <div class="fl-row"><span class="fl-lbl">🚶 Autres</span><input type="range" id="pm_aut" min="0" max="100" value="2" step="1" oninput="onModalRange('aut')"><input type="number" class="fl-num" id="pm_aut_n" min="0" max="100" value="2" oninput="onModalNum('aut')"><span style="font-size:.8rem">%</span></div>
+        <div class="fl-row"><span class="fl-lbl">🚶 Autres</span><input type="range" id="pm_aut" min="0" max="100" value="8" step="1" oninput="onModalRange('aut')"><input type="number" class="fl-num" id="pm_aut_n" min="0" max="100" value="8" oninput="onModalNum('aut')"><span style="font-size:.8rem">%</span></div>
         <div id="modal_tips" class="al al-i" style="display:none;margin-top:7px;font-size:.75rem"></div>
       </div>
       <div class="card">
@@ -1931,14 +1931,14 @@
         </div>
         <div class="al al-i" style="font-size:.75rem;margin-top:3px">
           <span class="al-ico">ℹ️</span>
-          <span>Primes carburant, Forfait Mobilité Durable et autres remboursements salariés :
+          <span>Primes carburant, Forfait Mobilités Durables et autres remboursements salariés :
             <a href="https://www.urssaf.fr/accueil/employeur/bases-et-taux-et-assiettes/remuneration/avantages-frais-transport.html"
               target="_blank">→ URSSAF — frais de transport et mobilité</a></span>
         </div>
       </div>
 
       <div class="card">
-        <div class="ct">🛴 Forfait Mobilité Durable
+        <div class="ct">💶 Forfait Mobilités Durables
           <span class="tw"><span class="ti">?</span><span class="tb">Jusqu'à 600€/an par salarié — prime non soumise à
               cotisation sociale patronale ni salariale (dans la limite du plafond). Pour vélo, trottinette,
               covoiturage, engins de déplacement personnel motorisés. Facultatif secteur privé, obligatoire fonction
@@ -1946,21 +1946,22 @@
         </div>
         <div class="fr">
           <div class="fg">
-            <label>Montant Forfait Mobilité Durable (€/an/salarié)</label>
-            <input type="number" id="fmd_mt" min="0" max="600" value="0" step="50" oninput="calc()">
+            <label>Montant Forfait Mobilités Durables (€/an/salarié)</label>
+            <input type="number" id="fmd_mt" min="0" max="600" value="420" step="10" oninput="calc()">
+            <span class="ns">📊 Montant moyen : 420 € — <a href="https://www.francemobilites.fr/sites/frenchmobility/files/fichiers/2024/02/24.02.08_Barom%C3%A8tre_FMD_2024_Infographie_0.pdf" target="_blank">baromètre FMD 2024</a></span>
             <span class="hint">Plafond légal : 600€/an</span>
           </div>
           <div class="fg">
             <label>Taux d'adhésion estimé (%)</label>
-            <input type="number" id="fmd_adh" min="0" max="100" value="20" oninput="calc()">
-            <span class="ns">📊 Moyen constaté : 20%</span>
+            <input type="number" id="fmd_adh" min="0" max="100" value="49" oninput="calc()">
+            <span class="ns">📊 Moyen constaté : 49 % — <a href="https://www.francemobilites.fr/sites/frenchmobility/files/fichiers/2024/02/24.02.08_Barom%C3%A8tre_FMD_2024_Infographie_0.pdf" target="_blank">baromètre FMD 2024</a></span>
           </div>
         </div>
         <div class="al al-i" style="font-size:.74rem">
           <span class="al-ico">📊</span>
           <span>
             <a href="https://www.francemobilites.fr/actualites/barometre-fmd-edition-2025" target="_blank">→ Baromètre
-              Forfait Mobilité Durable 2025</a> ·
+              Forfait Mobilités Durables 2025</a> ·
             <a href="https://entreprendre.service-public.gouv.fr/vosdroits/F33808" target="_blank">→ Conditions de mise
               en place</a> ·
 
@@ -2220,7 +2221,7 @@
       // ─── STATE ───────────────────────────────────────────────────────────────
       var nb_sal = 50, sal_moy = 2400, secteur = "gen", cp_val = "", cp_aom = null;
       var vm_taux_custom = null;
-      var pm_voit = 70, pm_tc = 20, pm_velo = 4, pm_cov = 4, pm_aut = 2;
+      var pm_voit = 69, pm_tc = 15, pm_velo = 4, pm_cov = 4, pm_aut = 8;
       var dist_val = 0, tt_pct = 0, tt_j = 0;
       var nb_veh = 5, km_an = 11600, pct_e = 46.7, pct_d = 48.3, pct_el = 5.0;
       var nb_park = 30, type_park = "surface", loyer_park = 130;
@@ -2388,9 +2389,9 @@
         if (dist_val > 25) {
           t.push("Distance > 25 km : le covoiturage et le télétravail sont les leviers prioritaires.");
         } else if (pm_velo < 5) {
-          t.push("Part vélo faible : Forfait Mobilité Durable + abris + ateliers peuvent atteindre 40% de part modale.");
+          t.push("Part vélo faible : Forfait Mobilités Durables + abris + ateliers peuvent atteindre 40% de part modale.");
         }
-        if (pm_cov < 5) t.push("Covoiturage sous-exploité : une plateforme libère des places de stationnement.");
+        if (pm_cov < 5) t.push("Covoiturage : aide à l'inscription sur une appli + challenges pour provoquer l'adoption.");
         var el = document.getElementById("modal_tips");
         el.style.display = t.length ? "flex" : "none";
         if (t.length) el.innerHTML = "<span class='al-ico'>💡</span><span>" + t.join(" ") + "</span>";
@@ -2547,8 +2548,8 @@
         pct_ik = parseFloat(document.getElementById("pct_ik").value.trim()) || 0;
         km_ik = parseFloat(document.getElementById("km_ik").value) || 3000;
         tx_ik = parseFloat(document.getElementById("tx_ik").value) || 0.32;
-        fmd_mt = parseFloat(document.getElementById("fmd_mt").value) || 0;
-        fmd_adh = parseFloat(document.getElementById("fmd_adh").value) || 20;
+        fmd_mt = (function(v){return isNaN(v)?420:v;})(parseFloat(document.getElementById("fmd_mt").value));
+        fmd_adh = (function(v){return isNaN(v)?49:v;})(parseFloat(document.getElementById("fmd_adh").value));
         dep_bgt = 0; dep_nb = 0; // legacy fields, now using dep_total directly
         to_tx = parseFloat(document.getElementById("to_tx").value) || 0;
         to_mob = parseFloat(document.getElementById("to_mob").value) || 0;
@@ -2625,7 +2626,7 @@
             "Nombre de salariés × abonnement mensuel × taux de remboursement × 12. Minimum légal : 50%.", pctT(d.c_tc, d.grand), "Min. 50% abonnement") +
           mkbc("⛽", "Indemnités kilométriques", fmt(d.c_ik), d.nb_ik + " salariés · " + km_ik.toLocaleString("fr-FR") + " km/an", "", false,
             "Remboursements déplacements professionnels avec véhicule personnel. Barème fiscal 2024.", pctT(d.c_ik, d.grand), "") +
-          mkbc("😴", "Forfait Mobilité Durable", fmt(d.c_fmd), fmd_mt > 0 ? d.nb_fmd + " bénéficiaires" : "Non activé", "", false,
+          mkbc("💶", "Forfait Mobilités Durables", fmt(d.c_fmd), fmd_mt > 0 ? d.nb_fmd + " bénéficiaires" : "Non activé", "", false,
             "Versé aux salariés venant à vélo, trottinette ou covoiturage. Exonéré de charges. Plafond : 600€/an.", fmd_mt > 0 ? pctT(d.c_fmd, d.grand) : "") +
           mkbc("💼", "Versement mobilité", fmt(d.c_vm), nb_sal >= 11 && taux ? taux.toFixed(2) + "% masse sal." : nb_sal < 11 ? "Exonéré (<11 salariés)" : "Code postal requis", "", false,
             "Cotisation obligatoire dès 11 salariés. Finance les transports en commun de l’autorité organisatrice de mobilité.", d.c_vm > 0 ? pctMS(d.c_vm) : "", (nb_sal >= 11 ? "Oblig. dès 11 salariés" : "")) +
@@ -2663,11 +2664,11 @@
             detail: dist_val > 25
               ? "⚠️ Distance moyenne > 25 km : le vélo seul n’est pas adapté sur ces distances. Privilégiez le covoiturage et le télétravail."
               : "Part modale du vélo cible. Réduit l’absentéisme (−15%), le stationnement, le turn-over.",
-            impl: ["Forfait Mobilité Durable (jusqu’à 600€/an, exonéré de charges)", "Abris vélo sécurisés", "Ateliers vélo / marquage", "Label Employeur pro-Vélo"],
+            impl: ["Forfait Mobilités Durables (jusqu’à 600€/an, exonéré de charges)", "Abris vélo sécurisés", "Ateliers vélo / marquage", "Label Employeur pro-Vélo"],
             cur: vc, max: dist_val > 25 ? vc : 40, unit: "%",
             saving: function (v) { var dl = Math.max(0, v - vc); return dl > 0 ? dl / 100 * nb_sal * (200 + (C.c_abs_mob || 0) / Math.max(1, nb_sal) * 0.15 + (C.c_park || 0) / Math.max(1, Math.max(1, nb_park)) * 0.08) : 0; },
             cost: function (v) { var dl = Math.max(0, v - vc); return dl > 0 ? Math.round(nb_sal * v / 100) * 300 : 0; },
-            tools: [{ l: "Label Employeur pro-Vélo", u: "https://employeurprovelo.fr/" }, { l: "ADEME — ressources Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "1kmàpied — guide Plan de mobilité employeur", u: "https://www.1kmapied.com/post/plan-mobilite-employeur-5" }]
+            tools: [{ l: "Label Employeur pro-Vélo", u: "https://employeurprovelo.fr/" }, { l: "ADEME — ressources Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "1 km à pied — guide Plan de mobilité employeur", u: "https://www.1kmapied.com/post/plan-mobilite-employeur-5" }]
           },
           {
             id: "sl_cov", ico: "🤝", name: "Déployer le covoiturage",
@@ -2733,7 +2734,7 @@
             cur: 0, max: 50, unit: "% de réduction",
             saving: function (v) { return (C.c_to_mob || 0) * v / 100; },
             cost: function (v) { return v > 0 ? (nb_sal >= 250 ? 20000 : 10000) / 5 : 0; },
-            tools: [{ l: "2R Aventure — Plan de mobilité employeur", u: "https://2raventure.com/plan-de-mobilite/" }, { l: "ADEME — centre de ressources", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "1kmàpied — guide", u: "https://www.1kmapied.com/post/plan-mobilite-employeur-5" }]
+            tools: [{ l: "2R Aventure — Plan de mobilité employeur", u: "https://2raventure.com/plan-de-mobilite/" }, { l: "ADEME — centre de ressources", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "1 km à pied — guide", u: "https://www.1kmapied.com/post/plan-mobilite-employeur-5" }]
           }
         ];
       }
@@ -3130,7 +3131,7 @@
         if (isMed) sections += sec("🏥 Secteur médico-social", [{ l: "Ressources ANAP mobilité", u: "https://www.anap.fr/" }]);
         if (isPro) sections += sec("🧹 Secteur propreté", [{ l: "FARE propreté", u: "https://www.fare-proprete.fr/" }]);
         if (isPub) sections += sec("🏗️ Secteur public et associatif", [
-          { l: "Forfait Mobilité Durable dans la fonction publique", u: "https://www.fonction-publique.gouv.fr/etre-agent-public/ma-remuneration/les-elements-accessoires-de-remuneration/forfait-mobilite-durable-fmd" },
+          { l: "Forfait Mobilités Durables dans la fonction publique", u: "https://www.fonction-publique.gouv.fr/etre-agent-public/ma-remuneration/les-elements-accessoires-de-remuneration/forfait-mobilite-durable-fmd" },
           { l: "Portail RSE", u: "https://portail-rse.beta.gouv.fr/" },
         ]);
         document.getElementById("res_acc").innerHTML = sections;
@@ -3141,10 +3142,10 @@
         var isPub = secteur === "pub";
         var items = [
           { q: "Qu’est-ce qu’un Plan de mobilité employeur ?", a: "Le Plan de mobilité employeur optimise les déplacements liés au travail en termes de coût, qualité de vie et impact carbone. Il comprend un diagnostic, une enquête, un plan d’actions et un suivi. Obligatoire dans certaines zones (Métropole Européenne de Lille +250 salariés), recommandé partout. <a href='https://2raventure.com/plan-de-mobilite/' target='_blank'>→ Outils 2R Aventure</a>" },
-          { q: "Qu’est-ce qu’un accord de mobilité ?", a: "Négocié lors des Négociations Annuelles Obligatoires pour les structures de plus de 50 salariés. Définit les engagements (Forfait Mobilité Durable, transports en commun, covoiturage…). <a href='https://www.1kmapied.com/post/accord-mobilite-entreprise' target='_blank'>→ Exemples d’accords</a>" },
-          { q: "Le Forfait Mobilité Durable est-il obligatoire ?", a: isPub ? "<strong>Oui pour la fonction publique</strong>. <a href='https://www.fonction-publique.gouv.fr/etre-agent-public/ma-remuneration/les-elements-accessoires-de-remuneration/forfait-mobilite-durable-fmd' target='_blank'>→ Détail</a>" : "<strong>Facultatif pour le secteur privé</strong>, fortement recommandé. Jusqu’à 600 €/an exonéré de charges. <a href='https://www.francemobilites.fr/actualites/barometre-fmd-edition-2025' target='_blank'>→ Baromètre 2025</a> · <a href='https://entreprendre.service-public.gouv.fr/vosdroits/F33808' target='_blank'>→ Conditions</a>" },
+          { q: "Qu’est-ce qu’un accord de mobilité ?", a: "Négocié lors des Négociations Annuelles Obligatoires pour les structures de plus de 50 salariés. Définit les engagements (Forfait Mobilités Durables, transports en commun, covoiturage…). <a href='https://www.1kmapied.com/post/accord-mobilite-entreprise' target='_blank'>→ Exemples d’accords</a>" },
+          { q: "Le Forfait Mobilités Durables est-il obligatoire ?", a: isPub ? "<strong>Oui pour la fonction publique</strong>. <a href='https://www.fonction-publique.gouv.fr/etre-agent-public/ma-remuneration/les-elements-accessoires-de-remuneration/forfait-mobilite-durable-fmd' target='_blank'>→ Détail</a>" : "<strong>Facultatif pour le secteur privé</strong>, fortement recommandé. Jusqu’à 600 €/an exonéré de charges. <a href='https://www.francemobilites.fr/actualites/barometre-fmd-edition-2025' target='_blank'>→ Baromètre 2025</a> · <a href='https://entreprendre.service-public.gouv.fr/vosdroits/F33808' target='_blank'>→ Conditions</a>" },
           { q: "Qu’est-ce que le leasing social ?", a: "Permet à des personnes à revenus modestes d’accéder à un véhicule électrique à moins de 100 €/mois. Levier fort pour l’accès à l’emploi. Mobilisez vos salariés éligibles avec un kit de com’ clé en main. <a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank'>→ Kit employeur 2R Aventure</a> · <a href='https://2raventure.github.io/cout-vehicule/calculateur_mobilite_LS' target='_blank'>→ Simulateur salarié</a>" },
-          { q: "Quelles sont les limites de ce calculateur ?", a: "Ratios de simplification basés sur les statistiques nationales 2024. Intègre flotte, parking, transports en commun, indemnités kilométriques, Forfait Mobilité Durable, versement mobilité, frais de déplacement et coûts de ressources humaines. Ne couvre pas l’accidentologie. <strong>Pour des chiffres précis, réalisez un Plan de mobilité employeur complet.</strong>" },
+          { q: "Quelles sont les limites de ce calculateur ?", a: "Ratios de simplification basés sur les statistiques nationales 2024. Intègre flotte, parking, transports en commun, indemnités kilométriques, Forfait Mobilités Durables, versement mobilité, frais de déplacement et coûts de ressources humaines. Ne couvre pas l’accidentologie. <strong>Pour des chiffres précis, réalisez un Plan de mobilité employeur complet.</strong>" },
           { q: "Comment la CARSAT peut-elle aider ?", a: "La CARSAT accompagne sur la prévention des risques routiers. Faites un bilan des accidents de trajet (obligatoire) et rapprochez-vous de la CARSAT régionale si besoin." },
         ];
         document.getElementById("faq_acc").innerHTML = items.map(function (f) {
@@ -3419,7 +3420,7 @@
           "<tr><td>Parking</td><td>" + fmt(d.c_park) + "</td><td>" + pctT(d.c_park, d.grand) + "</td></tr>" +
           "<tr><td>Transport en commun</td><td>" + fmt(d.c_tc) + "</td><td>" + pctT(d.c_tc, d.grand) + "</td></tr>" +
           "<tr><td>Indemnités kilométriques</td><td>" + fmt(d.c_ik) + "</td><td>" + pctT(d.c_ik, d.grand) + "</td></tr>" +
-          "<tr><td>Forfait Mobilité Durable</td><td>" + fmt(d.c_fmd) + "</td><td>" + pctT(d.c_fmd, d.grand) + "</td></tr>" +
+          "<tr><td>Forfait Mobilités Durables</td><td>" + fmt(d.c_fmd) + "</td><td>" + pctT(d.c_fmd, d.grand) + "</td></tr>" +
           "<tr><td>Versement mobilité</td><td>" + fmt(d.c_vm) + "</td><td>" + tautxt + "</td></tr>" +
           "<tr><td>Frais de déplacement (missions)</td><td>" + fmt(d.c_dep) + "</td><td>" + pctT(d.c_dep, d.grand) + "</td></tr>" +
           "<tr style='background:#e8f5f4'><td><strong>Total mobilité directe</strong></td><td><strong>" + fmt(d.c_mob) + "</strong></td><td>" + pctMS(d.c_mob) + " masse sal.</td></tr>" +
@@ -3434,7 +3435,7 @@
           (nb_sal >= 11 ? "<div class='oblig'>ℹ️ <strong>Versement mobilité</strong> (dès 11 salariés) — " + tautxt + "</div>" : "") +
           (nb_sal >= 50 ? "<div class='oblig'>⚖️ <strong>Accord de mobilité</strong> (dès 50 salariés) — Négociations Annuelles Obligatoires</div>" : "") +
           (nb_veh >= 100 ? "<div class='oblig'>🟡 <strong>Verdissement de flotte</strong> (+100 véhicules) — 20% électriques en 2024, 40% en 2027</div>" : "") +
-          "<footer>Généré par le Calculateur Mobilité Employeur — 2R Aventure · DGITM · CEREMA · 1kmàpied | 2raventure.com</footer>" +
+          "<footer>Généré par le Calculateur Mobilité Employeur — 2R Aventure · DGITM · CEREMA · 1 km à pied | 2raventure.com</footer>" +
           "<" + "script>window.onload=function(){setTimeout(function(){window.print();},400);}<" + "/script>" +
           "</body></html>";
         var blob = new Blob([html], { type: "text/html;charset=utf-8" });
@@ -3459,7 +3460,7 @@
           <strong>Qui a conçu cet outil ?</strong>
           <p>CalMob est conçu par <a href="https://2raventure.com/" target="_blank">2R Aventure</a>, <a
               href="https://www.ecologie.gouv.fr/" target="_blank">la DGITM</a>, <a href="https://www.cerema.fr/"
-              target="_blank">le CEREMA</a>, <a href="https://www.1kmapied.com/" target="_blank">1kmàpied</a> et l'ADEME
+              target="_blank">le CEREMA</a>, <a href="https://www.1kmapied.com/" target="_blank">1 km à pied</a> et l'ADEME
             dans le cadre d'un commun soutenu par l'ADEME.</p>
           <a class="ftr-res"
             href="https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/"
