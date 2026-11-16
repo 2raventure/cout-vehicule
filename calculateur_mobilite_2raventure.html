@@ -404,7 +404,6 @@
       .fl-pct {
         font-weight: 700;
         color: var(--v);
-        text-align: right;
         font-size: .79rem
       }
 
@@ -845,6 +844,14 @@
         margin-bottom: 10px;
         overflow: hidden;
         box-shadow: 0 1px 6px rgba(0, 74, 79, .06)
+      }
+      .eco-item.secondary {
+        opacity: .45;
+        filter: grayscale(50%);
+        border-style: dashed
+      }
+      .eco-secondary-label {
+        display:inline-block;background:#e8e8e8;color:#888;border-radius:10px;padding:1px 8px;font-size:.66rem;margin-left:6px;vertical-align:middle
       }
 
       .eco-header {
@@ -1569,7 +1576,7 @@
                 font-family="Asap, sans-serif" font-weight="800" font-size="14.5" fill="#004A4F">€</text>
             </svg><span aria-hidden="true">b</span></span></h1>
         <div class="hero-sub">Calculateur mobilité employeur</div>
-        <p>Combien vous coûte vraiment la mobilité ? Quelles économies pouvez-vous réaliser ? En 5 minutes, obtenez un
+        <p>Combien vous coûte vraiment la mobilité ? Quelles économies pouvez-vous réaliser ? En 10 minutes, obtenez un
           diagnostic personnalisé et les ressources adaptées à votre territoire.</p>
         <button class="btn btn-t" onclick="goTo(1)" style="font-size:.98rem;padding:11px 28px">Démarrer mon diagnostic
           →</button>
@@ -1602,7 +1609,7 @@
             basés sur les statistiques nationales 2024</strong>. Les valeurs pré-remplies correspondent aux moyennes
           nationales — ajustez-les selon votre situation réelle pour plus de précision.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;font-size:.79rem;color:#555">
-          <div style="padding:8px;background:var(--vc);border-radius:7px;text-align:center"><strong>⏱️ 5
+          <div style="padding:8px;background:var(--vc);border-radius:7px;text-align:center"><strong>⏱️ 10
               min</strong><br>Pour remplir</div>
           <div style="padding:8px;background:var(--vc);border-radius:7px;text-align:center"><strong>📊
               Gratuit</strong><br>Sans inscription</div>
@@ -1632,7 +1639,7 @@
             </span>
             <span class="sv" id="nb_sal_v">50</span>
           </div>
-          <input type="range" id="nb_sal_r" min="0" max="500" value="50" step="1" oninput="syncSal('r')">
+          <input type="range" id="nb_sal_r" min="0" max="5000" value="50" step="10" oninput="syncSal('r')">
           <div style="margin-top:5px;display:flex;align-items:center;gap:8px">
             <span class="ns">Valeur précise :</span>
             <input type="number" id="nb_sal_n" value="50" min="0" max="5000"
@@ -1749,10 +1756,25 @@
         <div class="ct">📍 Distance domicile–travail</div>
         <div class="sg">
           <div class="sl"><span>Distance moyenne aller (km)</span><span class="sv" id="dist_v">12 km</span></div>
-          <input type="range" id="dist_r" min="0" max="60" value="12" step="1" oninput="onDist()">
+          <input type="range" id="dist_r" min="0" max="60" value="12" step="1" oninput="syncDist('r')">
+          <div style="margin-top:5px;display:flex;align-items:center;gap:8px"><span class="ns">Valeur précise :</span><input type="number" id="dist_n" value="12" min="0" max="200" step="1" style="width:68px;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.83rem;font-family:'Asap',sans-serif;color:#4D4D4D;background:#fff" oninput="syncDist('n')"><span class="ns">km (aller) — Nationale 2024 : 12 km</span></div>
           <div class="ns" style="margin-top:3px">📊 Moyenne nationale 2024 : 12 km (aller)</div>
         </div>
         <div id="dist_tip" class="al al-i" style="font-size:.75rem"></div>
+      </div>
+      <div class="card">
+        <div class="ct">🚉 Desserte ferroviaire
+          <span class="tw"><span class="ti">?</span><span class="tb">Une gare de rabattement à moins de 5 km du domicile ou du lieu de travail permet de combiner vélo + train, notamment pour des distances de 15 à 60 km. Ce levier réduit la dépendance automobile sur les trajets longue distance.</span></span>
+        </div>
+        <div class="sg">
+          <div class="sl"><span>Vos salariés sont-ils à moins de 5 km d’une gare de rabattement ?</span></div>
+          <select id="gare_rb" style="margin-top:6px;padding:6px 10px;border:1.5px solid var(--bd);border-radius:7px;font-size:.85rem;background:var(--cr);color:var(--tx);width:100%" onchange="calc()">
+            <option value="ne_sait_pas">Je ne sais pas</option>
+            <option value="oui">Oui — une gare accessible à moins de 5 km</option>
+            <option value="non">Non — pas de gare à proximité</option>
+          </select>
+          <div class="ns" style="margin-top:5px">📊 L’intermodalité vélo + train peut réduire de 60 % les émissions CO₂ des trajets domicile-travail sur des distances de 15–60 km.</div>
+        </div>
       </div>
       <div class="card">
         <div class="ct">🏠 Télétravail</div>
@@ -1939,22 +1961,19 @@
 
       <div class="card">
         <div class="ct">💶 Forfait Mobilités Durables
-          <span class="tw"><span class="ti">?</span><span class="tb">Jusqu'à 600€/an par salarié — prime non soumise à
-              cotisation sociale patronale ni salariale (dans la limite du plafond). Pour vélo, trottinette,
-              covoiturage, engins de déplacement personnel motorisés. Facultatif secteur privé, obligatoire fonction
-              publique. ROI moyen : productivité +6-9%, absentéisme -15%.</span></span>
+          <span class="tw"><span class="ti">?</span><span class="tb">Jusqu'à 600 €/an par salarié — exonéré de cotisations sociales. Pour vélo, trottinette, covoiturage et engins de déplacement personnel motorisés.<br><strong>Barème selon nombre de jours de trajet/an</strong> : 30–59 j = 100 € · 60–99 j = 200 € · ≥100 j = 300 € (plafond légal 600 €).<br><strong>Obligatoire</strong> : fonction publique d'État et hospitalière. Soumis à délibération : fonction publique territoriale. <strong>Facultatif</strong> : secteur privé (accords de branche ou d'entreprise). ROI moyen : productivité +6–9 %, absentéisme −15 %.</span></span>
         </div>
         <div class="fr">
           <div class="fg">
             <label>Montant Forfait Mobilités Durables (€/an/salarié)</label>
             <input type="number" id="fmd_mt" min="0" max="600" value="420" step="10" oninput="calc()">
-            <span class="ns">📊 Montant moyen : 420 € — <a href="https://www.francemobilites.fr/sites/frenchmobility/files/fichiers/2024/02/24.02.08_Barom%C3%A8tre_FMD_2024_Infographie_0.pdf" target="_blank">baromètre FMD 2024</a></span>
+            <span class="ns">📊 Montant moyen : 420 € — <a href="https://www.francemobilites.fr/sites/frenchmobility/files/fichiers/2024/02/24.02.08_Barom%C3%A8tre_FMD_2024_Infographie_0.pdf" target="_blank">baromètre Forfait Mobilités Durables (FMD) 2024</a></span>
             <span class="hint">Plafond légal : 600€/an</span>
           </div>
           <div class="fg">
             <label>Taux d'adhésion estimé (%)</label>
             <input type="number" id="fmd_adh" min="0" max="100" value="49" oninput="calc()">
-            <span class="ns">📊 Moyen constaté : 49 % — <a href="https://www.francemobilites.fr/sites/frenchmobility/files/fichiers/2024/02/24.02.08_Barom%C3%A8tre_FMD_2024_Infographie_0.pdf" target="_blank">baromètre FMD 2024</a></span>
+            <span class="ns">📊 Moyen constaté : 49 % — <a href="https://www.francemobilites.fr/sites/frenchmobility/files/fichiers/2024/02/24.02.08_Barom%C3%A8tre_FMD_2024_Infographie_0.pdf" target="_blank">baromètre Forfait Mobilités Durables (FMD) 2024</a></span>
           </div>
         </div>
         <div class="al al-i" style="font-size:.74rem">
@@ -1978,8 +1997,7 @@
         <div class="fr">
           <div class="fg">
             <label>Budget annuel total — frais de déplacement du site (€/an)</label>
-            <input type="number" id="dep_total" min="0" value="18000" step="1000" oninput="calc()">
-            <span class="ns">📊 Exemple : 18 000 €/an (300 €/mois × 5 salariés)</span>
+            <input type="number" id="dep_total" min="0" value="0" step="500" oninput="dep_edited=true;calc()">
           </div>
         </div>
         <!-- Hidden legacy inputs kept for calc() compatibility -->
@@ -2010,9 +2028,13 @@
               coûte 6 à 9 mois de salaire brut.</span></span>
         </div>
         <div class="sg">
-          <div class="sl"><span>Taux de turn-over actuel (%/an)</span><span class="sv" id="to_v">0%</span></div>
-          <input type="range" id="to_tx" min="0" max="60" value="0" step="0.5" oninput="onTO()">
-          <div class="ns" style="margin-top:3px">📊 Turn-over naturel : 10–15%/an. Seuil d'alerte : 20%.</div>
+          <label style="font-size:.82rem;color:var(--tx);font-weight:600;display:block;margin-bottom:4px">Taux de turn-over actuel (%/an)</label>
+          <div class="fl-row" style="align-items:center;gap:8px">
+            <input type="range" id="to_tx_r" min="0" max="60" value="0" step="0.5" style="flex:1" oninput="syncTO('r')">
+            <input type="number" class="fl-num" id="to_tx" min="0" max="100" value="0" step="0.5" style="text-align:left" oninput="syncTO('n')">
+            <span style="font-size:.8rem">%</span>
+          </div>
+          <div class="ns" style="margin-top:3px">📊 Turn-over naturel : 10–15 %/an. Seuil d'alerte : 20 %.</div>
         </div>
         <div id="to_alert" style="display:none;margin-top:5px"></div>
         <div class="sg" style="margin-top:10px">
@@ -2034,10 +2056,13 @@
             <span>Taux d'absentéisme (%/an)
               <span class="tw"><span class="ti">?</span><span class="tb"><strong>Comment calculer ce taux ?</strong><br>Taux d'absentéisme = (Nombre de jours d'absence / Nombre de jours théoriques travaillés) × 100<br><br>Ex. : 10 salariés absents 5 jours chacun sur 220 jours ouvrés × 100 salariés = 10×5 / (100×220) = 2,3%<br><br>Toutes absences hors congés payés et jours fériés : maladie ordinaire, accidents du travail et de trajet, maternité/paternité, absences injustifiées.<br><br>📊 Références : secteur industriel ~5–6%, tertiaire ~4%, national moyen 4–5%/an.</span></span>
             </span>
-            <span class="sv" id="abs_v">0%</span>
           </div>
-          <input type="range" id="abs_tx" min="0" max="100" value="0" step="0.5" oninput="calc()">
-          <div class="ns" style="margin-top:3px">📊 Moyenne nationale : 4–5%/an · Seuil d'alerte : &gt;7%</div>
+          <div class="fl-row" style="align-items:center;gap:8px;margin-top:6px">
+            <input type="range" id="abs_tx_r" min="0" max="20" value="0" step="0.5" style="flex:1" oninput="syncAbs('r')">
+            <input type="number" class="fl-num" id="abs_tx" min="0" max="100" value="0" step="0.5" style="text-align:left" oninput="syncAbs('n')">
+            <span style="font-size:.8rem">%</span>
+          </div>
+          <div class="ns" style="margin-top:3px">📊 Moyenne nationale : 4–5 %/an · Seuil d'alerte : &gt;7 %</div>
         </div>
         <div class="al al-i" style="font-size:.75rem">
           <span class="al-ico">💡</span>
@@ -2147,6 +2172,7 @@
           </div>
           <button class="btn btn-p np" onclick="scrollToSection('bs2')">Voir le plan d'action →</button>
         </div>
+        <div id="axes_recap"></div>
         <div class="csb">
           <strong>⚠️ Accidentologie :</strong> Faites un bilan des accidents de trajet (obligatoire) et si besoin
           d'aide, rapprochez-vous de la CARSAT régionale pour un accompagnement sur la prévention routière.
@@ -2197,7 +2223,7 @@
     <script type="application/json"
       id="d_dept">{"01":1,"02":666,"03":1,"04":671,"05":671,"06":652,"07":1,"08":400,"09":660,"10":100,"11":660,"12":660,"13":655,"14":658,"15":1,"16":659,"17":659,"18":629,"19":659,"20":167,"21":3,"22":5,"23":284,"24":659,"25":664,"26":1,"27":265,"28":629,"29":66,"30":660,"31":660,"32":660,"33":659,"34":660,"35":106,"36":629,"37":629,"38":1,"39":342,"40":659,"41":629,"42":1,"43":1,"44":224,"45":629,"46":660,"47":8,"48":660,"49":89,"50":149,"51":628,"52":665,"53":544,"54":667,"55":366,"56":39,"57":590,"58":338,"59":651,"60":421,"61":194,"62":680,"63":1,"64":659,"65":660,"66":660,"67":663,"68":336,"69":693,"70":3,"71":504,"72":672,"73":1,"74":1,"76":348,"77":704,"78":704,"79":659,"80":642,"81":660,"82":660,"83":132,"84":671,"85":334,"86":659,"87":659,"88":108,"89":3,"90":688,"91":704,"92":704,"93":704,"94":704,"95":704,"97":648,"98":689,"75":704}</script>
     <script type="application/json"
-      id="d_aomdir">{"66":[{"nom":"Perpignan M\u00e9diterran\u00e9e M\u00e9tropole Communaut\u00e9 Urbaine","cp":"66000","ville":"Perpignan","site":"https://perpignanmediterraneemetropole.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Acc\u00e8s au titre Sank\u00e9o Pass PDE SALARIE sous condition d'adh\u00e9sion au Club PDE Employeur de Perpignan M\u00e9diterran\u00e9e M\u00e9tropole","aide_velo":true,"anim_velo":true,"lien_velo":"https://perpignanmediterraneemetropole.fr/tous-a-velo-2023/","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"76":[{"nom":"Le Havre Seine M\u00e9tropole","cp":"76085","ville":"Le Havre","site":"https://www.lehavreseinemetropole.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"M\u00e9tropole Rouen Normandie","cp":"76000","ville":"Rouen","site":"https://www.metropole-rouen-normandie.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Site Astuce","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration de la R\u00e9gion Dieppoise","cp":"76370","ville":"Rouxmesnil-Bouteilles","site":"http://www.agglodieppe-maritime.com/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"56":[{"nom":"Golfe du Morbihan - Vannes Agglom\u00e9ration","cp":"56006","ville":"Vannes","site":"https://www.golfedumorbihan-vannesagglomeration.bzh/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.golfedumorbihan-vannesagglomeration.bzh/covoiturage","anim_cov":true},{"nom":"IZILO Mobilit\u00e9s de Lorient Agglo","cp":"56100","ville":"Lorient","site":"https://www.izilo.bzh/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.izilo.bzh/se-deplacer/covoiturage","anim_cov":true},{"nom":"Auray Quiberon Terre Atlantique","cp":"56400","ville":"Auray","site":"https://www.auray-quiberon.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.auray-quiberon.fr/a-votre-service/mobilites/covoiturage/","anim_cov":true}],"90":[{"nom":"Syndicat Mixte des Transports du Territoire de Belfort","cp":"90000","ville":"Belfort","site":"https://www.smtc90.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.optymo.fr/voiture/covoiturage/","anim_cov":false}],"30":[{"nom":"Syndicat des mobilit\u00e9s de Touraine","cp":"30651","ville":"Tours","site":"https://smt-touraine.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://smt-touraine.fr/parcourez-les-services-publics/klaxit-service-de-covoiturage","anim_cov":true}],"84":[{"nom":"Grand Avignon","cp":"84911","ville":"Avignon","site":"https://www.grandavignon.fr/fr/transport","pdme_online":false,"anim_tc":false,"aide_tc":true,"aide_tc_detail":"jusqu'\u00e0 80% (+10% pour l'employeur, +20% pour le Grand Avignon)","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Ventoux Comtat Venaissin (CoVe)","cp":"84203","ville":"Carpentras","site":"https://www.lacove.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.lacove.fr/covoiturage.html","anim_cov":true}],"11":[{"nom":"Le Grand Narbonne","cp":"11100","ville":"Narbonne","site":"https://www.legrandnarbonne.com","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.legrandnarbonne.com/vivre-au-quotidien/se-deplacer/ecomobilite-en-entreprises","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Carcassonne Agglo","cp":"11890","ville":"Carcassonne","site":"https://www.carcassonne-agglo.fr/fr/services/mobilites.html","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":"https://rtca.carcassonne-agglo.fr/velociteagglo/","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.carcassonne-agglo.fr/fr/actualites/klaxit-devient-blablacar-daily.html","anim_cov":false}],"71":[{"nom":"Le Grand Chalon","cp":"71100","ville":"Chalon sur Sa\u00f4ne","site":"https://www.legrandchalon.fr/competences/mobilites/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 de Communes du Clunisois","cp":"71250","ville":"Cluny","site":"https://enclunisois.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobigo Covoiturage","aide_cov":false,"lien_cov":null,"anim_cov":true},{"nom":"Communaut\u00e9 de communes du Grand Autunois Morvan","cp":"71400","ville":"Autun","site":"https://www.grandautunoismorvan.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobicoop","aide_cov":false,"lien_cov":null,"anim_cov":false}],"87":[{"nom":"Limoges M\u00e9tropole - Communaut\u00e9 Urbaine","cp":"87031","ville":"Limoges","site":"https://www.limoges-metropole.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.limoges-metropole.fr/services/mobilites-nos-missions/les-amenagements-cyclables/vlim-le-service-de-location-de-velos","covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"21":[{"nom":"Dijon M\u00e9tropole","cp":"21073","ville":"Dijon","site":"https://Divia.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"C'est \u00e0 l'employeur de prendre en charge, pas \u00e0 l'AOM","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"DiviaCovoit","aide_cov":false,"lien_cov":null,"anim_cov":false}],"83":[{"nom":"Drac\u00e9nie Provence Verdon agglom\u00e9ration","cp":"83004","ville":"Draguignan","site":"https://www.dracenie.com/mobilite-durable","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Est\u00e9rel C\u00f4te d'Azur Agglom\u00e9ration","cp":"83707","ville":"Saint-Rapha\u00ebl","site":"https://esterelcotedazur-agglo.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://esterelcotedazur-agglo.fr/transports_et_mobilites/se_deplacer_en_voiture/le-covoiturage/","anim_cov":false}],"38":[{"nom":"Syndicat Mixte des Mobilit\u00e9s de l\u2019Aire Grenobloise","cp":"38000","ville":"Grenoble","site":"https://smmag.fr/","pdme_online":true,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"-8% sur l'abonnement annuel","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.veloplus-m.fr/","covoiturage":true,"cv_plateforme":"Karos,Ecov","aide_cov":true,"lien_cov":"https://www.lignesplus-m.fr/","anim_cov":true},{"nom":"Communaut\u00e9 d'agglom\u00e9ration du Beauvaisis","cp":"38000","ville":"Grenoble","site":"https://www.beauvaisis.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":"https://www.beauvais.fr/velo/","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://go.klaxit.com/beauvais","anim_cov":false},{"nom":"Vienne Condrieu Agglom\u00e9ration","cp":"38217","ville":"Vienne","site":"https://www.vienne-condrieu-agglomeration.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true},{"nom":"Communaut\u00e9 de communes Les Vals du Dauphin\u00e9","cp":"38110","ville":"La Tour du Pin","site":"https://www.valsdudauphine.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"Nous ne sommes pas AOM","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.ecomouv-services.fr/louer-un-vae-vals-du-dauphine","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Porte de l'Is\u00e8re","cp":"38080","ville":"L'Isle-d'Abeau","site":"https://capi-agglo.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":"https://economie.capi-agglo.fr/faciliter-vos-deplacements/#1616591999141-b9915617-0d78","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"52":[{"nom":"PETR du Pays de Langres","cp":"52200","ville":"Langres","site":"https://www.pays-langres.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobicoop","aide_cov":false,"lien_cov":"https://covoiturage.linggo.fr/","anim_cov":true}],"17":[{"nom":"Communaut\u00e9 d'agglom\u00e9ration de La Rochelle","cp":"17000","ville":"La Rochelle","site":"https://www.agglo-larochelle.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true}],"14":[{"nom":"Communaut\u00e9 Urbaine CAEN LA MER","cp":"14027","ville":"Caen","site":"https://caenlamer.fr","pdme_online":true,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true}],"59":[{"nom":"Syndicat Mixte des Transports du Douaisis","cp":"59287","ville":"Guesnain","site":"https://www.smtd.fr","pdme_online":true,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"Le r\u00e9seau \u00e9v\u00e9ole du SMTD est en gratuit\u00e9 totale depuis 2022.","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.smtd.fr/pole-mobilite/le-velo-sur-le-douaisis-et-lostrevent/vellow-votre-service-de-location-de-velos-a-assistance-electrique","covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true},{"nom":"Syndicat Mixte Sambre Mobilit\u00e9s","cp":"59605","ville":"Maubeuge","site":"https://www.sambre-mobilites.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"M\u00e9tropole Europ\u00e9enne de Lille","cp":"59000","ville":"Lille","site":"http://www.lillemetropole.fr","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration de Cambrai","cp":"59400","ville":"Cambrai","site":"https://www.agglo-cambrai.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Autre","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Syndicat Intercommunal de Mobilit\u00e9 et d'Organisation Urbaine du Valenciennois (SIMOUV)","cp":"59880","ville":"Saint Saulve","site":"https://www.simouv.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Autre","aide_cov":false,"lien_cov":null,"anim_cov":true}],"49":[{"nom":"Cholet Agglom\u00e9ration","cp":"49319","ville":"Cholet","site":"https://www.choletbus.fr","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"-20% de r\u00e9duction sur abo annuel 26/64 pour toute entreprise engag\u00e9e dans un PDME","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.choletbus.fr/autres-services/2-roues","covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.choletbus.fr/autres-services/covoiturage","anim_cov":true},{"nom":"Communaut\u00e9 Agglom\u00e9ration Saumur Val de Loire","cp":"49400","ville":"Saumur","site":"https://www.saumurvaldeloire.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":false,"lien_cov":"https://ogalo-saumurvaldeloire.fr/ogalo-mobilites/co-voiturage/","anim_cov":true},{"nom":"Angers Loire M\u00e9tropole","cp":"49000","ville":"Angers","site":"https://www.angersloiremetropole.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.irigo.fr/services/irigo-pro","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.irigo.fr/","anim_cov":true},{"nom":"Mauges Communaut\u00e9","cp":"49600","ville":"Beaupr\u00e9au-en-Mauges","site":"https://www.maugescommunaute.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.mooj.fr/mobilites-alternatives/modes-actifs/vae-aide-achat/#:~:text=100%20%E2%82%AC%20pour%20un%20VAE,pour%20un%20mod%C3%A8le%20d%27occasion","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.mooj.fr/covoiturage-mauges/","anim_cov":true}],"27":[{"nom":"Agglo Seine Eure","cp":"27400","ville":"Louviers","site":"https://www.agglo-seine-eure.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"42":[{"nom":"Loire Forez agglom\u00e9ration","cp":"42605","ville":"Montbrison","site":"https://www.loireforez.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true}],"51":[{"nom":"Ch\u00e2lons en Champagne agglo","cp":"51009","ville":"Ch\u00e2lons-en-Champagne","site":"https://www.chalons-agglo.fr/cac","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"89":[{"nom":"Communaut\u00e9 de communes de Puisaye-Forterre","cp":"89130","ville":"Toucy","site":"https://www.puisaye-forterre.com/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":"https://www.puisaye-forterre.com/vivre/aide-a-la-mobilite/","covoiturage":false,"cv_plateforme":"Karos","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration du Grand S\u00e9nonais","cp":"89100","ville":"Sens","site":"https://www.grand-senonais.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"64":[{"nom":"Syndicat des Mobilit\u00e9s Pays Basque Adour","cp":"64104","ville":"Bayonne","site":"https://www.txiktxak.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit,Karos","aide_cov":true,"lien_cov":null,"anim_cov":true}],"28":[{"nom":"Chartres M\u00e9tropole","cp":"28000","ville":"Chartres","site":"https://www.chartres-metropole.fr/dynamique/deplacements/comite-des-partenaires-de-la-mobilite","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"13":[{"nom":"Communaut\u00e9 d'agglom\u00e9ration Arles Crau Camargue Montagnette","cp":"13637","ville":"Arles","site":"https://www.agglo-accm.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"M\u00e9tropole d'Aix-Marseille-Provence","cp":"13000","ville":"Marseille","site":"https://www.lametropolemobilite.fr/","pdme_online":true,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.lametropolemobilite.fr/covoiturage/","anim_cov":true}],"62":[{"nom":"Communaut\u00e9 Urbaine d'Arras","cp":"62026","ville":"Arras","site":"https://www.cu-arras.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":"https://www.passpasscovoiturage.fr/","anim_cov":true},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration du Pays de Saint-Omer","cp":"62500","ville":"Saint-Omer","site":"https://mouveo.ca-pso.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Artois Mobilit\u00e9s","cp":"62300","ville":"Lens","site":"https://www.artois-mobilites.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true}],"79":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration du Niortais","cp":"79027","ville":"Niort","site":"https://www.niortagglo.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"Transports collectifs d\u00e9j\u00e0 gratuits sur l'agglom\u00e9ration du Niortais","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.tanlib.com/a-covoiturage-4.html","anim_cov":true},{"nom":"Agglom\u00e9ration du Bocage Bressuirais","cp":"79300","ville":"Bressuire","site":"https://agglo2b.fr/transports-mobilite","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://reseau-rectoverso.fr/nos-actions/#mobilite","covoiturage":true,"cv_plateforme":"Covoit Modalis","aide_cov":false,"lien_cov":"https://m.covoitmodalis.fr/#/carpools/home","anim_cov":true}],"88":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration d'\u00c9pinal","cp":"88000","ville":"\u00c9pinal","site":"https://www.agglo-epinal.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://vilvolt.fr/location-longue-duree/","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"68":[{"nom":"Colmar Agglom\u00e9ration","cp":"68004","ville":"Colmar","site":"https://www.agglo-colmar.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.agglo-colmar.fr/","anim_cov":true},{"nom":"Mulhouse Alsace Agglom\u00e9ration","cp":"68390","ville":"Sausheim","site":"https://www.m2a.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true}],"25":[{"nom":"Grand Besan\u00e7on M\u00e9tropole","cp":"25034","ville":"Besan\u00e7on","site":"https://www.grandbesancon.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.grandbesancon.fr/infos-pratiques/transports/se-deplacer-plus-simplement/","covoiturage":true,"cv_plateforme":"Mobigo covoiturage","aide_cov":false,"lien_cov":null,"anim_cov":true},{"nom":"Pays de Montb\u00e9liard Agglom\u00e9ration","cp":"25208","ville":"Montb\u00e9liard","site":"https://www.agglo-montbeliard.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":false,"lien_cov":"https://www.evolity.fr/evolity-covoiturage/","anim_cov":true}],"16":[{"nom":"Grand Cognac","cp":"16111","ville":"Cognac","site":"https://www.grand-cognac.fr","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"covoitModalis","aide_cov":false,"lien_cov":null,"anim_cov":false}],"54":[{"nom":"Pays du Lun\u00e9villois","cp":"54300","ville":"Luneville","site":"https://www.pays-lunevillois.com","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobicoop","aide_cov":true,"lien_cov":"https://www.pays-lunevillois.com/mes-deplacements/solutions-dans-le-lunevillois/covoiturage","anim_cov":true},{"nom":"SMITRAL","cp":"54400","ville":"Longwy","site":"https://smitral@grandlongwy.fr","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":false},{"nom":"M\u00e9tropole du Grand Nancy","cp":"54000","ville":"Nancy","site":"https://www.grandnancy.eu","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"22":[{"nom":"Guingamp-Paimpol Agglom\u00e9ration","cp":"22200","ville":"Guingamp","site":"https://www.guingamp-paimpol-agglo.bzh/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"OuestGo","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Lannion-Tr\u00e9gor Communaut\u00e9","cp":"22300","ville":"Lannion","site":"https://www.lannion-tregor.com/fr/deplacements.html","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.lannion-tregor.com/fr/deplacements/le-covoiturage.html","anim_cov":true},{"nom":"Saint Brieuc Armor Agglom\u00e9ration","cp":"22000","ville":"Saint-Brieuc","site":"https://www.saintbrieuc-armor-agglo.bzh/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"OuestGo","aide_cov":false,"lien_cov":null,"anim_cov":true}],"35":[{"nom":"Rennes M\u00e9tropole","cp":"35031","ville":"Rennes","site":"https://metropole.rennes.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Le plan de mobilit\u00e9 doit r\u00e9pondre aux crit\u00e8res de notre label Mobil'employeurs","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.star.fr/star-sur-mesure/entreprises-salaries/entreprises","covoiturage":true,"cv_plateforme":"Autre","aide_cov":false,"lien_cov":null,"anim_cov":true}],"61":[{"nom":"Communaut\u00e9 Urbaine d'Alen\u00e7on","cp":"61000","ville":"Alen\u00e7on","site":"https://cu-alencon.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":"https://alencon.fr/mon-cadre-de-vie/mobilite-et-stationnement/alencon-a-velo/#:~:text=25%20rue%20Dem%C3%A9es%2061000%20Alen%C3%A7on,02%2033%2080%2087%2060","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"81":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Gaillac-Graulhet","cp":"81604","ville":"Gaillac","site":"https://www.gaillac-graulhet.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"44":[{"nom":"Communaut\u00e9 de communes Erdre et Gesvres","cp":"44119","ville":"Grandchamp-des-Fontaines","site":"https://cceg.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true}],"57":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Sarreguemines Confluences","cp":"57200","ville":"Sarreguemines","site":"https://agglo-sarreguemines.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 de communes Sarrebourg Moselle Sud","cp":"57400","ville":"","site":"https://www.cc-sms.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Eurom\u00e9tropole de Metz","cp":"57000","ville":"Metz","site":"https://www.eurometropolemetz.eu/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Convention tripartite avec notre exploitant : tarifs sp\u00e9cifiques sur les abonnements annuels et mensuels (-10%) (https://www.lemet.fr/pdm/)","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":false,"lien_cov":null,"anim_cov":false}],"50":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Saint-L\u00f4 Agglo","cp":"50000","ville":"Saint-L\u00f6","site":"https://www.saint-lo-agglo.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'agglom\u00e9ration Mont Saint-Michel","cp":"50300","ville":"Avranches","site":"https://www.msm-normandie.fr/fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration du Cotentin","cp":"50100","ville":"","site":"https://www.capcotentin.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"Offre en cours de construction","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.capcotentin.fr/velo/","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.capcotentin.fr/voiture-partagee/","anim_cov":true}],"60":[{"nom":"Creil Sud Oise","cp":"60106","ville":"Creil","site":"http://www.creilsudoise.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true},{"nom":"Agglom\u00e9ration de la r\u00e9gion de Compi\u00e8gne","cp":"60200","ville":"Compi\u00e8gne","site":"https://www.agglo-compiegne.fr","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Le r\u00e9seau de transport en commun est gratuit pour tous depuis 1975.","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true}],"80":[{"nom":"Amiens M\u00e9tropole","cp":"80027","ville":"Amiens","site":"https://amiens.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true}],"10":[{"nom":"Troyes Champagne M\u00e9tropole","cp":"10000","ville":"Troyes","site":"https://troyes-champagne-metropole.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://troyes-champagne-metropole.fr/habitervivre/se-deplacer-dans-tcm/covoiturage/","anim_cov":true}],"24":[{"nom":"CA Grand P\u00e9rigueux","cp":"24000","ville":"P\u00e9rigueux","site":"https://www.grandperigueux.fr/au-quotidien/deplacements","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.grandperigueux.fr/au-quotidien/deplacements/velo/aides-a-lachat-velo","covoiturage":true,"cv_plateforme":"Autre","aide_cov":true,"lien_cov":"https://www.grandperigueux.fr/au-quotidien/deplacements/covoiturage-et-autopartage/covoiturage","anim_cov":false}],"40":[{"nom":"CC MACS","cp":"40230","ville":"Saint-Vincent-de-Tyrosse","site":"https://www.cc-macs.org/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"-- TC d\u00e9j\u00e0 gratuit. Obligation employeur de 50% de prise en charge des abonnements du TER.","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.cc-macs.org/entreprendre-travailler/mobilite-durable-pour-les-entreprises/","covoiturage":true,"cv_plateforme":"Autre","aide_cov":false,"lien_cov":"https://covoitmodalis.fr/","anim_cov":true}],"41":[{"nom":"Agglopolys  - Communaut\u00e9 d'Agglom\u00e9ration de Blois","cp":"41000","ville":"Blois","site":"https://Agglopolys.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.agglopolys.fr/1247-le-velo-a-assistance-electrique.htm","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"33":[{"nom":"Bordeaux M\u00e9tropole","cp":"33000","ville":"Bordeaux","site":"https://www.bordeaux-metropole.fr/","pdme_online":true,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"29":[{"nom":"Brest m\u00e9tropole","cp":"29200","ville":"Brest","site":"https://www.mobilite-durable-brest.net","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobicoop,OuestGo","aide_cov":false,"lien_cov":null,"anim_cov":true}],"67":[{"nom":"Eurom\u00e9tropole de Strasbourg","cp":"67000","ville":"Strasbourg","site":"https://www.strasbourg.eu/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.strasbourg.eu/web/strasbourg.eu/-/webmag-authop-la-plateforme-dediee-au-covoiturage","anim_cov":true}],"34":[{"nom":"Montpellier M\u00e9diterran\u00e9e M\u00e9tropole","cp":"34000","ville":"Montpellier","site":"https://www.montpellier3m.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Une convention entre l'employeur et Montpellier M\u00e9diterran\u00e9e M\u00e9tropole doit \u00eatre sign\u00e9e. Ceci offre une r\u00e9duction de 10% sur l'abonnement annuel des salari\u00e9s. https://www.entreprendre-montpellier.com/","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.montpellier3m.fr/vivre-transport/toutes-les-aides-pour-lachat-ou-la-reparation-de-velos","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.montpellier3m.fr/vivre-transport/covoiturez-avec-klaxit","anim_cov":true}],"63":[{"nom":"SMTC-AC","cp":"63000","ville":"Clermont-Ferrand","site":"https://www.smtc-clermont-agglo.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Il s'agit de tarif pr\u00e9f\u00e9rentiels sur les abonnements annuels et/ou mensuels de notre exploitant , infos sur le site du SMTC et d\u00e9tails sur le site de l'exploitant -5%","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"31":[{"nom":"Tisseo Collectivit\u00e9s","cp":"31000","ville":"Toulouse","site":"https://www.commuteo.info/","pdme_online":true,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"Tarifs pr\u00e9f\u00e9rentiels \u00e0 l'achat de titres uniques de transports en commun","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.maisonduvelotoulouse.com/","covoiturage":true,"cv_plateforme":"Karos","aide_cov":false,"lien_cov":"https://covoiteo.info/","anim_cov":true}]}</script>
+      id="d_aomdir">{"66":[{"nom":"Perpignan M\u00e9diterran\u00e9e M\u00e9tropole Communaut\u00e9 Urbaine","cp":"66000","ville":"Perpignan","site":"https://perpignanmediterraneemetropole.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Acc\u00e8s au titre Sank\u00e9o Pass PDE SALARIE sous condition d'adh\u00e9sion au Club PDE Employeur de Perpignan M\u00e9diterran\u00e9e M\u00e9tropole","aide_velo":true,"anim_velo":true,"lien_velo":"https://perpignanmediterraneemetropole.fr/tous-a-velo-2023/","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"76":[{"nom":"Le Havre Seine M\u00e9tropole","cp":"76085","ville":"Le Havre","site":"https://www.lehavreseinemetropole.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"M\u00e9tropole Rouen Normandie","cp":"76000","ville":"Rouen","site":"https://www.metropole-rouen-normandie.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Site Astuce","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration de la R\u00e9gion Dieppoise","cp":"76370","ville":"Rouxmesnil-Bouteilles","site":"http://www.agglodieppe-maritime.com/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"56":[{"nom":"Golfe du Morbihan - Vannes Agglom\u00e9ration","cp":"56006","ville":"Vannes","site":"https://www.golfedumorbihan-vannesagglomeration.bzh/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.golfedumorbihan-vannesagglomeration.bzh/covoiturage","anim_cov":true},{"nom":"IZILO Mobilit\u00e9s de Lorient Agglo","cp":"56100","ville":"Lorient","site":"https://www.izilo.bzh/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.izilo.bzh/se-deplacer/covoiturage","anim_cov":true},{"nom":"Auray Quiberon Terre Atlantique","cp":"56400","ville":"Auray","site":"https://www.auray-quiberon.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.auray-quiberon.fr/a-votre-service/mobilites/covoiturage/","anim_cov":true}],"90":[{"nom":"Syndicat Mixte des Transports du Territoire de Belfort","cp":"90000","ville":"Belfort","site":"https://www.smtc90.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.optymo.fr/voiture/covoiturage/","anim_cov":false}],"30":[{"nom":"Syndicat des mobilit\u00e9s de Touraine","cp":"30651","ville":"Tours","site":"https://smt-touraine.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://smt-touraine.fr/parcourez-les-services-publics/klaxit-service-de-covoiturage","anim_cov":true}],"84":[{"nom":"Grand Avignon","cp":"84911","ville":"Avignon","site":"https://www.grandavignon.fr/fr/transport","pdme_online":false,"anim_tc":false,"aide_tc":true,"aide_tc_detail":"jusqu'\u00e0 80% (+10% pour l'employeur, +20% pour le Grand Avignon)","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Ventoux Comtat Venaissin (CoVe)","cp":"84203","ville":"Carpentras","site":"https://www.lacove.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.lacove.fr/covoiturage.html","anim_cov":true}],"11":[{"nom":"Le Grand Narbonne","cp":"11100","ville":"Narbonne","site":"https://www.legrandnarbonne.com","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.legrandnarbonne.com/vivre-au-quotidien/se-deplacer/ecomobilite-en-entreprises","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Carcassonne Agglo","cp":"11890","ville":"Carcassonne","site":"https://www.carcassonne-agglo.fr/fr/services/mobilites.html","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":"https://rtca.carcassonne-agglo.fr/velociteagglo/","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.carcassonne-agglo.fr/fr/actualites/klaxit-devient-blablacar-daily.html","anim_cov":false}],"71":[{"nom":"Le Grand Chalon","cp":"71100","ville":"Chalon sur Sa\u00f4ne","site":"https://www.legrandchalon.fr/competences/mobilites/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 de Communes du Clunisois","cp":"71250","ville":"Cluny","site":"https://enclunisois.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobigo Covoiturage","aide_cov":false,"lien_cov":null,"anim_cov":true},{"nom":"Communaut\u00e9 de communes du Grand Autunois Morvan","cp":"71400","ville":"Autun","site":"https://www.grandautunoismorvan.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobicoop","aide_cov":false,"lien_cov":null,"anim_cov":false}],"87":[{"nom":"Limoges M\u00e9tropole - Communaut\u00e9 Urbaine","cp":"87031","ville":"Limoges","site":"https://www.limoges-metropole.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.limoges-metropole.fr/services/mobilites-nos-missions/les-amenagements-cyclables/vlim-le-service-de-location-de-velos","covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"21":[{"nom":"Dijon M\u00e9tropole","cp":"21073","ville":"Dijon","site":"https://Divia.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"C'est \u00e0 l'employeur de prendre en charge, pas \u00e0 l'AOM","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"DiviaCovoit","aide_cov":false,"lien_cov":null,"anim_cov":false}],"83":[{"nom":"Drac\u00e9nie Provence Verdon agglom\u00e9ration","cp":"83004","ville":"Draguignan","site":"https://www.dracenie.com/mobilite-durable","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Est\u00e9rel C\u00f4te d'Azur Agglom\u00e9ration","cp":"83707","ville":"Saint-Rapha\u00ebl","site":"https://esterelcotedazur-agglo.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://esterelcotedazur-agglo.fr/transports_et_mobilites/se_deplacer_en_voiture/le-covoiturage/","anim_cov":false}],"38":[{"nom":"Syndicat Mixte des Mobilit\u00e9s de l\u2019Aire Grenobloise","cp":"38000","ville":"Grenoble","site":"https://smmag.fr/","pdme_online":true,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"-8% sur l'abonnement annuel","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.veloplus-m.fr/","covoiturage":true,"cv_plateforme":"Karos,Ecov","aide_cov":true,"lien_cov":"https://www.lignesplus-m.fr/","anim_cov":true},{"nom":"Communaut\u00e9 d'agglom\u00e9ration du Beauvaisis","cp":"38000","ville":"Grenoble","site":"https://www.beauvaisis.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":"https://www.beauvais.fr/velo/","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://go.klaxit.com/beauvais","anim_cov":false},{"nom":"Vienne Condrieu Agglom\u00e9ration","cp":"38217","ville":"Vienne","site":"https://www.vienne-condrieu-agglomeration.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true},{"nom":"Communaut\u00e9 de communes Les Vals du Dauphin\u00e9","cp":"38110","ville":"La Tour du Pin","site":"https://www.valsdudauphine.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"Nous ne sommes pas AOM","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.ecomouv-services.fr/louer-un-vae-vals-du-dauphine","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Porte de l'Is\u00e8re","cp":"38080","ville":"L'Isle-d'Abeau","site":"https://capi-agglo.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":"https://economie.capi-agglo.fr/faciliter-vos-deplacements/#1616591999141-b9915617-0d78","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"52":[{"nom":"PETR du Pays de Langres","cp":"52200","ville":"Langres","site":"https://www.pays-langres.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobicoop","aide_cov":false,"lien_cov":"https://covoiturage.linggo.fr/","anim_cov":true}],"17":[{"nom":"Communaut\u00e9 d'agglom\u00e9ration de La Rochelle","cp":"17000","ville":"La Rochelle","site":"https://www.agglo-larochelle.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true}],"14":[{"nom":"Communaut\u00e9 Urbaine CAEN LA MER","cp":"14027","ville":"Caen","site":"https://caenlamer.fr","pdme_online":true,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true}],"59":[{"nom":"Syndicat Mixte des Transports du Douaisis","cp":"59287","ville":"Guesnain","site":"https://www.smtd.fr","pdme_online":true,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"Le r\u00e9seau \u00e9v\u00e9ole du SMTD est en gratuit\u00e9 totale depuis 2022.","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.smtd.fr/pole-mobilite/le-velo-sur-le-douaisis-et-lostrevent/vellow-votre-service-de-location-de-velos-a-assistance-electrique","covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true},{"nom":"Syndicat Mixte Sambre Mobilit\u00e9s","cp":"59605","ville":"Maubeuge","site":"https://www.sambre-mobilites.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"M\u00e9tropole Europ\u00e9enne de Lille","cp":"59000","ville":"Lille","site":"http://www.lillemetropole.fr","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration de Cambrai","cp":"59400","ville":"Cambrai","site":"https://www.agglo-cambrai.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Autre","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Syndicat Intercommunal de Mobilit\u00e9 et d'Organisation Urbaine du Valenciennois (SIMOUV)","cp":"59880","ville":"Saint Saulve","site":"https://www.simouv.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Autre","aide_cov":false,"lien_cov":null,"anim_cov":true}],"49":[{"nom":"Cholet Agglom\u00e9ration","cp":"49319","ville":"Cholet","site":"https://www.choletbus.fr","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"-20% de r\u00e9duction sur abo annuel 26/64 pour toute entreprise engag\u00e9e dans un PDME","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.choletbus.fr/autres-services/2-roues","covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.choletbus.fr/autres-services/covoiturage","anim_cov":true},{"nom":"Communaut\u00e9 Agglom\u00e9ration Saumur Val de Loire","cp":"49400","ville":"Saumur","site":"https://www.saumurvaldeloire.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":false,"lien_cov":"https://ogalo-saumurvaldeloire.fr/ogalo-mobilites/co-voiturage/","anim_cov":true},{"nom":"Angers Loire M\u00e9tropole","cp":"49000","ville":"Angers","site":"https://www.angersloiremetropole.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.irigo.fr/services/irigo-pro","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.irigo.fr/","anim_cov":true},{"nom":"Mauges Communaut\u00e9","cp":"49600","ville":"Beaupr\u00e9au-en-Mauges","site":"https://www.maugescommunaute.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.mooj.fr/mobilites-alternatives/modes-actifs/vae-aide-achat/#:~:text=100%20%E2%82%AC%20pour%20un%20VAE,pour%20un%20mod%C3%A8le%20d%27occasion","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.mooj.fr/covoiturage-mauges/","anim_cov":true}],"27":[{"nom":"Agglo Seine Eure","cp":"27400","ville":"Louviers","site":"https://www.agglo-seine-eure.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"42":[{"nom":"Loire Forez agglom\u00e9ration","cp":"42605","ville":"Montbrison","site":"https://www.loireforez.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true}],"51":[{"nom":"Ch\u00e2lons en Champagne agglo","cp":"51009","ville":"Ch\u00e2lons-en-Champagne","site":"https://www.chalons-agglo.fr/cac","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"89":[{"nom":"Communaut\u00e9 de communes de Puisaye-Forterre","cp":"89130","ville":"Toucy","site":"https://www.puisaye-forterre.com/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":"https://www.puisaye-forterre.com/vivre/aide-a-la-mobilite/","covoiturage":false,"cv_plateforme":"Karos","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration du Grand S\u00e9nonais","cp":"89100","ville":"Sens","site":"https://www.grand-senonais.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"64":[{"nom":"Syndicat des Mobilit\u00e9s Pays Basque Adour","cp":"64104","ville":"Bayonne","site":"https://www.txiktxak.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit,Karos","aide_cov":true,"lien_cov":null,"anim_cov":true}],"28":[{"nom":"Chartres M\u00e9tropole","cp":"28000","ville":"Chartres","site":"https://www.chartres-metropole.fr/dynamique/deplacements/comite-des-partenaires-de-la-mobilite","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"13":[{"nom":"Communaut\u00e9 d'agglom\u00e9ration Arles Crau Camargue Montagnette","cp":"13637","ville":"Arles","site":"https://www.agglo-accm.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"M\u00e9tropole d'Aix-Marseille-Provence","cp":"13000","ville":"Marseille","site":"https://www.lametropolemobilite.fr/","pdme_online":true,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.lametropolemobilite.fr/covoiturage/","anim_cov":true}],"62":[{"nom":"Communaut\u00e9 Urbaine d'Arras","cp":"62026","ville":"Arras","site":"https://www.cu-arras.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":"https://www.passpasscovoiturage.fr/","anim_cov":true},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration du Pays de Saint-Omer","cp":"62500","ville":"Saint-Omer","site":"https://mouveo.ca-pso.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Artois Mobilit\u00e9s","cp":"62300","ville":"Lens","site":"https://www.artois-mobilites.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true}],"79":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration du Niortais","cp":"79027","ville":"Niort","site":"https://www.niortagglo.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"Transports collectifs d\u00e9j\u00e0 gratuits sur l'agglom\u00e9ration du Niortais","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.tanlib.com/a-covoiturage-4.html","anim_cov":true},{"nom":"Agglom\u00e9ration du Bocage Bressuirais","cp":"79300","ville":"Bressuire","site":"https://agglo2b.fr/transports-mobilite","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://reseau-rectoverso.fr/nos-actions/#mobilite","covoiturage":true,"cv_plateforme":"Covoit Modalis","aide_cov":false,"lien_cov":"https://m.covoitmodalis.fr/#/carpools/home","anim_cov":true}],"88":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration d'\u00c9pinal","cp":"88000","ville":"\u00c9pinal","site":"https://www.agglo-epinal.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://vilvolt.fr/location-longue-duree/","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"68":[{"nom":"Colmar Agglom\u00e9ration","cp":"68004","ville":"Colmar","site":"https://www.agglo-colmar.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.agglo-colmar.fr/","anim_cov":true},{"nom":"Mulhouse Alsace Agglom\u00e9ration","cp":"68390","ville":"Sausheim","site":"https://www.m2a.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true}],"25":[{"nom":"Grand Besan\u00e7on M\u00e9tropole","cp":"25034","ville":"Besan\u00e7on","site":"https://www.grandbesancon.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.grandbesancon.fr/infos-pratiques/transports/se-deplacer-plus-simplement/","covoiturage":true,"cv_plateforme":"Mobigo covoiturage","aide_cov":false,"lien_cov":null,"anim_cov":true},{"nom":"Pays de Montb\u00e9liard Agglom\u00e9ration","cp":"25208","ville":"Montb\u00e9liard","site":"https://www.agglo-montbeliard.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":false,"lien_cov":"https://www.evolity.fr/evolity-covoiturage/","anim_cov":true}],"16":[{"nom":"Grand Cognac","cp":"16111","ville":"Cognac","site":"https://www.grand-cognac.fr","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"covoitModalis","aide_cov":false,"lien_cov":null,"anim_cov":false}],"54":[{"nom":"Pays du Lun\u00e9villois","cp":"54300","ville":"Luneville","site":"https://www.pays-lunevillois.com","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobicoop","aide_cov":true,"lien_cov":"https://www.pays-lunevillois.com/mes-deplacements/solutions-dans-le-lunevillois/covoiturage","anim_cov":true},{"nom":"SMITRAL","cp":"54400","ville":"Longwy","site":"https://smitral@grandlongwy.fr","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":false},{"nom":"M\u00e9tropole du Grand Nancy","cp":"54000","ville":"Nancy","site":"https://www.grandnancy.eu","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"22":[{"nom":"Guingamp-Paimpol Agglom\u00e9ration","cp":"22200","ville":"Guingamp","site":"https://www.guingamp-paimpol-agglo.bzh/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"OuestGo","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Lannion-Tr\u00e9gor Communaut\u00e9","cp":"22300","ville":"Lannion","site":"https://www.lannion-tregor.com/fr/deplacements.html","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.lannion-tregor.com/fr/deplacements/le-covoiturage.html","anim_cov":true},{"nom":"Saint Brieuc Armor Agglom\u00e9ration","cp":"22000","ville":"Saint-Brieuc","site":"https://www.saintbrieuc-armor-agglo.bzh/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"OuestGo","aide_cov":false,"lien_cov":null,"anim_cov":true}],"35":[{"nom":"Rennes M\u00e9tropole","cp":"35031","ville":"Rennes","site":"https://metropole.rennes.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Le plan de mobilit\u00e9 doit r\u00e9pondre aux crit\u00e8res de notre label Mobil'employeurs","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.star.fr/star-sur-mesure/entreprises-salaries/entreprises","covoiturage":true,"cv_plateforme":"Autre","aide_cov":false,"lien_cov":null,"anim_cov":true}],"61":[{"nom":"Communaut\u00e9 Urbaine d'Alen\u00e7on","cp":"61000","ville":"Alen\u00e7on","site":"https://cu-alencon.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":"https://alencon.fr/mon-cadre-de-vie/mobilite-et-stationnement/alencon-a-velo/#:~:text=25%20rue%20Dem%C3%A9es%2061000%20Alen%C3%A7on,02%2033%2080%2087%2060","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"81":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Gaillac-Graulhet","cp":"81604","ville":"Gaillac","site":"https://www.gaillac-graulhet.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"44":[{"nom":"Communaut\u00e9 de communes Erdre et Gesvres","cp":"44119","ville":"Grandchamp-des-Fontaines","site":"https://cceg.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":true}],"57":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Sarreguemines Confluences","cp":"57200","ville":"Sarreguemines","site":"https://agglo-sarreguemines.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 de communes Sarrebourg Moselle Sud","cp":"57400","ville":"","site":"https://www.cc-sms.fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Eurom\u00e9tropole de Metz","cp":"57000","ville":"Metz","site":"https://www.eurometropolemetz.eu/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Convention tripartite avec notre exploitant : tarifs sp\u00e9cifiques sur les abonnements annuels et mensuels (-10%) (https://www.lemet.fr/pdm/)","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":false,"lien_cov":null,"anim_cov":false}],"50":[{"nom":"Communaut\u00e9 d'Agglom\u00e9ration Saint-L\u00f4 Agglo","cp":"50000","ville":"Saint-L\u00f6","site":"https://www.saint-lo-agglo.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'agglom\u00e9ration Mont Saint-Michel","cp":"50300","ville":"Avranches","site":"https://www.msm-normandie.fr/fr/","pdme_online":false,"anim_tc":false,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false},{"nom":"Communaut\u00e9 d'Agglom\u00e9ration du Cotentin","cp":"50100","ville":"","site":"https://www.capcotentin.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"Offre en cours de construction","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.capcotentin.fr/velo/","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.capcotentin.fr/voiture-partagee/","anim_cov":true}],"60":[{"nom":"Creil Sud Oise","cp":"60106","ville":"Creil","site":"http://www.creilsudoise.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true},{"nom":"Agglom\u00e9ration de la r\u00e9gion de Compi\u00e8gne","cp":"60200","ville":"Compi\u00e8gne","site":"https://www.agglo-compiegne.fr","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Le r\u00e9seau de transport en commun est gratuit pour tous depuis 1975.","aide_velo":false,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true}],"80":[{"nom":"Amiens M\u00e9tropole","cp":"80027","ville":"Amiens","site":"https://amiens.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":true}],"10":[{"nom":"Troyes Champagne M\u00e9tropole","cp":"10000","ville":"Troyes","site":"https://troyes-champagne-metropole.fr/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://troyes-champagne-metropole.fr/habitervivre/se-deplacer-dans-tcm/covoiturage/","anim_cov":true}],"24":[{"nom":"CA Grand P\u00e9rigueux","cp":"24000","ville":"P\u00e9rigueux","site":"https://www.grandperigueux.fr/au-quotidien/deplacements","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.grandperigueux.fr/au-quotidien/deplacements/velo/aides-a-lachat-velo","covoiturage":true,"cv_plateforme":"Autre","aide_cov":true,"lien_cov":"https://www.grandperigueux.fr/au-quotidien/deplacements/covoiturage-et-autopartage/covoiturage","anim_cov":false}],"40":[{"nom":"CC MACS","cp":"40230","ville":"Saint-Vincent-de-Tyrosse","site":"https://www.cc-macs.org/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"-- transports en commun (TC) d\u00e9j\u00e0 gratuit. Obligation employeur de 50% de prise en charge des abonnements du TER.","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.cc-macs.org/entreprendre-travailler/mobilite-durable-pour-les-entreprises/","covoiturage":true,"cv_plateforme":"Autre","aide_cov":false,"lien_cov":"https://covoitmodalis.fr/","anim_cov":true}],"41":[{"nom":"Agglopolys  - Communaut\u00e9 d'Agglom\u00e9ration de Blois","cp":"41000","ville":"Blois","site":"https://Agglopolys.fr","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.agglopolys.fr/1247-le-velo-a-assistance-electrique.htm","covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"33":[{"nom":"Bordeaux M\u00e9tropole","cp":"33000","ville":"Bordeaux","site":"https://www.bordeaux-metropole.fr/","pdme_online":true,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"29":[{"nom":"Brest m\u00e9tropole","cp":"29200","ville":"Brest","site":"https://www.mobilite-durable-brest.net","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Mobicoop,OuestGo","aide_cov":false,"lien_cov":null,"anim_cov":true}],"67":[{"nom":"Eurom\u00e9tropole de Strasbourg","cp":"67000","ville":"Strasbourg","site":"https://www.strasbourg.eu/","pdme_online":false,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"","aide_velo":true,"anim_velo":true,"lien_velo":null,"covoiturage":true,"cv_plateforme":"Karos","aide_cov":true,"lien_cov":"https://www.strasbourg.eu/web/strasbourg.eu/-/webmag-authop-la-plateforme-dediee-au-covoiturage","anim_cov":true}],"34":[{"nom":"Montpellier M\u00e9diterran\u00e9e M\u00e9tropole","cp":"34000","ville":"Montpellier","site":"https://www.montpellier3m.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Une convention entre l'employeur et Montpellier M\u00e9diterran\u00e9e M\u00e9tropole doit \u00eatre sign\u00e9e. Ceci offre une r\u00e9duction de 10% sur l'abonnement annuel des salari\u00e9s. https://www.entreprendre-montpellier.com/","aide_velo":true,"anim_velo":true,"lien_velo":"https://www.montpellier3m.fr/vivre-transport/toutes-les-aides-pour-lachat-ou-la-reparation-de-velos","covoiturage":true,"cv_plateforme":"BlaBlaCar Daily / Klaxit","aide_cov":true,"lien_cov":"https://www.montpellier3m.fr/vivre-transport/covoiturez-avec-klaxit","anim_cov":true}],"63":[{"nom":"SMTC-AC","cp":"63000","ville":"Clermont-Ferrand","site":"https://www.smtc-clermont-agglo.fr/","pdme_online":false,"anim_tc":true,"aide_tc":true,"aide_tc_detail":"Il s'agit de tarif pr\u00e9f\u00e9rentiels sur les abonnements annuels et/ou mensuels de notre exploitant , infos sur le site du SMTC et d\u00e9tails sur le site de l'exploitant -5%","aide_velo":false,"anim_velo":false,"lien_velo":null,"covoiturage":false,"cv_plateforme":"","aide_cov":false,"lien_cov":null,"anim_cov":false}],"31":[{"nom":"Tisseo Collectivit\u00e9s","cp":"31000","ville":"Toulouse","site":"https://www.commuteo.info/","pdme_online":true,"anim_tc":true,"aide_tc":false,"aide_tc_detail":"Tarifs pr\u00e9f\u00e9rentiels \u00e0 l'achat de titres uniques de transports en commun","aide_velo":false,"anim_velo":true,"lien_velo":"https://www.maisonduvelotoulouse.com/","covoiturage":true,"cv_plateforme":"Karos","aide_cov":false,"lien_cov":"https://covoiteo.info/","anim_cov":true}]}</script>
 
     <script>
       var AOM_LIST = JSON.parse(document.getElementById('d_aom').textContent);
@@ -2278,8 +2304,10 @@
       // ─── SYNC ─────────────────────────────────────────────────────────────────
       function syncSal(src) {
         var v = src === "r" ? parseInt(document.getElementById("nb_sal_r").value) || 50 : parseInt(document.getElementById("nb_sal_n").value) || 50;
-        if (src === "r") document.getElementById("nb_sal_n").value = v; else document.getElementById("nb_sal_r").value = Math.min(v, 500);
-        nb_sal = v; document.getElementById("nb_sal_v").textContent = v; updateOblig0(); updateVMCard(); calc();
+        if (src === "r") document.getElementById("nb_sal_n").value = v; else document.getElementById("nb_sal_r").value = v;
+        nb_sal = v; document.getElementById("nb_sal_v").textContent = v;
+        if (!dep_edited) { document.getElementById("dep_total").value = 0; }
+        updateOblig0(); updateVMCard(); calc();
       }
       function syncSalMoy(src) {
         var v = src === "r" ? parseInt(document.getElementById("sal_moy_r").value) || 2400 : parseInt(document.getElementById("sal_moy_n").value) || 2400;
@@ -2395,8 +2423,8 @@
       function updateModalTips() {
         var t = [];
         if (pm_voit > 60) t.push("Voiture seule dominante (" + Math.round(pm_voit) + "%). Un plan de mobilité peut réduire ce ratio.");
-        if (dist_val > 25) {
-          t.push("Distance > 25 km : le covoiturage et le télétravail sont les leviers prioritaires.");
+        if (dist_val > 12) {
+          t.push("Distance > 12 km : covoiturage, transports en commun et vélo + train sont les leviers prioritaires.");
         } else if (pm_velo < 5) {
           t.push("Part vélo faible : Forfait Mobilités Durables + abris + ateliers peuvent atteindre 40% de part modale.");
         }
@@ -2405,18 +2433,33 @@
         el.style.display = t.length ? "flex" : "none";
         if (t.length) el.innerHTML = "<span class='al-ico'>💡</span><span>" + t.join(" ") + "</span>";
       }
+      function syncDist(src) {
+        var r = document.getElementById("dist_r"), n = document.getElementById("dist_n");
+        if (src === "r") { dist_val = parseInt(r.value)||0; if(n) n.value = dist_val; }
+        else { dist_val = Math.min(200, Math.max(0, parseInt(n.value)||0)); r.value = Math.min(60, dist_val); }
+        document.getElementById("dist_v").textContent = dist_val + " km";
+        // update dist_tip
+        var tip = document.getElementById("dist_tip");
+        if(tip){
+          if (dist_val <= 12) tip.innerHTML = "<span class='al-ico'>🚲</span><span>Distance ≤ 12 km : <strong>le vélo est le levier prioritaire</strong>.</span>";
+          else if (dist_val <= 20) tip.innerHTML = "<span class='al-ico'>⚡</span><span>Distance 12–20 km : <strong>vélo à assistance électrique (VAE)</strong> idéale.</span>";
+          else if (dist_val <= 30 && gare_rb_val === "oui") tip.innerHTML = "<span class='al-ico'>🚉</span><span>Distance 20–30 km + gare à proximité : <strong>intermodalité vélo + train</strong> très favorable.</span>";
+          else tip.innerHTML = "<span class='al-ico'>🚗</span><span>Distance supérieure à 20 km : covoiturage, transports en commun et télétravail sont les leviers prioritaires.</span>";
+        }
+        calc();
+      }
       function onDist() {
         dist_val = parseInt(document.getElementById("dist_r").value) || 0;
         document.getElementById("dist_v").textContent = dist_val + " km";
         var tip = document.getElementById("dist_tip");
         if (dist_val <= 15) tip.innerHTML = "<span class='al-ico'>🚲</span><span>Distance ≤ 15 km : <strong>le vélo est le levier prioritaire</strong>.</span>";
-        else if (dist_val <= 20) tip.innerHTML = "<span class='al-ico'>⚡</span><span>Distance 15–20 km : le <strong>VAE</strong> est pertinent, combiné aux transports en commun.</span>";
-        else if (dist_val <= 30) tip.innerHTML = "<span class='al-ico'>🤝</span><span>Distance 20–30 km : misez sur <strong>les TC et le covoiturage</strong>.</span>";
+        else if (dist_val <= 20) tip.innerHTML = "<span class='al-ico'>⚡</span><span>Distance 15–20 km : le <strong>vélo à assistance électrique (VAE)</strong> est pertinent, combiné aux transports en commun.</span>";
+        else if (dist_val <= 30) tip.innerHTML = "<span class='al-ico'>🤝</span><span>Distance 20–30 km : misez sur les transports en commun et le covoiturage.</span>";
         else tip.innerHTML = "<span class='al-ico'>🚗</span><span>Distance &gt; 30 km : <strong>covoiturage organisé</strong> et leviers organisationnels (semaine 4j, télétravail selon secteur).</span>";
         tip.style.display = "flex"; calc();
       }
       function onTT() { tt_pct = parseInt(document.getElementById("tt_pct_r").value) || 0; document.getElementById("tt_pct_v").textContent = tt_pct + "%"; calc(); }
-      var lockF = false;
+      var dep_edited = false; var gare_rb_val = "ne_sait_pas"; var lockF = false;
       var FK = ["e", "d", "el"];
       function syncFleetUI(fv) {
         FK.forEach(function(k) {
@@ -2529,9 +2572,18 @@
         if (proprio === "oui_amorti") return nb_park * pc.entretien; // entretien forfaitaire uniquement
         return nb_park * (pc.invest / 20 + pc.entretien);
       }
+      function syncTO(src) {
+        var r = document.getElementById("to_tx_r"), n = document.getElementById("to_tx");
+        if (src === "r") n.value = r.value; else r.value = Math.min(60, parseFloat(n.value)||0);
+        onTO();
+      }
+      function syncAbs(src) {
+        var r = document.getElementById("abs_tx_r"), n = document.getElementById("abs_tx");
+        if (src === "r") n.value = r.value; else r.value = Math.min(20, parseFloat(n.value)||0);
+        calc();
+      }
       function onTO() {
         to_tx = parseFloat(document.getElementById("to_tx").value) || 0;
-        document.getElementById("to_v").textContent = to_tx + "%";
         var al = document.getElementById("to_alert");
         if (to_tx > 20) { al.className = "al al-d"; al.style.display = "flex"; al.innerHTML = "<span class='al-ico'>⚠️</span><span>Turn-over <strong>" + to_tx + "%</strong> : signal d’alerte.</span>"; }
         else if (to_tx > 15) { al.className = "al al-w"; al.style.display = "flex"; al.innerHTML = "<span class='al-ico'>⚠️</span><span>Turn-over <strong>" + to_tx + "%</strong> légèrement au-dessus de la normale.</span>"; }
@@ -2560,6 +2612,9 @@
         tx_ik = parseFloat(document.getElementById("tx_ik").value) || 0.32;
         fmd_mt = (function(v){return isNaN(v)?420:v;})(parseFloat(document.getElementById("fmd_mt").value));
         fmd_adh = (function(v){return isNaN(v)?49:v;})(parseFloat(document.getElementById("fmd_adh").value));
+        var gare_rb_el = document.getElementById("gare_rb");
+        gare_rb_val = gare_rb_el ? gare_rb_el.value : "ne_sait_pas";
+        var gare_rb = gare_rb_val;
         dep_bgt = 0; dep_nb = 0; // legacy fields, now using dep_total directly
         to_tx = parseFloat(document.getElementById("to_tx").value) || 0;
         to_mob = parseFloat(document.getElementById("to_mob").value) || 0;
@@ -2570,9 +2625,7 @@
 
         document.getElementById("nb_sal_v").textContent = nb_sal;
         document.getElementById("sal_moy_v").textContent = sal_moy.toLocaleString("fr-FR") + " €";
-        document.getElementById("to_v").textContent = to_tx + "%";
         document.getElementById("to_mob_v").textContent = to_mob + "%";
-        document.getElementById("abs_v").textContent = abs_tx + "%";
         document.getElementById("tt_pct_v").textContent = tt_pct + "%";
         document.getElementById("tt_j_v").textContent = tt_j + " j";
         document.getElementById("dist_v").textContent = dist_val + " km";
@@ -2627,6 +2680,16 @@
 
       function renderBilan() {
         var d = C; var taux = getVMTaux();
+        // Résumé plan d'action sous le bilan
+        var arEl = document.getElementById("axes_recap");
+        if (arEl) {
+          var _axHtml = buildAxesCibles();
+          arEl.innerHTML = _axHtml
+            ? "<div style='margin-top:12px;border-top:2px dashed var(--bd);padding-top:12px'>"
+              + "<div style='font-size:.8rem;font-weight:700;color:var(--v);margin-bottom:8px'>🎯 Résumé du plan d'action</div>"
+              + _axHtml + "</div>"
+            : "";
+        }
         document.getElementById("kpi_direct").innerHTML =
           mkbc("🚗", "Flotte de véhicules", fmt(d.c_fleet), nb_veh + " véh. · " + km_an.toLocaleString("fr-FR") + " km/an", "rd", false,
             "Barème kilométrique × kilométrage × 1,35 (frais réels) + Taxe sur les véhicules de société + gestion administrative.", pctT(d.c_fleet, d.grand), "Nat. : 5 000–10 000€/véh./an") +
@@ -2634,8 +2697,6 @@
             "Amortissement sur 20 ans + entretien. Surface : 3 500€/pl. Silo : 13 000€. Souterrain : 25 000€.", pctT(d.c_park, d.grand), "") +
           mkbc("🚌", "Transport en commun", fmt(d.c_tc), d.nb_tc + " salariés · " + rbt_tc + "% remb.", "", false,
             "Nombre de salariés × abonnement mensuel × taux de remboursement × 12. Minimum légal : 50%.", pctT(d.c_tc, d.grand), "Min. 50% abonnement") +
-          mkbc("⛽", "Indemnités kilométriques", fmt(d.c_ik), d.nb_ik + " salariés · " + km_ik.toLocaleString("fr-FR") + " km/an", "", false,
-            "Remboursements déplacements professionnels avec véhicule personnel. Barème fiscal 2024.", pctT(d.c_ik, d.grand), "") +
           mkbc("💶", "Forfait Mobilités Durables", fmt(d.c_fmd), fmd_mt > 0 ? d.nb_fmd + " bénéficiaires" : "Non activé", "", false,
             "Versé aux salariés venant à vélo, trottinette ou covoiturage. Exonéré de charges. Plafond : 600€/an.", fmd_mt > 0 ? pctT(d.c_fmd, d.grand) : "") +
           mkbc("💼", "Versement mobilité", fmt(d.c_vm), nb_sal >= 11 && taux ? taux.toFixed(2) + "% masse sal." : nb_sal < 11 ? "Exonéré (<11 salariés)" : "Code postal requis", "", false,
@@ -2667,42 +2728,44 @@
 
       function buildEcoItems() {
         var vc = Math.round(pm_velo), cc = Math.round(pm_cov), ec = Math.round(pct_el), ttc = tt_pct;
+        var SECTEURS_PRESENTIEL_ECO = ["industrie", "btp", "logistique", "agriculture", "hotellerie", "sante", "restauration", "med"];
+        var estPresentielEco = SECTEURS_PRESENTIEL_ECO.indexOf(secteur || "") >= 0;
         ECO_ITEMS = [
           {
             id: "sl_velo", ico: "🚲", name: "Encourager le vélo",
-            hidden: dist_val > 25,
-            detail: dist_val > 25
-              ? "⚠️ Distance moyenne > 25 km : le vélo seul n’est pas adapté sur ces distances. Privilégiez le covoiturage et le télétravail."
-              : "Part modale du vélo cible. Réduit l’absentéisme (−15%), le stationnement, le turn-over.",
+            hidden: dist_val > 12,
+            detail: dist_val > 12
+              ? "⚠️ Distance moyenne > 12 km : le vélo seul n’est pas adapté sur ces distances. Privilégiez les transports en commun, le covoiturage et le vélo + train."
+              : "Part modale du vélo cible. Coût FMD : 600 €/salarié/an (exonéré de charges). Économies : 1 500–3 000 €/place de parking libérée/an, absentéisme −15 %, fidélisation améliorée.",
             impl: ["Forfait Mobilités Durables (jusqu’à 600€/an, exonéré de charges)", "Abris vélo sécurisés", "Ateliers vélo / marquage", "Label Employeur pro-Vélo"],
-            cur: vc, max: dist_val > 25 ? vc : 40, unit: "%",
+            cur: vc, max: dist_val > 12 ? vc : 40, unit: "% part modale vélo",
             saving: function (v) { var dl = Math.max(0, v - vc); return dl > 0 ? dl / 100 * nb_sal * (200 + (C.c_abs_mob || 0) / Math.max(1, nb_sal) * 0.15 + (C.c_park || 0) / Math.max(1, Math.max(1, nb_park)) * 0.08) : 0; },
-            cost: function (v) { var dl = Math.max(0, v - vc); return dl > 0 ? Math.round(nb_sal * v / 100) * 300 : 0; },
-            tools: [{ l: "Label Employeur pro-Vélo", u: "https://employeurprovelo.fr/" }, { l: "ADEME — ressources Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "1 km à pied — guide Plan de mobilité employeur", u: "https://www.1kmapied.com/post/plan-mobilite-employeur-5" }]
+            cost: function (v) { var dl = Math.max(0, v - vc); if(dl<=0) return 0; var nbV = Math.round(nb_sal * v / 100); return nbV * 300 + nbV * 50; },
+            tools: [{ l: "Label Employeur pro-Vélo", u: "https://employeurprovelo.fr/" }, { l: "ADEME — ressources Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "Kit Tous à Biclou", u: "https://app.notion.com/p/Tous-Biclou-2071d74b98228231939f8134b6e42bc4" }]
           },
           {
             id: "sl_cov", ico: "🤝", name: "Déployer le covoiturage",
-            detail: "Part modale du covoiturage cible. Libère des places de stationnement et fidélise.",
+            detail: "Part modale du covoiturage cible. Chaque 10 % de salariés covoitureurs libère ~5 places de stationnement (1 500–3 000 €/place/an). Peut réduire l'absentéisme mobilité de 20 %.",
             impl: ["Convention avec une plateforme de covoiturage", "Communication interne", "Incitation au premier trajet"],
-            cur: cc, max: 30, unit: "%",
+            priority: (dist_val > 12 || estPresentielEco), cur: cc, max: 30, unit: "% part modale covoiturage",
             saving: function (v) { var dl = Math.max(0, v - cc); if (dl <= 0) return 0; var pl = Math.round(nb_park * (dl / 100) * 0.5); var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio3 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; var cppl = type_park === "loue" ? loyer_park * 12 : (proprio3 === "oui_amorti" ? pc.entretien : pc.invest / 20 + pc.entretien); return pl * cppl; },
             cost: function (v) { return v > cc ? (nb_sal < 50 ? 3000 : nb_sal < 200 ? 6000 : 12000) : 0; },
-            tools: [{ l: "Karos", u: "https://www.karos.fr/" }, { l: "Ecov — lignes de covoiturage", u: "https://www.ecov.fr/" }, { l: "PassPass Covoiturage", u: "https://www.passpasscovoiturage.fr/" }, { l: "Mobicoop", u: "https://www.mobicoop.fr/" }]
+            tools: [{ l: "Employeurs Pro-Covoiturage ADEME", u: "https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/" }, { l: "Ecov — lignes de covoiturage", u: "https://www.ecov.fr/" }, { l: "PassPass Covoiturage", u: "https://www.passpasscovoiturage.fr/" }, { l: "Mobicoop", u: "https://www.mobicoop.fr/" }]
           },
           {
             id: "sl_elec", ico: "⚡", name: "Électrifier la flotte de véhicules",
-            detail: "% de véhicules électriques dans la flotte cible. Réduit le coût d’usage.",
+            detail: "% de véhicules électriques dans la flotte cible. Économies carburant : ~1 500€/véhicule/an. Coût : borne ~1 500€ + surcoût véhicule réduit par aides (jusqu’à5 000€ bonus leasing).",
             impl: ["Audit de flotte (MobiliPro — ADEME)", "Bornes de recharge (~1 500€/borne)", "Aides à l’achat de véhicules électriques"],
-            cur: ec, max: 70, unit: "%",
-            saving: function (v) { var dl = Math.max(0, v - ec) / 100; return dl * nb_veh * km_an * (0.397 - 0.357); },
-            cost: function (v) { return Math.max(0, v - ec) / 100 * nb_veh * 1500 / 7; },
+            cur: ec, max: 70, unit: "% flotte électrique",
+            saving: function (v) { var dl = Math.max(0, v - ec) / 100; return Math.round(dl * nb_veh * 3124); },
+            cost: function (v) { var dl = Math.max(0, v - ec) / 100; return Math.round(dl * nb_veh * 150); },
             tools: [{ l: "MobiliPro — audit flotte (ADEME)", u: "https://www.mobilipro.fr/" },
             ...(isIDF(cp_val) ? [{ l: "Véligo pro (Ile-de-France) — location vélo à assistance électrique", u: "https://www.veligo-location.fr/professionnels/comment-s-abonnner" }] : [])]
           },
           {
-            id: "sl_park", ico: "🅿️", name: "Libérer des places de stationnement",
+            id: "sl_park", ico: "🅿️", name: "Réduire les places de stationnement",
             detail: (function() {
-              if (pm_voit > 50 && pm_tc > 15) return "Voiture solo dominante (" + Math.round(pm_voit) + "%) et bonne desserte TC (" + Math.round(pm_tc) + "%) : réduire l’offre de stationnement est un levier puissant de report modal — et libère du foncier pour végétalisation, espaces conviviaux ou extension du bâti.";
+              if (pm_voit > 50 && pm_tc > 15) return "Voiture solo dominante (" + Math.round(pm_voit) + "%) et bonne desserte en transports en commun (" + Math.round(pm_tc) + "%) : réduire l’offre de stationnement est un levier puissant de report modal — et libère du foncier pour végétalisation, espaces conviviaux ou extension du bâti.";
               if (pm_voit > 50) return "Voiture solo dominante (" + Math.round(pm_voit) + "%) : limiter le stationnement gratuit encourage le changement de comportement et libère du foncier (végétalisation, espaces partagés).";
               return "Nombre de places libérées via report modal. Chaque place récupérée représente une économie directe et un potentiel de réaffectation foncière.";
             })(),
@@ -2716,35 +2779,37 @@
             })(),
             cur: 0, max: Math.max(1, nb_park), unit: " places",
             saving: function (v) { var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio4 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; return v * (type_park === "loue" ? loyer_park * 12 : (proprio4 === "oui_amorti" ? pc.entretien : pc.invest / 20 + pc.entretien)); },
-            cost: function (v) { return v > 0 ? (nb_sal >= 250 ? 20000 : 10000) / 5 : 0; },
+            cost: function (v) { if(v<=0) return 0; var base = nb_sal < 50 ? 3000 : nb_sal < 250 ? 6000 : nb_sal < 1000 ? 12000 : 20000; var local = isHdF(cp_val) ? 0.8 : 1; return Math.round(base * local / 5); },
             tools: [{ l: "2R Aventure — outils Plan de mobilité employeur", u: "https://2raventure.com/plan-de-mobilite/" }, { l: "ADEME — mettre en place un Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }]
           },
           {
             id: "sl_tt", ico: "🏠", name: "Développer le télétravail",
-            detail: "% du temps de travail en télétravail cible. Réduit stationnement, absentéisme et turn-over.",
+            detail: estPresentielEco
+              ? "⚠️ Secteur en présentiel : le télétravail n'est pas applicable dans ce type d'activité. Privilégiez la semaine de 4 jours et le covoiturage."
+              : "% du temps de travail en télétravail cible. 1 j/semaine = −20 % de déplacements. Économies estimées : 500–1 500 €/salarié/an (parking + absentéisme). Coût de mise en place : ~2 000 €.",
             impl: ["Accord ou charte de télétravail", "Organisation des présences sur site", "Équipement des salariés"],
-            cur: ttc, max: 80, unit: "%",
+            cur: ttc, max: 80, unit: "% du temps en télétravail",
             saving: function (v) { var dl = Math.max(0, v - ttc) / 100; var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio5 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; var cppl2 = type_park === "loue" ? loyer_park * 12 : (proprio5 === "oui_amorti" ? pc.entretien : pc.invest / 20 + pc.entretien); var ps = Math.round(nb_park * dl * 0.3) * cppl2; var rs = dl * nb_sal * (C.c_abs_mob || 0) / Math.max(1, nb_sal) * 0.2; return ps + rs; },
             cost: function (v) { return v > ttc ? 2000 : 0; },
-            tools: []
+            tools: [{ l: "Travailler l’organisation du travail", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/jai-un-projet-rh-ou-dorganisation-du-travail/" }]
           },
           {
             id: "sl_dist", ico: "📍", name: "Réduire les distances domicile–travail",
-            detail: "Via recrutement local ou mobilité interne géographique. Réduit les indemnités kilométriques et facilite l’accès à l’emploi.",
+            detail: "Via recrutement local ou mobilité interne géographique. Réduit les indemnités kilométriques et l’abcéisme. Impact RH : -15 % de turn-over sur les postes à faible salaire. Facilite l’accès à l’emploi local.",
             impl: ["Outil Kelsite (mobilité interne géographique)", "Aide à la mobilité pour les candidats éloignés", "Partenariat avec les acteurs de l’insertion"],
-            cur: 0, max: 50, unit: "% de réduction",
+            cur: 0, max: 50, unit: "% de réduction des coûts mob.",
             saving: function (v) { return v > 0 ? ((C.c_ik || 0) * v / 100 + (C.c_to_mob || 0) * v / 200) : 0; },
             cost: function (v) { return v > 0 ? 1500 : 0; },
             tools: [{ l: "Kelsite — outil de mobilité interne géographique", u: "https://www.1kmapied.com/outil/kelsite" }]
           },
           {
-            id: "sl_to", ico: "📉", name: "Initier un Plan de mobilité employeur",
-            detail: "Réduit le turn-over lié aux difficultés de trajet et renforce l’attractivité pour les candidats éloignés.",
+            id: "sl_to", ico: "📉", name: "Initier un plan de mobilité employeur",
+            detail: "Démarche structurée : diagnostic, enquête salariés, plan d’actions, dépôt. Ouvre droit à des aides ADEME et AOM. Coût AMO : 3 000–15 000€ selon la taille. La démarche génère en moyenne 10 % de réduction des coûts de mobilité totaux (stationnement + indemnités + abséntéisme). Réduit le turn-over et renforce l’attractivité candidats.",
             impl: ["Diagnostic d’accessibilité", "Enquête salariés", "Plan d’actions", "Dépôt auprès de l’autorité organisatrice de mobilité"],
-            cur: 0, max: 50, unit: "% de réduction",
+            cur: 0, max: 50, unit: "% de réduction des coûts mob.",
             saving: function (v) { return (C.c_to_mob || 0) * v / 100; },
-            cost: function (v) { return v > 0 ? (nb_sal >= 250 ? 20000 : 10000) / 5 : 0; },
-            tools: [{ l: "2R Aventure — Plan de mobilité employeur", u: "https://2raventure.com/plan-de-mobilite/" }, { l: "ADEME — centre de ressources", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "1 km à pied — guide", u: "https://www.1kmapied.com/post/plan-mobilite-employeur-5" }]
+            cost: function (v) { if(v<=0) return 0; var base = nb_sal < 50 ? 3000 : nb_sal < 250 ? 6000 : nb_sal < 1000 ? 12000 : 20000; var local = isHdF(cp_val) ? 0.8 : 1; return Math.round(base * local / 5); },
+            tools: [{ l: "2R Aventure — Plan de mobilité employeur", u: "https://2raventure.com/plan-de-mobilite/" }, { l: "ADEME — centre de ressources", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }]
           }
         ];
       }
@@ -2772,7 +2837,7 @@
           var item = s.item, v = s.v;
           var saving = item.saving(v);
           var isHidden = item.hidden === true;
-          var isOptional = saving <= 0;
+          var isOptional = (saving <= 0) && !item.priority;
           var implH = item.impl.map(function (i) { return "<span class='eco-impl-tag'>" + i + "</span>"; }).join("");
           var toolsH = item.tools.map(function (t) { return "<a href='" + t.u + "' target='_blank' class='eco-tool-link'><span>→</span>" + t.l + "</a>"; }).join("");
           var toolsSec = item.tools.length ? "<div class='eco-tools-section'><div class='eco-impl-title'>Outils et ressources</div><div class='eco-tools-links'>" + toolsH + "</div></div>" : "";
@@ -2781,7 +2846,7 @@
           var optBadge = isOptional ? "<span style='display:inline-block;background:#e0e0e0;color:#666;border-radius:10px;padding:1px 8px;font-size:.68rem;margin-left:6px;vertical-align:middle'>optionnel</span>" : "";
           if (isHidden) optBadge += "<span style='display:inline-block;background:#FEF3C7;color:#92400E;border-radius:10px;padding:1px 8px;font-size:.68rem;margin-left:6px;vertical-align:middle'>distance > 25 km</span>";
           var card =
-            "<div class='eco-item' id='wi_" + item.id + "' style='" + optStyle + "'>" +
+            "<div class='eco-item" + (isOptional ? " secondary" : "") + "' id='wi_" + item.id + "' style='" + optStyle + "'>" +
             "<div class='eco-header' data-id='" + item.id + "' onclick='toggleEco(this.dataset.id)'>" +
             "<div class='eco-ico-wrap'>" + item.ico + "</div>" +
             "<div class='eco-title-wrap'>" +
@@ -2795,7 +2860,7 @@
             "</div>" +
             "<div class='eco-arr' id='arr_" + item.id + "'>▼</div>" +
             "</div>" +
-            "<div class='eco-body' id='body_" + item.id + "'>" +
+            "<div class='eco-body" + (!isOptional ? " open" : "") + "' id='body_" + item.id + "'>" +
             "<div class='eco-slider-row'>" +
             "<label>Cible\xa0:</label>" +
             "<input type='range' id='" + item.id + "' min='" + item.cur + "' max='" + item.max + "' value='" + v + "' step='1' data-unit='" + item.unit + "' oninput='updEco(this.id)'>" +
@@ -2825,10 +2890,6 @@
         if (optHtml) {
           finalHtml += "<div style='margin-top:12px;padding:8px 12px;background:#f5f5f5;border-radius:8px;font-size:.76rem;color:#666;font-weight:600'>□ Actions optionnelles (\xe9conomies n\xe9gligeables ou n\xe9gatives)</div>" + optHtml;
         }
-        // ─── AXES D'ACTION CIBLÉS — logique conditionnelle ─────────────────────
-        var axesHtml = buildAxesCibles();
-        if (axesHtml) finalHtml = axesHtml + finalHtml;
-
         document.getElementById("eco_actions").innerHTML = finalHtml;
         renderEcoValues(); // populate with current values
       }
@@ -2837,144 +2898,179 @@
       function buildAxesCibles() {
         var SAL_BAS = 2200;      // seuil bas salaire brut mensuel
         var SAL_HAUT = 2800;     // seuil haut salaire brut mensuel
-        var DIST_COURT = 15;     // km : vélo très favorable
-        var DIST_MOYEN = 30;     // km : zone intermédiaire (VAE, TC, covoiturage)
+        var DIST_VELO = 12;      // km : vélo / VAE recommandé en dessous
+        var DIST_COURT = 15;     // km : plan vélo prioritaire (déplacements pro inclus)
+        var DIST_MOYEN = 30;     // km : zone intermédiaire transports en commun + covoiturage
         var ABS_ELEVE = 5;       // % d'absentéisme considéré élevé
         var isCambraisis = /^59/.test(cp_val || "");
         // Secteurs sans télétravail possible : industrie, logistique, agriculture, BTP, santé, hôtellerie-restauration
-        var SECTEURS_PRESENTIEL = ["industrie", "btp", "logistique", "agriculture", "hotellerie", "sante", "restauration"];
+        var SECTEURS_PRESENTIEL = ["industrie", "btp", "logistique", "agriculture", "hotellerie", "sante", "restauration", "med"];
         var estPresentiel = SECTEURS_PRESENTIEL.indexOf(secteur || "") >= 0;
+        var pm_velo_v = parseFloat((document.getElementById("pm_velo_n")||{}).value||0)||0;
+        var fmd_mt_v = parseFloat((document.getElementById("fmd_mt")||{}).value||0)||0;
+        var fmd_actif = fmd_mt_v > 0;
 
         var axes = [];
 
-        // ── AXE 1 : Distance courte (≤ 15 km) → plan vélo prioritaire ──────────────
-        if (dist_val <= DIST_COURT) {
-          var veloDetail = "<p style='margin-bottom:8px'>La distance moyenne domicile–travail de vos salariés (<strong>" + dist_val + "\u202fkm</strong>) est <strong>idéale pour le vélo</strong> : c'est le levier le plus rentable à court terme, sans dépendance à un opérateur extérieur.</p>";
-          veloDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
-            + "<li><strong>Plan vélo entreprise</strong> : stationnement sécurisé, local vélos, Forfait Mobilités Durables (jusqu'à 600\u202f€/an exonéré de charges), ateliers d'entretien</li>"
-            + "<li><strong>Label Employeur pro-Vélo</strong> (FUB) : reconnaissance externe, recrutement différenciant, kit de communication clé en main</li>"
-            + "<li><strong>Vélo cargo</strong> pour les déplacements inter-sites et la logistique du dernier kilomètre</li>"
+        // ── AXE VELO FORT : part modale vélo déjà ≥ 15% → plan vélo accentué ──────
+        if (pm_velo_v >= 15) {
+          var veloFortDetail = "<p style='margin-bottom:8px'><strong>" + pm_velo_v.toFixed(0) + " % de vos salariés viennent déjà à vélo</strong> : c'est un signal fort. Il est temps de passer à un plan vélo accentué et d'en faire un marqueur de votre culture d'entreprise.</p>";
+          veloFortDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
+            + "<li><strong>Exemplarité de l'équipe dirigeante</strong> : dirigeants et managers à vélo, communication interne sur leurs trajets — l'effet d'entraînement est immédiat sur les équipes</li>"
+            + "<li><strong>Label Employeur pro-Vélo (FUB)</strong> : audit, plan d'action, reconnaissance externe — différenciateur RH puissant pour le recrutement et la fidélisation</li>"
+            + "<li><strong>Vélo de fonction</strong> : un vélo affecté à un collaborateur, pour ses trajets domicile-travail et ses déplacements pro. Peut ne rien coûter à l'employeur via la <a href='https://2raventure.com/2026/03/06/combien-coute-vraiment-un-velo-pour-aller-travailler/' target='_blank' style='color:var(--v)'>conversion salariale</a> : le salarié renonce à une partie de sa rémunération brute, neutre pour l'employeur.</li>"
+            + (fmd_actif ? "" : "<li><strong>Forfait Mobilités Durables (FMD)</strong> : non encore activé dans votre structure — fort potentiel sur une base vélo déjà élevée</li>")
             + "</ul>";
-          veloDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
-            + "<a href='https://employeurprovelo.fr/' target='_blank' class='aom-lnk'>\ud83c\udfc5 Label Employeur pro-Vélo</a>"
-            + "<a href='https://2raventure.com/2026/05/05/mettre-en-place-un-plan-velo-en-entreprise/' target='_blank' class='aom-lnk'>\ud83d\udeb2 Guide plan vélo 2R Aventure</a>"
-            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>\ud83d\udce6 Kit de com\u2019 employeur</a>"
+          veloFortDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://employeurprovelo.fr/' target='_blank' class='aom-lnk'>🏅 Label Employeur pro-Vélo</a>"
+            + "<a href='https://2raventure.com/2026/03/06/combien-coute-vraiment-un-velo-pour-aller-travailler/' target='_blank' class='aom-lnk'>🚲 Vélo de fonction et conversion salariale</a>"
+            + "<a href='https://2raventure.com/2026/05/05/mettre-en-place-un-plan-velo-en-entreprise/' target='_blank' class='aom-lnk'>📋 Plan vélo en entreprise</a>"
             + "</div>";
-          axes.push({ ico: "\ud83d\udeb2", titre: "Plan vélo : votre levier prioritaire", contenu: veloDetail, couleur: "#e8f5e9", bordure: "#2e7d32" });
+          axes.push({ ico: "🚲", titre: "Plan vélo accentué : passez à la vitesse supérieure", contenu: veloFortDetail, couleur: "#e0f7e9", bordure: "#1b5e20" });
         }
 
-        // ── AXE 1b : Distance intermédiaire (15–30 km) → VAE + TC + covoiturage ───
-        else if (dist_val > DIST_COURT && dist_val <= DIST_MOYEN) {
-          var midDetail = "<p style='margin-bottom:8px'>À <strong>" + dist_val + "\u202fkm</strong> en moyenne, le vélo musculaire est possible pour une minorité de salariés sportifs. Le <strong>VAE</strong> (vélo à assistance électrique) reste pertinent jusqu'à 20\u202fkm. Au-delà, misez sur la combinaison <strong>transports en commun + covoiturage</strong>.</p>";
+        // ── AXE 1 : Distance courte (≤ 12 km) → plan vélo prioritaire ───────────────
+        if (dist_val <= DIST_VELO) {
+          var veloDetail = "<p style='margin-bottom:8px'>La distance moyenne domicile–travail de vos salariés (<strong>" + dist_val + " km</strong>) est <strong>idéale pour le vélo</strong> : c'est le levier le plus rentable à court terme, sans dépendance à un opérateur extérieur.</p>";
+          veloDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
+            + "<li><strong>Plan vélo entreprise</strong> : facilitez les trajets domicile-travail de moins de " + DIST_COURT + " km et les déplacements professionnels à vélo — stationnement sécurisé, local vélos" + (fmd_actif ? "" : ", Forfait Mobilités Durables (FMD) jusqu'à 600 €/an exonéré de charges ; obligatoire dans la FP d'État et hospitalière, facultatif dans le privé") + ", ateliers d'entretien</li>"
+            + "<li><strong>Vélo de fonction</strong> : un vélo affecté à un collaborateur pour ses trajets et déplacements pro. Peut ne rien coûter à l'employeur via la <a href='https://2raventure.com/2026/03/06/combien-coute-vraiment-un-velo-pour-aller-travailler/' target='_blank' style='color:var(--v)'>conversion salariale</a></li>"
+            + "<li><strong>Label Employeur pro-Vélo</strong> (FUB) : reconnaissance externe, recrutement différenciant, kit de communication clé en main</li>"
+            + "</ul>";
+          veloDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://employeurprovelo.fr/' target='_blank' class='aom-lnk'>🏅 Label Employeur pro-Vélo</a>"
+            + "<a href='https://2raventure.com/2026/03/06/combien-coute-vraiment-un-velo-pour-aller-travailler/' target='_blank' class='aom-lnk'>🚲 Vélo de fonction</a>"
+            + "<a href='https://2raventure.com/2026/05/05/mettre-en-place-un-plan-velo-en-entreprise/' target='_blank' class='aom-lnk'>📋 Guide plan vélo 2R Aventure</a>"
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com’ employeur</a>"
+            + "</div>";
+          axes.push({ ico: "🚲", titre: "Plan vélo : votre levier prioritaire", contenu: veloDetail, couleur: "#e8f5e9", bordure: "#2e7d32" });
+        }
+
+        // ── AXE 1b : Distance intermédiaire (18–30 km) → transports en commun + covoiturage + vélo+train ──
+        else if (dist_val > DIST_VELO && dist_val <= DIST_MOYEN) {
+          var midDetail = "<p style='margin-bottom:8px'>À <strong>" + dist_val + " km</strong> en moyenne, misez sur la combinaison transports en commun + covoiturage et l'intermodalité vélo + train pour les salariés proches d'une gare.</p>";
           midDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
-            + "<li><strong>VAE en location longue durée</strong> : subventionnable via le FMD (jusqu'à 600\u202f€/an), coût net après aide souvent &lt;\u202f30\u202f€/mois</li>"
-            + "<li><strong>Vélo + Train / Bus</strong> : combiner modes pour les grandes distances — stationnement vélo sécurisé à la gare, abonnements TC pris en charge à 50\u202f% minimum</li>"
-            + "<li><strong>Covoiturage domicile-travail</strong> : organisation interne, places réservées, bonus covoitureur</li>"
-            + "<li><strong>Plan vélo entreprise</strong> : toujours pertinent pour les salariés proches (≤\u202f15\u202fkm) et les déplacements pro</li>"
+            + (gare_rb_val === "oui"
+                ? "<li><strong>Vélo + train</strong> : combinez un stationnement vélo sécurisé à la gare avec le remboursement de l'abonnement transports en commun à " + rbt_tc + " % (taux de votre structure, minimum légal : 50 %). Rappelez à vos salariés les itinéraires et horaires de train disponibles.</li>"
+                : "<li><strong>Vélo + train</strong> : si une gare est accessible, combinez stationnement vélo sécurisé sur votre site avec le remboursement de l’abonnement transports en commun à " + rbt_tc + " % (taux de votre structure, minimum légal : 50 %). Rappelez à vos salariés les itinéraires et horaires de train disponibles.</li>")
+            + "<li><strong>Covoiturage domicile-travail</strong> : encouragez les trajets entre collègues avec des places réservées au parking, des bonus covoitureurs, et rappel du nombre de collègues habitant à proximité</li>"
+            + "<li><strong>Plan vélo entreprise</strong> : toujours pertinent pour les salariés proches (≤ " + DIST_COURT + " km) et pour tous les déplacements professionnels à vélo</li>"
             + "</ul>";
           midDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
-            + "<a href='https://employeurprovelo.fr/' target='_blank' class='aom-lnk'>\ud83c\udfc5 Label Employeur pro-Vélo</a>"
-            + "<a href='https://www.karos.fr/' target='_blank' class='aom-lnk'>\ud83e\udd1d Karos covoiturage</a>"
-            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>\ud83d\udce6 Kit de com\u2019 employeur</a>"
+            + "<a href='https://employeurprovelo.fr/' target='_blank' class='aom-lnk'>🏅 Label Employeur pro-Vélo</a>"
+            + "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com’ employeur</a>"
             + "</div>";
-          axes.push({ ico: "\ud83d\udeb4", titre: "Distance intermédiaire : VAE, transports en commun et covoiturage", contenu: midDetail, couleur: "#e8f5e9", bordure: "#388e3c" });
+          axes.push({ ico: "🚆", titre: "Distance intermédiaire : vélo + train, transports en commun et covoiturage", contenu: midDetail, couleur: "#e8f5e9", bordure: "#388e3c" });
         }
 
         // ── AXE 2 : Distance longue (> 30 km) + bas salaires ────────────────────────
         if (dist_val > DIST_MOYEN && sal_moy <= SAL_BAS) {
-          var covDetail = "<p style='margin-bottom:8px'>Avec <strong>" + dist_val + "\u202fkm</strong> en moyenne et un salaire moyen de <strong>" + sal_moy.toLocaleString("fr-FR") + "\u202f€ brut/mois</strong>, la mobilité pèse lourd dans le budget de vos salariés. Plusieurs leviers réduisent cette charge sans investissement lourd de votre part.</p>";
+          var covDetail = "<p style='margin-bottom:8px'>Avec <strong>" + dist_val + " km</strong> en moyenne et un salaire moyen de <strong>" + sal_moy.toLocaleString("fr-FR") + " € brut/mois</strong>, la mobilité pèse lourd dans le budget de vos salariés. Plusieurs leviers réduisent cette charge sans investissement lourd de votre part.</p>";
           covDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
-            + "<li><strong>Covoiturage domicile-travail</strong> : Karos, OuestGo, Mobicoop — libère des places de stationnement, crée du lien social, indemnité passager déductible</li>"
-            + "<li><strong>Leasing social véhicule électrique</strong> : informez vos salariés éligibles (revenus ≤\u202f23\u202f400\u202f€/an) — moins de 100\u202f€/mois tout compris</li>"
-            + "<li><strong>Garages solidaires</strong> (CareMakers, Manaara) : entretien à petit prix pour les salariés contraints à la voiture thermique</li>"
-            + (isCambraisis ? "<li><strong>Solimob</strong> : location courte durée de voiture (y compris électrique et sans permis), VAE — spécifiquement actif sur votre territoire <a href='https://solimob.fr/' target='_blank' style='color:var(--v)'>→ solimob.fr</a></li>" : "")
+            + "<li><strong>Covoiturage domicile-travail</strong> : encouragez les trajets entre collègues avec des places réservées, des bonus covoitureurs et le rappel du nombre de collègues habitant à proximité — plateforme <a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' style='color:var(--v)'>Employeurs Pro-Covoiturage ADEME</a></li>"
+            + (gare_rb_val === "oui"
+                ? "<li><strong>Vélo + train</strong> : une gare de rabattement est accessible — combinez stationnement vélo sécurisé sur votre site avec le remboursement de l’abonnement transports en commun à " + rbt_tc + " % (taux de votre structure, minimum légal : 50 %). Rappelez à vos salariés les itinéraires et horaires de train disponibles.</li>"
+                : "")
+            + "<li><strong>Leasing social véhicule électrique</strong> : informez vos salariés éligibles (revenus ≤ 23 400 €/an) — moins de 100 €/mois tout compris</li>"
+            + "<li><strong>Garages solidaires</strong> (CareMakers, Manaara) : entretien à petit prix pour les salariés contraints à la voiture thermique</li>"
+            + (isCambraisis ? "<li><strong>Solimob</strong> : location courte durée de voiture (y compris électrique et sans permis) — spécifiquement actif sur votre territoire <a href='https://solimob.fr/' target='_blank' style='color:var(--v)'>→ solimob.fr</a></li>" : "")
             + "</ul>";
           covDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
-            + "<a href='https://www.karos.fr/' target='_blank' class='aom-lnk'>\ud83e\udd1d Karos covoiturage</a>"
-            + "<a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank' class='aom-lnk'>\u26a1 Kit leasing social</a>"
-            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk'>\ud83d\ude97 Solimob</a>" : "")
-            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>\ud83d\udce6 Kit de com\u2019 employeur</a>"
+            + "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
+            + "<a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank' class='aom-lnk'>⚡ Kit leasing social</a>"
+            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk'>🚗 Solimob</a>" : "")
+            + (gare_rb_val === "oui" ? "<a href='https://www.sncf-connect.com/' target='_blank' class='aom-lnk'>🚂 Abonnement train SNCF</a>" : "")
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com’ employeur</a>"
             + "</div>";
-          axes.push({ ico: "\ud83e\udd1d", titre: "Trajets longs + bas salaires : cap sur le covoiturage et les alternatives solidaires", contenu: covDetail, couleur: "#fff8e1", bordure: "#F08030" });
+          axes.push({ ico: "🤝", titre: "Trajets longs + bas salaires : cap sur le covoiturage et les alternatives solidaires", contenu: covDetail, couleur: "#fff8e1", bordure: "#F08030" });
         }
 
         // ── AXE 3 : Distance longue (> 30 km) + hauts salaires ──────────────────────
         if (dist_val > DIST_MOYEN && sal_moy > SAL_HAUT) {
-          var orgDetail = "<p style='margin-bottom:8px'>Les salariés parcourent en moyenne <strong>" + dist_val + "\u202fkm</strong>. Sur un profil de salaires élevés, les leviers organisationnels ont un impact fort sur l'attractivité et la rétention, en plus de réduire les coûts de mobilité.</p>";
+          var orgDetail = "<p style='margin-bottom:8px'>Les salariés parcourent en moyenne <strong>" + dist_val + " km</strong>. Sur un profil de salaires élevés, les leviers organisationnels ont un impact fort sur l'attractivité et la rétention, en plus de réduire les coûts de mobilité.</p>";
           orgDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>";
           if (!estPresentiel) {
-            orgDetail += "<li><strong>Accord de télétravail</strong> : réduire les déplacements 1 à 2 jours/semaine réduit les coûts directs et renforce la marque employeur</li>";
+            orgDetail += "<li><strong>Accord de télétravail</strong> : réduire les déplacements 1 à 2 jours/semaine réduit les coûts directs et renforce la marque employeur</li>";
           }
-          orgDetail += "<li><strong>Semaine de 4 jours</strong> : réduction de 20\u202f% des trajets domicile-travail, levier fort de qualité de vie et de fidélisation des talents"
+          orgDetail += "<li><strong>Semaine de 4 jours</strong> : réduction de 20 % des trajets domicile-travail, levier fort de qualité de vie et de fidélisation des talents"
             + (estPresentiel ? " — <em>particulièrement adapté aux secteurs en présentiel</em>" : "")
             + "</li>"
-            + "<li><strong>Covoiturage organisé</strong> : places de stationnement dédiées, animation interne (ambassadeurs, défis), souscription à Karos</li>"
+            + "<li><strong>Covoiturage organisé</strong> : encouragez les trajets entre collègues avec des places réservées, des bonus covoitureurs et le rappel du nombre de collègues habitant à proximité — plateforme <a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' style='color:var(--v)'>Employeurs Pro-Covoiturage ADEME</a></li>"
             + "</ul>";
           if (estPresentiel) {
-            orgDetail += "<div style='font-size:.79rem;padding:7px 10px;background:rgba(21,101,192,.08);border-radius:6px;margin-bottom:8px;color:#1565c0'>\u2139\ufe0f Secteur en présentiel : le télétravail n'est pas applicable. La semaine de 4 jours et le covoiturage organisé restent des leviers puissants.</div>";
+            orgDetail += "<div style='font-size:.79rem;padding:7px 10px;background:rgba(21,101,192,.08);border-radius:6px;margin-bottom:8px;color:#1565c0'>ℹ️ Secteur en présentiel : le télétravail n'est pas applicable. La semaine de 4 jours et le covoiturage organisé restent des leviers puissants.</div>";
           }
           orgDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
-            + "<a href='https://www.francetravail.org/accueil/actualites/2023/la-semaine-de-4-jours-la-cle-de-lequilibre-entre-vie-personnelle-et-vie-professionnelle.html?type=article' target='_blank' class='aom-lnk'>\ud83d\udcc5 Semaine de 4 jours — France Travail</a>"
-            + "<a href='https://www.karos.fr/' target='_blank' class='aom-lnk'>\ud83e\udd1d Karos covoiturage</a>"
-            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>\ud83d\udce6 Kit de com\u2019 employeur</a>"
+            + "<a href='https://www.francetravail.org/accueil/actualites/2023/la-semaine-de-4-jours-la-cle-de-lequilibre-entre-vie-personnelle-et-vie-professionnelle.html?type=article' target='_blank' class='aom-lnk'>📅 Semaine de 4 jours — France Travail</a>"
+            + "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com’ employeur</a>"
             + "</div>";
-          axes.push({ ico: "\ud83d\udcc5", titre: "Trajets longs + salaires hauts : leviers organisationnels et covoiturage", contenu: orgDetail, couleur: "#e3f2fd", bordure: "#1565c0" });
+          axes.push({ ico: "📅", titre: "Trajets longs + salaires hauts : leviers organisationnels et covoiturage", contenu: orgDetail, couleur: "#e3f2fd", bordure: "#1565c0" });
         }
 
         // ── AXE 3b : Distance longue + salaires intermédiaires (2200–2800) ───────────
         if (dist_val > DIST_MOYEN && sal_moy > SAL_BAS && sal_moy <= SAL_HAUT) {
-          var midSalDetail = "<p style='margin-bottom:8px'>À <strong>" + dist_val + "\u202fkm</strong> avec un salaire moyen de <strong>" + sal_moy.toLocaleString("fr-FR") + "\u202f€/mois</strong>, le covoiturage est le levier le plus accessible. Le leasing social peut concerner une partie de l'effectif.</p>";
+          var midSalDetail = "<p style='margin-bottom:8px'>À <strong>" + dist_val + " km</strong> avec un salaire moyen de <strong>" + sal_moy.toLocaleString("fr-FR") + " €/mois</strong>, le covoiturage est le levier le plus accessible. Le leasing social peut concerner une partie de l'effectif.</p>";
           midSalDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
-            + "<li><strong>Covoiturage domicile-travail</strong> : Karos — animation interne, places dédiées, bonus conducteur</li>"
-            + "<li><strong>Leasing social</strong> : pour les salariés éligibles (≤\u202f23\u202f400\u202f€/an)</li>"
-            + (!estPresentiel ? "<li><strong>Accord de télétravail partiel</strong> : 1 jour/semaine réduit significativement les coûts de déplacement</li>" : "<li><strong>Semaine de 4 jours</strong> : réduction de 20\u202f% des trajets sans changer l'organisation productive</li>")
+            + "<li><strong>Covoiturage domicile-travail</strong> : encouragez les trajets entre collègues avec des places réservées, des bonus covoitureurs et le rappel du nombre de collègues habitant à proximité — plateforme <a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' style='color:var(--v)'>Employeurs Pro-Covoiturage ADEME</a></li>"
+            + "<li><strong>Leasing social</strong> : pour les salariés éligibles (≤ 23 400 €/an)</li>"
+            + (!estPresentiel ? "<li><strong>Accord de télétravail partiel</strong> : 1 jour/semaine réduit significativement les coûts de déplacement</li>" : "<li><strong>Semaine de 4 jours</strong> : réduction de 20 % des trajets sans changer l'organisation productive</li>")
             + "</ul>";
           midSalDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
-            + "<a href='https://www.karos.fr/' target='_blank' class='aom-lnk'>\ud83e\udd1d Karos covoiturage</a>"
-            + "<a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank' class='aom-lnk'>\u26a1 Kit leasing social</a>"
+            + "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
+            + "<a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank' class='aom-lnk'>⚡ Kit leasing social</a>"
             + "</div>";
-          axes.push({ ico: "\ud83d\ude97", titre: "Trajets longs : covoiturage et alternatives selon le profil de l'effectif", contenu: midSalDetail, couleur: "#fce4ec", bordure: "#c2185b" });
+          axes.push({ ico: "🚗", titre: "Trajets longs : covoiturage et alternatives selon le profil de l'effectif", contenu: midSalDetail, couleur: "#fce4ec", bordure: "#c2185b" });
         }
 
         // ── AXE 4 : Absentéisme élevé + bas salaires ────────────────────────────────
         if (abs_tx >= ABS_ELEVE && sal_moy <= SAL_BAS) {
-          var absDetail = "<p style='margin-bottom:8px'>Un absentéisme de <strong>" + abs_tx + "\u202f%</strong> combiné à des salaires bas (moy. " + sal_moy.toLocaleString("fr-FR") + "\u202f€/mois) est souvent le signe de <strong>difficultés de mobilité</strong> : pannes, coût de l'entretien, absence de permis ou de véhicule. Les dispositifs solidaires permettent un accompagnement individuel là où les incitations collectives ne suffisent pas.</p>";
+          var absDetail = "<p style='margin-bottom:8px'>Un absentéisme de <strong>" + abs_tx + " %</strong> combiné à des salaires bas (moy. " + sal_moy.toLocaleString("fr-FR") + " €/mois) est souvent le signe de <strong>difficultés de mobilité</strong> : pannes, coût de l'entretien, absence de permis ou de véhicule. Les dispositifs solidaires permettent un accompagnement individuel là où les incitations collectives ne suffisent pas.</p>";
           absDetail += "<ul style='margin:0 0 8px 16px;line-height:1.7;font-size:.82rem'>"
-            + "<li><strong>Plateformes de mobilité inclusive</strong> : accompagnement individuel (diagnostic, formation, accès au permis, prêt de véhicule), disponibles sur de nombreux territoires</li>"
-            + "<li><strong>Ateliers d'autoréparation vélo</strong> (Heureux Cyclages / FUB) : entretien gratuit ou à petit prix, dans un cadre convivial</li>"
-            + (isCambraisis ? "<li><strong>Solimob</strong> (Cambraisis) : location courte durée, VAE, voiture sans permis électrique pour les salariés en situation précaire <a href='https://solimob.fr/' target='_blank' style='color:var(--v)'>→ solimob.fr</a></li>" : "")
+            + "<li><strong>Plateformes de mobilité inclusive</strong> : accompagnement individuel (diagnostic, formation, accès au permis, prêt de véhicule), disponibles sur de nombreux territoires</li>"
+            + "<li><strong>Ateliers d'autoréparation vélo</strong> (Heureux Cyclages / FUB) : entretien gratuit ou à petit prix, dans un cadre convivial</li>"
+            + (isCambraisis ? "<li><strong>Solimob</strong> (Cambraisis) : location courte durée, vélo à assistance électrique (VAE), voiture sans permis électrique pour les salariés en situation précaire <a href='https://solimob.fr/' target='_blank' style='color:var(--v)'>→ solimob.fr</a></li>" : "")
             + "</ul>";
           absDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
-            + "<a href='https://www.heureux-cyclage.org/les-ateliers-en-france.html' target='_blank' class='aom-lnk'>\ud83d\udd27 Ateliers Heureux Cyclages</a>"
-            + "<a href='https://www.mobiliteinclusive.com/cartographie-des-plateformes/' target='_blank' class='aom-lnk'>\ud83d\uddfa\ufe0f Carte plateformes mobilité inclusive</a>"
-            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk'>\ud83d\ude97 Solimob</a>" : "")
+            + "<a href='https://www.heureux-cyclage.org/les-ateliers-en-france.html' target='_blank' class='aom-lnk'>🔧 Ateliers Heureux Cyclages</a>"
+            + "<a href='https://www.mobiliteinclusive.com/cartographie-des-plateformes/' target='_blank' class='aom-lnk'>🗺️ Carte plateformes mobilité inclusive</a>"
+            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk'>🚗 Solimob</a>" : "")
             + "</div>";
-          axes.push({ ico: "\ud83e\udef2", titre: "Absentéisme + précarité mobilité : miser sur l'accompagnement individuel", contenu: absDetail, couleur: "#f3e5f5", bordure: "#9c27b0" });
+          axes.push({ ico: "🫲", titre: "Absentéisme + précarité mobilité : miser sur l'accompagnement individuel", contenu: absDetail, couleur: "#f3e5f5", bordure: "#9c27b0" });
         }
 
         // ── Encart kit de com' (toujours présent) ───────────────────────────────────
+        // Plan de mobilité employeur obligatoire pour les +250 salariés
+        var planMobBlock = nb_sal >= 250
+          ? "<div style='margin-top:8px;padding:8px 12px;background:#FFF8E1;border-radius:8px;border:1px solid #F9A825;font-size:.79rem'>"
+            + "📋 <strong>Plan de mobilité employeur</strong> : à partir d'une certaine taille, c'est l'outil idéal pour comprendre l'ensemble des impacts et dialoguer avec la collectivité."
+            + " <a href='https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/' target='_blank' style='color:var(--v);font-weight:600'>→ Guide ADEME plan de mobilité</a>"
+            + "</div>"
+          : "";
         var kitBlock = "<div style='margin-top:10px;padding:8px 12px;background:#E8F5F4;border-radius:8px;border:1px solid var(--bd);font-size:.79rem'>"
-          + "\ud83d\udce6 <strong>Kit de com\u2019 employeur clé en main</strong> : affiches, posts réseaux sociaux, messages internes — tout pour sensibiliser vos salariés sans partir de zéro."
+          + "📦 <strong>Kit de com’ employeur clé en main</strong> : affiches, posts réseaux sociaux, messages internes — tout pour sensibiliser vos salariés sans partir de zéro."
           + " <a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' style='color:var(--v);font-weight:600'>→ Accéder au kit (Notion)</a>"
           + "</div>";
 
         if (!axes.length) {
           return "<div style='background:#fff;border-radius:12px;border:1.5px solid var(--bd);padding:14px 16px;margin-bottom:12px'>"
-            + "<div style='font-weight:700;color:var(--v);font-size:.88rem;margin-bottom:6px'>\ud83d\udca1 Axes d\u2019action personnalisés</div>"
+            + "<div style='font-weight:700;color:var(--v);font-size:.88rem;margin-bottom:6px'>💡 Axes d’action personnalisés</div>"
             + "<p style='font-size:.82rem;color:#666;margin-bottom:8px'>Aucun signal fort identifié sur votre profil. Les leviers ci-dessous sont classés par potentiel d'économies estimé pour votre structure.</p>"
+            + planMobBlock
             + kitBlock
             + "</div>";
         }
 
         var html = "<div style='background:#fff;border-radius:12px;border:2px solid var(--t);padding:16px;margin-bottom:14px;box-shadow:var(--sh)'>"
-          + "<div style='font-weight:700;color:var(--v);font-size:.9rem;margin-bottom:12px;display:flex;align-items:center;gap:7px'><span style='background:var(--t);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0'>!</span>Axes d\u2019action prioritaires pour votre profil</div>";
+          + "<div style='font-weight:700;color:var(--v);font-size:.9rem;margin-bottom:12px;display:flex;align-items:center;gap:7px'><span style='background:var(--t);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0'>!</span>Axes d’action prioritaires pour votre profil</div>";
         axes.forEach(function(ax) {
           html += "<div style='margin-bottom:12px;padding:12px 14px;background:" + ax.couleur + ";border-radius:10px;border-left:4px solid " + ax.bordure + "'>"
             + "<div style='font-weight:700;color:var(--v);font-size:.85rem;margin-bottom:7px'>" + ax.ico + " " + ax.titre + "</div>"
             + "<div style='font-size:.81rem;color:var(--tx)'>" + ax.contenu + "</div>"
             + "</div>";
         });
-        html += kitBlock + "</div>";
+        html += planMobBlock + kitBlock + "</div>";
         return html;
       }
 
@@ -3040,6 +3136,12 @@
         if (nb_sal >= 50) h += "<div class='ob'>⚖️ <strong>Accord de mobilité (dès 50 salariés)</strong> : négocié lors des Négociations Annuelles Obligatoires. <a href='https://travail-emploi.gouv.fr/les-negociations-obligatoires-dans-lentreprise-theme-periodicite-et-deroulement' target='_blank'>→ Détail</a></div>";
         if (cp_aom && cp_aom.name && cp_aom.name.indexOf("Lille") >= 0 && nb_sal >= 250) h += "<div class='ob'>⚖️ <strong>Plan de mobilité employeur obligatoire — Métropole Européenne de Lille (+250 salariés)</strong>. <a href='https://www.nord.gouv.fr/Actions-de-l-Etat/Environnement/Air-climat-energie/Plan-de-protection-de-l-atmosphere-des-agglomerations-de-Lille-et-du-bassin-minier' target='_blank'>→ Plan de protection de l’atmosphère</a></div>";
         if (nb_veh >= 100) h += "<div class='ob'>⚖️ <strong>Obligation de verdissement de flotte (+100 véhicules)</strong> : 🟡 10% depuis jan. 2022 · 🟠 20% depuis 2024 · 🔴 40% en 2027 · 🔴 70% en 2030. <a href='https://www.ecologie.gouv.fr/politiques-publiques/verdissement-du-parc-automobile' target='_blank'>→ Détail</a></div>";
+        // Obligation Huwart/APER : parking surface >= 1 500 m² (100 places x 15 m²)
+        if (type_park === "surface" && nb_park >= 100) {
+          var sMin2 = nb_park * 15, sMax2 = nb_park * 20;
+          var hDeadline = sMax2 > 10000 ? "1ᵉʳ juillet 2026 (parc &gt;10 000 m²)" : "1ᵉʳ juillet 2028 (report possible 2030)";
+          h += "<div class='ob'>⚖️ <strong>Loi APER et Huwart — Ombrières photovoltaïques ou végétalisation (+1 500 m² de surface)</strong> : votre parking d'au moins <strong>" + nb_park + " places</strong> (surface estimée : " + sMin2.toLocaleString('fr-FR') + "–" + sMax2.toLocaleString('fr-FR') + " m²) est soumis à l'obligation. Échéance : " + hDeadline + ". Risque d'inaction : 20 000–140 000 €/an (sanction préfectorale). <a href='https://www.ecologie.gouv.fr/politiques-publiques/photovoltaique-parkings' target='_blank'>→ Détail Ministère</a></div>";
+        }
         if (!h) h = "<p style='font-size:.83rem;color:#888'>Aucune obligation spécifique détectée. Vous pouvez néanmoins engager une démarche volontaire.</p>";
         document.getElementById("oblig_box").innerHTML = h;
       }
@@ -3078,13 +3180,13 @@
           if (e.ville) h += " <span style='color:#999;font-size:.75rem'>(" + e.ville + ")</span>";
           h += "<br>";
           var badges = [];
-          if (e.aide_tc) badges.push("<span class='dir-badge dir-tc'>Aide abonnements TC</span>");
-          if (e.aide_velo) badges.push("<span class='dir-badge dir-velo'>Aide v\u00e9lo\u00a0/ VAE</span>");
+          if (e.aide_tc) badges.push("<span class='dir-badge dir-tc'>Aide abonnements transports en commun (TC)</span>");
+          if (e.aide_velo) badges.push("<span class='dir-badge dir-velo'>Aide v\u00e9lo\u00a0/ vélo à assistance électrique (VAE)</span>");
           if (e.covoiturage) badges.push("<span class='dir-badge dir-cov'>Covoiturage organis\u00e9</span>");
           if (e.pdme_online) badges.push("<span class='dir-badge dir-pdme'>D\u00e9p\u00f4t PDME en ligne</span>");
           if (e.anim_velo) badges.push("<span class='dir-badge dir-anim'>Animation v\u00e9lo</span>");
           if (e.anim_cov) badges.push("<span class='dir-badge dir-anim'>Animation covoiturage</span>");
-          if (e.anim_tc) badges.push("<span class='dir-badge dir-anim'>Animation TC</span>");
+          if (e.anim_tc) badges.push("<span class='dir-badge dir-anim'>Animation transports en commun (TC)</span>");
           if (badges.length) h += "<div style='display:flex;flex-wrap:wrap;gap:4px;margin:6px 0'>" + badges.join("") + "</div>";
           var links = [];
           if (e.aide_tc && e.aide_tc_detail && e.aide_tc_detail.length > 5) {
@@ -3170,24 +3272,26 @@
         }
         if (fougeres) {
           aides.push({ l: "Prêt de vélos en entreprise — Fougères Agglomération", u: "https://fougeres-agglo.bzh/mobilites-transports/velo/experimentation-velo-en-entreprise/" });
-          aides.push({ l: "Les vélos SURF — location VAE longue durée (90€/3 mois, cargo dès 50€/mois)", u: "https://www.lesurf.fr/location-de-velo-a-assistance-electrique/" });
-          aides.push({ raw: "<div style='background:#fff;border-radius:8px;padding:10px 12px;border:1.5px solid var(--bd);font-size:.79rem;margin:3px 0'><strong>🗺️ Plateforme mobilité — Mission Locale Fougères</strong><br>Diagnostic individuel, location solidaire (VAE, trottinette, scooter), aide au permis. 02 30 27 01 60 · <a href='mailto:contact@mlf.bzh'>contact@mlf.bzh</a></div>" });
+          aides.push({ l: "Les vélos SURF — location vélo à assistance électrique (VAE) longue durée (90€/3 mois, cargo dès 50€/mois)", u: "https://www.lesurf.fr/location-de-velo-a-assistance-electrique/" });
+          aides.push({ raw: "<div style='background:#fff;border-radius:8px;padding:10px 12px;border:1.5px solid var(--bd);font-size:.79rem;margin:3px 0'><strong>🗺️ Plateforme mobilité — Mission Locale Fougères</strong><br>Diagnostic individuel, location solidaire (vélo à assistance électrique (VAE), trottinette, scooter), aide au permis. 02 30 27 01 60 · <a href='mailto:contact@mlf.bzh'>contact@mlf.bzh</a></div>" });
           aides.push({ raw: "<div style='background:#fff;border-radius:8px;padding:10px 12px;border:1.5px solid var(--bd);font-size:.79rem;margin:3px 0'><strong>🚗 Atchoum — transport solidaire à la demande (Fougères Agglomération)</strong><br>Conducteurs bénévoles, trajets dès 3,75€. <a href='https://www.atchoum.eu' target='_blank'>atchoum.eu</a> · 0 806 110 444</div>" });
           aides.push({ l: "OuestGo — covoiturage local (Bretagne)", u: "https://ouestgo.fr/" });
         }
         if (havre) {
           aides.push({ raw: "<div style='background:#fff;border-radius:8px;padding:10px 12px;border:1.5px solid var(--bd);font-size:.79rem;margin:3px 0'><strong>🚌 FlexiLiA — desserte Zone Industrielle et Portuaire à la demande (Le Havre)</strong><br>Lignes 15, 18, 25 · lun–ven 5h–20h, réservation obligatoire. <a href='https://www.transports-lia.fr/fr/flexilia' target='_blank'>transports-lia.fr</a></div>" });
-          aides.push({ l: "Location longue durée vélos LiA — gratuit (musculaire), VAE dès 24€/mois", u: "https://www.transports-lia.fr/fr/component/louer-un-velo" });
+          aides.push({ l: "Location longue durée vélos LiA — gratuit (musculaire), vélo à assistance électrique (VAE) dès 24€/mois", u: "https://www.transports-lia.fr/fr/component/louer-un-velo" });
           aides.push({ l: "Mécanos solidaires Le Havre — réparation vélo accessible", u: "https://www.helloasso.com/associations/nouvelle-association-des-mecanos-solidaires" });
         }
         if (nantes) {
           aides.push({ l: "Déclic Mobilité — parcours mobilité insertion (Nantes Métropole)", u: "https://www.declicmobilite.fr/" });
-          aides.push({ l: "Naolib — location VAE longue durée et covoiturage (Nantes)", u: "https://naolib.fr/fr/velos/velos-en-location-longue-duree" });
+          aides.push({ l: "Naolib — location vélo à assistance électrique (VAE) longue durée et covoiturage (Nantes)", u: "https://naolib.fr/fr/velos/velos-en-location-longue-duree" });
           aides.push({ l: "L'Atelier — mobilité solidaire (Nantes)", u: "https://associationlatelier.org/" });
         }
 
         var sections = "";
         aides.push({ l: "mesaidesvelo.fr — toutes les aides à l'achat d'un vélo", u: "https://mesaidesvelo.fr/" });
+        aides.push({ l: "CareMakers Mobility — garages solidaires (réseau national)", u: "https://www.caremakersmobility.com/fr" });
+        aides.push({ l: "Manaara — garage associatif et mobilité inclusive", u: "https://manaara.org/" });
         aides.push({ l: "Leasing social véhicule électrique — kit de com' employeur (2R Aventure)", u: "https://2raventure.com/2026/08/17/leasing-social/" });
         sections += sec("💰 Aides financières et accompagnements sur votre territoire", aides);
         sections += sec("🎓 Se former et s'initier", [
@@ -3204,20 +3308,29 @@
           { l: "Accords de mobilité signés — Légifrance", u: "https://www.legifrance.gouv.fr/search?fonds=ACCO&searchField=ALL&query=v%C3%A9lo+forfait+mobilit%C3%A9&page=1&init=true" },
           { l: "Portail RSE — obligations extra-financières", u: "https://portail-rse.beta.gouv.fr/" },
         ]);
-        sections += sec("🚴 Animer la démarche mobilité", [
-          { l: "Plan vélo en entreprise — 2R Aventure", u: "https://2raventure.com/2026/05/05/mettre-en-place-un-plan-velo-en-entreprise/" },
-          { l: "Challenge Mobilité Hauts-de-France", u: "https://challenge-mobilite-hdf.fr/" },
-          { l: "Heureux Cyclage — ateliers vélo participatifs (FUB)", u: "https://www.heureux-cyclage.org/les-ateliers-en-france.html" },
-          { l: "Mai à Vélo 2026", u: "https://maiavelo.fr/" },
-          { l: "Jeu des 7 familles de la mobilité durable (2R Aventure)", u: "https://2raventure.com/produit/jeu-des-7-familles-de-la-mobilite-durable/" },
-          { l: "Citiz — autopartage (réseau national)", u: "https://www.citiz.coop/" },
-          { l: "Karos — covoiturage domicile-travail", u: "https://www.karos.fr/" },
+        sections += sec("🔗 Solutions référencées", [
+          { l: "Citiz — autopartage (réseau coopératif national)", u: "https://www.citiz.coop/" },
+          { l: "Heureux Cyclage — ateliers vélo participatifs (réseau FUB)", u: "https://www.heureux-cyclage.org/les-ateliers-en-france.html" },
           { l: "CareMakers Mobility — garages solidaires (réseau national)", u: "https://www.caremakersmobility.com/fr" },
           { l: "Manaara — garage associatif et mobilité inclusive", u: "https://manaara.org/" },
-          { l: "Ecov — lignes de covoiturage", u: "https://www.ecov.fr/" },
-          { l: "Mobicoop — covoiturage associatif", u: "https://www.mobicoop.fr/" },
+        ]);
+        sections += sec("🚴 Animer la démarche mobilité", [
+          (isHdF(cp_val) ? { l: "Challenge Mobilité Hauts-de-France", u: "https://challenge-mobilite-hdf.fr/" } : null),
+          { l: "Mai à Vélo 2026", u: "https://maiavelo.fr/" },
+          { l: "Jeu des 7 familles de la mobilité durable (2R Aventure)", u: "https://2raventure.com/produit/jeu-des-7-familles-de-la-mobilite-durable/" },
           (mel ? { l: "MobiliMEL — dispositifs sociaux mobilité (Métropole Européenne de Lille)", u: "https://mobilimel.fr/" } : null),
         ].filter(Boolean));
+        // Section covoiturage étendue si fort usage
+        var pm_cov_v = parseFloat((document.getElementById("pm_cov_n")||{}).value||0)||0;
+        if (pm_cov_v > 10) {
+          sections += sec("🤝 Covoiturage — acteurs incontournables", [
+            { raw: "<div style='background:var(--vc);border-radius:8px;padding:9px 12px;border:1.5px solid var(--t);font-size:.79rem;margin:3px 0'>🔍 Le covoiturage est un levier fort dans votre structure (part modale : " + pm_cov_v.toFixed(0) + " %). Voici les opérateurs à solliciter en priorité.</div>" },
+            { l: "Mobicoop — covoiturage associatif et territoire", u: "https://www.mobicoop.fr/" },
+            { l: "Ecov — lignes de covoiturage (arrêts dédiés)", u: "https://www.ecov.fr/" },
+            { l: "Employeurs Pro-Covoiturage ADEME", u: "https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/" },
+            { l: "BlaBlaCar Daily — covoiturage quotidien", u: "https://www.blablacar.fr/carpooling" },
+          ]);
+        }
         sections += sec("🛠️ Outils gratuits", [
           { l: "Leasing social — kit de communication employeur (2R Aventure)", u: "https://2raventure.com/2026/08/17/leasing-social/" },
           { l: "Simulateur leasing social — pour vos salariés", u: "https://2raventure.github.io/cout-vehicule/calculateur_mobilite_LS" },
@@ -3230,13 +3343,15 @@
           { l: "Communauté Déclic Mobilités", u: "https://www.declic-mobilites.org/" },
           (mel ? { l: "Tous à Biclou (Métropole Européenne de Lille)", u: "https://www.linkedin.com/company/tous-a-biclou/" } : null),
         ].filter(Boolean));
-        if (isMed) sections += sec("🏥 Secteur médico-social", [{ l: "Ressources ANAP mobilité", u: "https://www.anap.fr/" }]);
-        if (isPro) sections += sec("🧹 Secteur propreté", [{ l: "FARE propreté", u: "https://www.fare-proprete.fr/" }]);
-        if (isPub) sections += sec("🏗️ Secteur public et associatif", [
+        // Ressources sectorielles en tête
+        var sec_top = "";
+        if (isMed) sec_top += sec("🏥 Secteur médico-social", [{ l: "Ressources ANAP mobilité", u: "https://www.anap.fr/" }]);
+        if (isPro) sec_top += sec("🧹 Secteur propreté", [{ l: "FARE propreté", u: "https://www.fare-proprete.fr/" }]);
+        if (isPub) sec_top += sec("🏗️ Secteur public et associatif", [
           { l: "Forfait Mobilités Durables dans la fonction publique", u: "https://www.fonction-publique.gouv.fr/etre-agent-public/ma-remuneration/les-elements-accessoires-de-remuneration/forfait-mobilite-durable-fmd" },
           { l: "Portail RSE", u: "https://portail-rse.beta.gouv.fr/" },
         ]);
-        document.getElementById("res_acc").innerHTML = sections;
+        document.getElementById("res_acc").innerHTML = sec_top + sections;
       }
 
       // ─── FAQ ──────────────────────────────────────────────────────────────────
@@ -3245,7 +3360,7 @@
         var items = [
           { q: "Qu’est-ce qu’un Plan de mobilité employeur ?", a: "Le Plan de mobilité employeur optimise les déplacements liés au travail en termes de coût, qualité de vie et impact carbone. Il comprend un diagnostic, une enquête, un plan d’actions et un suivi. Obligatoire dans certaines zones (Métropole Européenne de Lille +250 salariés), recommandé partout. <a href='https://2raventure.com/plan-de-mobilite/' target='_blank'>→ Outils 2R Aventure</a>" },
           { q: "Qu’est-ce qu’un accord de mobilité ?", a: "Négocié lors des Négociations Annuelles Obligatoires pour les structures de plus de 50 salariés. Définit les engagements (Forfait Mobilités Durables, transports en commun, covoiturage…). <a href='https://www.1kmapied.com/post/accord-mobilite-entreprise' target='_blank'>→ Exemples d’accords</a>" },
-          { q: "Le Forfait Mobilités Durables est-il obligatoire ?", a: isPub ? "<strong>Oui pour la fonction publique</strong>. <a href='https://www.fonction-publique.gouv.fr/etre-agent-public/ma-remuneration/les-elements-accessoires-de-remuneration/forfait-mobilite-durable-fmd' target='_blank'>→ Détail</a>" : "<strong>Facultatif pour le secteur privé</strong>, fortement recommandé. Jusqu’à 600 €/an exonéré de charges. <a href='https://www.francemobilites.fr/actualites/barometre-fmd-edition-2025' target='_blank'>→ Baromètre 2025</a> · <a href='https://entreprendre.service-public.gouv.fr/vosdroits/F33808' target='_blank'>→ Conditions</a>" },
+          { q: "Le Forfait Mobilités Durables (FMD) est-il obligatoire ?", a: isPub ? "<strong>Obligatoire pour la fonction publique d'État et la fonction publique hospitalière.</strong> Soumis à délibération pour la fonction publique territoriale. Barème : 30–59 jours = 100 € · 60–99 jours = 200 € · ≥100 jours = 300 € (plafond 600 €). <a href='https://www.fonction-publique.gouv.fr/etre-agent-public/ma-remuneration/les-elements-accessoires-de-remuneration/forfait-mobilite-durable-fmd' target='_blank'>→ Détail fonction publique</a>" : "<strong>Facultatif dans le secteur privé</strong> — applicable par accord d'entreprise ou de branche, à tous les salariés concernés (hors volontaires en service civique). Barème : 30–59 jours = 100 € · 60–99 jours = 200 € · ≥100 jours = 300 € (plafond légal 600 €). <a href='https://www.ecologie.gouv.fr/politiques-publiques/soutien-employeurs-aux-mobilites-durables' target='_blank'>→ Ministère Écologie</a> · <a href='https://www.francemobilites.fr/actualites/barometre-fmd-edition-2025' target='_blank'>→ Baromètre 2025</a>" },
           { q: "Qu’est-ce que le leasing social ?", a: "Permet à des personnes à revenus modestes d’accéder à un véhicule électrique à moins de 100 €/mois. Levier fort pour l’accès à l’emploi. Mobilisez vos salariés éligibles avec un kit de com’ clé en main. <a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank'>→ Kit employeur 2R Aventure</a> · <a href='https://2raventure.github.io/cout-vehicule/calculateur_mobilite_LS' target='_blank'>→ Simulateur salarié</a>" },
           { q: "Quelles sont les limites de ce calculateur ?", a: "Ratios de simplification basés sur les statistiques nationales 2024. Intègre flotte, parking, transports en commun, indemnités kilométriques, Forfait Mobilités Durables, versement mobilité, frais de déplacement et coûts de ressources humaines. Ne couvre pas l’accidentologie. <strong>Pour des chiffres précis, réalisez un Plan de mobilité employeur complet.</strong>" },
           { q: "Comment la CARSAT peut-elle aider ?", a: "La CARSAT accompagne sur la prévention des risques routiers. Faites un bilan des accidents de trajet (obligatoire) et rapprochez-vous de la CARSAT régionale si besoin." },
@@ -3431,7 +3546,7 @@
             "Prefer": "return=minimal"
           },
           body: JSON.stringify([row])
-        }).catch(function (e) { console.warn("CalMob store:", e); lastStoreSig = ""; })
+        }).catch(function () { lastStoreSig = ""; })
           .then(function () { storeSending = false; });
       }
 
@@ -3521,7 +3636,6 @@
           "<tr><td>Flotte de véhicules</td><td>" + fmt(d.c_fleet) + "</td><td>" + pctT(d.c_fleet, d.grand) + "</td></tr>" +
           "<tr><td>Parking</td><td>" + fmt(d.c_park) + "</td><td>" + pctT(d.c_park, d.grand) + "</td></tr>" +
           "<tr><td>Transport en commun</td><td>" + fmt(d.c_tc) + "</td><td>" + pctT(d.c_tc, d.grand) + "</td></tr>" +
-          "<tr><td>Indemnités kilométriques</td><td>" + fmt(d.c_ik) + "</td><td>" + pctT(d.c_ik, d.grand) + "</td></tr>" +
           "<tr><td>Forfait Mobilités Durables</td><td>" + fmt(d.c_fmd) + "</td><td>" + pctT(d.c_fmd, d.grand) + "</td></tr>" +
           "<tr><td>Versement mobilité</td><td>" + fmt(d.c_vm) + "</td><td>" + tautxt + "</td></tr>" +
           "<tr><td>Frais de déplacement (missions)</td><td>" + fmt(d.c_dep) + "</td><td>" + pctT(d.c_dep, d.grand) + "</td></tr>" +
@@ -3531,7 +3645,7 @@
           "<tr style='background:#e8f5f4'><td><strong>Total coûts ressources humaines</strong></td><td><strong>" + fmt(d.c_rh) + "</strong></td><td>" + pctMS(d.c_rh) + " masse sal.</td></tr>" +
           "<tr style='background:#004A4F;color:white'><td><strong>TOTAL ESTIMÉ</strong></td><td><strong style='color:#3ECDC5'>" + fmt(d.grand) + "</strong></td><td>" + (d.ms_an > 0 ? Math.round(d.grand / d.ms_an * 100) + "% masse sal." : "") + "</td></tr>" +
           "</table>" +
-          "<h2>Plan d’action — Potentiel d’économies</h2>" +
+          "<h2>Plan d’actions — Potentiel d’économies</h2>" +
           "<table><tr><th>Levier</th><th style='color:#3ECDC5'>Économies</th><th>Coût</th><th>Solde net</th></tr>" + ecoRows + "</table>" +
           "<h2>Obligations réglementaires</h2>" +
           (nb_sal >= 11 ? "<div class='oblig'>ℹ️ <strong>Versement mobilité</strong> (dès 11 salariés) — " + tautxt + "</div>" : "") +
