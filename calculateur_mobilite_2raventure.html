@@ -1127,6 +1127,70 @@
         text-decoration: none
       }
 
+      /* Ressources locales */
+      .eco-tool-link.local {
+        background: #f0faf9;
+        border-color: var(--t);
+        color: var(--v);
+        font-weight: 600
+      }
+      .eco-tool-link.local::before {
+        content: "\1F4CD";
+        font-size: .75rem;
+        margin-right: 2px
+      }
+      .eco-tool-link.local:hover {
+        background: var(--v);
+        color: #fff;
+        border-color: var(--v)
+      }
+      .eco-tools-sep {
+        font-size: .68rem;
+        font-weight: 700;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin: 6px 0 3px;
+        padding-left: 2px
+      }
+
+      /* Ressources locales dans axes d'action */
+      .aom-local-wrap {
+        margin-bottom: 8px;
+        padding: 8px 10px;
+        background: #f0faf9;
+        border: 1.5px solid var(--t);
+        border-radius: 8px
+      }
+      .aom-local-label {
+        font-size: .66rem;
+        font-weight: 700;
+        color: var(--t);
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-bottom: 5px
+      }
+      .aom-lnk-local {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 10px;
+        background: #fff;
+        border: 1.5px solid var(--t);
+        border-radius: 20px;
+        color: var(--v);
+        font-size: .75rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all .2s
+      }
+      .aom-lnk-local:hover {
+        background: var(--v);
+        color: #fff;
+        border-color: var(--v);
+        text-decoration: none
+      }
+
       /* TABS */
       .tab-bar {
         display: flex;
@@ -2151,8 +2215,8 @@
         <div class="al al-i" style="font-size:.73rem;margin-bottom:8px">
           <span class="al-ico">ℹ️</span>
           <span>Ratios de simplification — statistiques nationales 2024. Pour des chiffres précis, réalisez un
-            <strong>Plan de mobilité employeur complet</strong>. <a href="https://2raventure.com/plan-de-mobilite/"
-              target="_blank">→ 2R Aventure</a></span>
+            <strong>Plan de mobilité employeur complet</strong>. <a href="https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/"
+              target="_blank">→ Centre de ressources ADEME</a></span>
         </div>
         <div class="st">💰 Coûts directs de mobilité</div>
         <div class="bg" id="kpi_direct"></div>
@@ -2741,7 +2805,7 @@
             cur: vc, max: dist_val > 12 ? vc : 40, unit: "% part modale vélo",
             saving: function (v) { var dl = Math.max(0, v - vc); return dl > 0 ? dl / 100 * nb_sal * (200 + (C.c_abs_mob || 0) / Math.max(1, nb_sal) * 0.15 + (C.c_park || 0) / Math.max(1, Math.max(1, nb_park)) * 0.08) : 0; },
             cost: function (v) { var dl = Math.max(0, v - vc); if(dl<=0) return 0; var nbV = Math.round(nb_sal * v / 100); return nbV * 300 + nbV * 50; },
-            tools: [{ l: "Label Employeur pro-Vélo", u: "https://employeurprovelo.fr/" }, { l: "ADEME — ressources Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "Kit Tous à Biclou", u: "https://app.notion.com/p/Tous-Biclou-2071d74b98228231939f8134b6e42bc4" }]
+            tools: [{ l: "Kit Tous à Biclou — ressources vélo employeur HDF", u: "https://app.notion.com/p/Tous-Biclou-2071d74b98228231939f8134b6e42bc4", local: true }, { l: "Label Employeur pro-Vélo", u: "https://employeurprovelo.fr/" }, { l: "ADEME — ressources Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }]
           },
           {
             id: "sl_cov", ico: "🤝", name: "Déployer le covoiturage",
@@ -2750,7 +2814,7 @@
             priority: (dist_val > 12 || estPresentielEco), cur: cc, max: 30, unit: "% part modale covoiturage",
             saving: function (v) { var dl = Math.max(0, v - cc); if (dl <= 0) return 0; var pl = Math.round(nb_park * (dl / 100) * 0.5); var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio3 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; var cppl = type_park === "loue" ? loyer_park * 12 : (proprio3 === "oui_amorti" ? pc.entretien : pc.invest / 20 + pc.entretien); return pl * cppl; },
             cost: function (v) { return v > cc ? (nb_sal < 50 ? 3000 : nb_sal < 200 ? 6000 : 12000) : 0; },
-            tools: [{ l: "Employeurs Pro-Covoiturage ADEME", u: "https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/" }, { l: "Ecov — lignes de covoiturage", u: "https://www.ecov.fr/" }, { l: "PassPass Covoiturage", u: "https://www.passpasscovoiturage.fr/" }, { l: "Mobicoop", u: "https://www.mobicoop.fr/" }]
+            tools: (isHdF(cp_val) ? [{ l: "PassPass Covoiturage — plateforme régionale HDF", u: "https://www.passpasscovoiturage.fr/", local: true }, { l: "Employeurs Pro-Covoiturage ADEME", u: "https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/" }, { l: "Ecov — lignes de covoiturage", u: "https://www.ecov.fr/" }, { l: "Mobicoop", u: "https://www.mobicoop.fr/" }] : [{ l: "Employeurs Pro-Covoiturage ADEME", u: "https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/" }, { l: "Ecov — lignes de covoiturage", u: "https://www.ecov.fr/" }, { l: "Mobicoop", u: "https://www.mobicoop.fr/" }])
           },
           {
             id: "sl_elec", ico: "⚡", name: "Électrifier la flotte de véhicules",
@@ -2780,7 +2844,7 @@
             cur: 0, max: Math.max(1, nb_park), unit: " places",
             saving: function (v) { var pc = PARK_COSTS[type_park] || PARK_COSTS.surface; var proprio4 = (document.getElementById("park_proprio")||{value:"oui_actif"}).value; return v * (type_park === "loue" ? loyer_park * 12 : (proprio4 === "oui_amorti" ? pc.entretien : pc.invest / 20 + pc.entretien)); },
             cost: function (v) { if(v<=0) return 0; var base = nb_sal < 50 ? 3000 : nb_sal < 250 ? 6000 : nb_sal < 1000 ? 12000 : 20000; var local = isHdF(cp_val) ? 0.8 : 1; return Math.round(base * local / 5); },
-            tools: [{ l: "2R Aventure — outils Plan de mobilité employeur", u: "https://2raventure.com/plan-de-mobilite/" }, { l: "ADEME — mettre en place un Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }]
+            tools: [{ l: "ADEME — mettre en place un Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "2R Aventure — accompagnement Plan de mobilité", u: "https://2raventure.com/plan-de-mobilite/" }]
           },
           {
             id: "sl_tt", ico: "🏠", name: "Développer le télétravail",
@@ -2809,7 +2873,7 @@
             cur: 0, max: 50, unit: "% de réduction des coûts mob.",
             saving: function (v) { return (C.c_to_mob || 0) * v / 100; },
             cost: function (v) { if(v<=0) return 0; var base = nb_sal < 50 ? 3000 : nb_sal < 250 ? 6000 : nb_sal < 1000 ? 12000 : 20000; var local = isHdF(cp_val) ? 0.8 : 1; return Math.round(base * local / 5); },
-            tools: [{ l: "2R Aventure — Plan de mobilité employeur", u: "https://2raventure.com/plan-de-mobilite/" }, { l: "ADEME — centre de ressources", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }]
+            tools: [{ l: "ADEME — mettre en place un Plan de mobilité employeur", u: "https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/mettre-en-place-un-plan-de-mobilite-employeur/" }, { l: "2R Aventure — accompagnement Plan de mobilité", u: "https://2raventure.com/plan-de-mobilite/" }]
           }
         ];
       }
@@ -2839,7 +2903,11 @@
           var isHidden = item.hidden === true;
           var isOptional = (saving <= 0) && !item.priority;
           var implH = item.impl.map(function (i) { return "<span class='eco-impl-tag'>" + i + "</span>"; }).join("");
-          var toolsH = item.tools.map(function (t) { return "<a href='" + t.u + "' target='_blank' class='eco-tool-link'><span>→</span>" + t.l + "</a>"; }).join("");
+          var localTools = item.tools.filter(function(t){ return t.local; });
+          var natTools = item.tools.filter(function(t){ return !t.local; });
+          var localH = localTools.map(function(t){ return "<a href='" + t.u + "' target='_blank' class='eco-tool-link local'>" + t.l + "</a>"; }).join("");
+          var natH = natTools.map(function(t){ return "<a href='" + t.u + "' target='_blank' class='eco-tool-link'>" + t.l + "</a>"; }).join("");
+          var toolsH = (localH ? "<div class='eco-tools-sep'>Ressources locales</div>" + localH + (natH ? "<div class='eco-tools-sep'>Ressources nationales</div>" : "") : "") + natH;
           var toolsSec = item.tools.length ? "<div class='eco-tools-section'><div class='eco-impl-title'>Outils et ressources</div><div class='eco-tools-links'>" + toolsH + "</div></div>" : "";
           var optStyle = isOptional ? "opacity:.65;" : "";
           if (isHidden) optStyle += "border-left:3px solid #F08030;";
@@ -2903,6 +2971,11 @@
         var DIST_MOYEN = 30;     // km : zone intermédiaire transports en commun + covoiturage
         var ABS_ELEVE = 5;       // % d'absentéisme considéré élevé
         var isCambraisis = /^59/.test(cp_val || "");
+        var hdf = isHdF(cp_val);
+        var paris = isParis(cp_val), idf = isIDF(cp_val);
+        var bordeaux = isBdx(cp_val), lyon = isLyon(cp_val), nantes = isNts(cp_val), grenoble = isGrn(cp_val);
+        var cornouaille = isCornouaille(cp_val), fougeres = isFougeres(cp_val), bretagne = isBretagne(cp_val);
+        var havre = isHavre(cp_val), simouv = isSIMOUV(cp_val), marseille = isMar(cp_val), paca = isPACA(cp_val);
         // Secteurs sans télétravail possible : industrie, logistique, agriculture, BTP, santé, hôtellerie-restauration
         var SECTEURS_PRESENTIEL = ["industrie", "btp", "logistique", "agriculture", "hotellerie", "sante", "restauration", "med"];
         var estPresentiel = SECTEURS_PRESENTIEL.indexOf(secteur || "") >= 0;
@@ -2922,10 +2995,37 @@
             + (fmd_actif ? "" : "<li><strong>Forfait Mobilités Durables (FMD)</strong> : non encore activé dans votre structure — fort potentiel sur une base vélo déjà élevée</li>")
             + "</ul>";
           veloFortDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + (hdf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales HDF</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://app.notion.com/p/Tous-Biclou-2071d74b98228231939f8134b6e42bc4' target='_blank' class='aom-lnk-local'>🚴 Kit Tous à Biclou</a>"
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk-local'>Kit de com’ employeur</a>"
+            + "</div></div>"
+            : paris ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Paris</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.veligo-location.fr/professionnels/comment-s-abonnner' target='_blank' class='aom-lnk-local'>🚲 Véligo Location — VAE longue durée</a>"
+            + "<a href='https://www.paris.fr/pages/lutte-contre-la-pollution-les-aides-a-la-mobilite-5373' target='_blank' class='aom-lnk-local'>💶 Aides écomobilité Ville de Paris</a>"
+            + "</div></div>"
+            : idf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Île-de-France</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.veligo-location.fr/professionnels/comment-s-abonnner' target='_blank' class='aom-lnk-local'>🚲 Véligo Location — VAE longue durée</a>"
+            + "</div></div>"
+            : cornouaille ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Cornouaille</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.coralie-velos.fr/' target='_blank' class='aom-lnk-local'>🚲 Coralie Vélos — location VAE longue durée</a>"
+            + "</div></div>"
+            : fougeres ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Fougères</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://fougeres-agglo.bzh/mobilites-transports/velo/experimentation-velo-en-entreprise/' target='_blank' class='aom-lnk-local'>🚲 Prêt vélos — Fougères Agglomération</a>"
+            + "<a href='https://www.velos-surf.fr/' target='_blank' class='aom-lnk-local'>🚲 Les vélos SURF — location VAE</a>"
+            + "</div></div>"
+            : bretagne ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Bretagne</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.coralie-velos.fr/' target='_blank' class='aom-lnk-local'>🚲 Coralie Vélos — location VAE</a>"
+            + "</div></div>"
+            : "")
+            + (!hdf && !paris && !idf && !cornouaille && !fougeres && !bretagne ? "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
             + "<a href='https://employeurprovelo.fr/' target='_blank' class='aom-lnk'>🏅 Label Employeur pro-Vélo</a>"
-            + "<a href='https://2raventure.com/2026/03/06/combien-coute-vraiment-un-velo-pour-aller-travailler/' target='_blank' class='aom-lnk'>🚲 Vélo de fonction et conversion salariale</a>"
-            + "<a href='https://2raventure.com/2026/05/05/mettre-en-place-un-plan-velo-en-entreprise/' target='_blank' class='aom-lnk'>📋 Plan vélo en entreprise</a>"
-            + "</div>";
+            + "</div>" : "");
           axes.push({ ico: "🚲", titre: "Plan vélo accentué : passez à la vitesse supérieure", contenu: veloFortDetail, couleur: "#e0f7e9", bordure: "#1b5e20" });
         }
 
@@ -2938,11 +3038,37 @@
             + "<li><strong>Label Employeur pro-Vélo</strong> (FUB) : reconnaissance externe, recrutement différenciant, kit de communication clé en main</li>"
             + "</ul>";
           veloDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + (hdf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales HDF</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://app.notion.com/p/Tous-Biclou-2071d74b98228231939f8134b6e42bc4' target='_blank' class='aom-lnk-local'>🚴 Kit Tous à Biclou</a>"
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk-local'>Kit de com’ employeur</a>"
+            + "</div></div>"
+            : paris ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Paris</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.veligo-location.fr/professionnels/comment-s-abonnner' target='_blank' class='aom-lnk-local'>🚲 Véligo Location — VAE longue durée</a>"
+            + "<a href='https://www.paris.fr/pages/lutte-contre-la-pollution-les-aides-a-la-mobilite-5373' target='_blank' class='aom-lnk-local'>💶 Aides écomobilité Ville de Paris</a>"
+            + "</div></div>"
+            : idf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Île-de-France</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.veligo-location.fr/professionnels/comment-s-abonnner' target='_blank' class='aom-lnk-local'>🚲 Véligo Location — VAE longue durée</a>"
+            + "</div></div>"
+            : cornouaille ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Cornouaille</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.coralie-velos.fr/' target='_blank' class='aom-lnk-local'>🚲 Coralie Vélos — location VAE longue durée</a>"
+            + "</div></div>"
+            : fougeres ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Fougères</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://fougeres-agglo.bzh/mobilites-transports/velo/experimentation-velo-en-entreprise/' target='_blank' class='aom-lnk-local'>🚲 Prêt vélos — Fougères Agglomération</a>"
+            + "<a href='https://www.velos-surf.fr/' target='_blank' class='aom-lnk-local'>🚲 Les vélos SURF — location VAE</a>"
+            + "</div></div>"
+            : bretagne ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Bretagne</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.coralie-velos.fr/' target='_blank' class='aom-lnk-local'>🚲 Coralie Vélos — location VAE</a>"
+            + "</div></div>"
+            : "")
+            + (!hdf && !paris && !idf && !cornouaille && !fougeres && !bretagne ? "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
             + "<a href='https://employeurprovelo.fr/' target='_blank' class='aom-lnk'>🏅 Label Employeur pro-Vélo</a>"
-            + "<a href='https://2raventure.com/2026/03/06/combien-coute-vraiment-un-velo-pour-aller-travailler/' target='_blank' class='aom-lnk'>🚲 Vélo de fonction</a>"
-            + "<a href='https://2raventure.com/2026/05/05/mettre-en-place-un-plan-velo-en-entreprise/' target='_blank' class='aom-lnk'>📋 Guide plan vélo 2R Aventure</a>"
-            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com’ employeur</a>"
-            + "</div>";
+            + "</div>" : "");
           axes.push({ ico: "🚲", titre: "Plan vélo : votre levier prioritaire", contenu: veloDetail, couleur: "#e8f5e9", bordure: "#2e7d32" });
         }
 
@@ -2957,10 +3083,38 @@
             + "<li><strong>Plan vélo entreprise</strong> : toujours pertinent pour les salariés proches (≤ " + DIST_COURT + " km) et pour tous les déplacements professionnels à vélo</li>"
             + "</ul>";
           midDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + (hdf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales HDF</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.passpasscovoiturage.fr/' target='_blank' class='aom-lnk-local'>🤝 PassPass Covoiturage HDF</a>"
+            + "<a href='https://app.notion.com/p/Tous-Biclou-2071d74b98228231939f8134b6e42bc4' target='_blank' class='aom-lnk-local'>🚴 Kit Tous à Biclou</a>"
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk-local'>Kit de com’ employeur</a>"
+            + "</div></div>"
+            : cornouaille ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Cornouaille</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.ouestgo.fr/' target='_blank' class='aom-lnk-local'>🤝 OuestGo — covoiturage gratuit</a>"
+            + "<a href='https://www.coralie-velos.fr/' target='_blank' class='aom-lnk-local'>🚲 Coralie Vélos — location VAE</a>"
+            + "</div></div>"
+            : fougeres ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Fougères</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.ouestgo.fr/' target='_blank' class='aom-lnk-local'>🤝 OuestGo — covoiturage gratuit</a>"
+            + "</div></div>"
+            : bretagne ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Bretagne</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.ouestgo.fr/' target='_blank' class='aom-lnk-local'>🤝 OuestGo — covoiturage gratuit (Bretagne)</a>"
+            + "</div></div>"
+            : havre ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Le Havre</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.transports-lia.fr/fr/flexilia' target='_blank' class='aom-lnk-local'>🚌 FlexiLiA — transport à la demande ZI</a>"
+            + "</div></div>"
+            : simouv ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Valenciennois</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.simouv.fr/' target='_blank' class='aom-lnk-local'>🚌 Réseau Transvilles SIMOUV — gratuit</a>"
+            + "</div></div>"
+            : "")
+            + (!hdf && !cornouaille && !fougeres && !bretagne && !havre && !simouv ? "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
             + "<a href='https://employeurprovelo.fr/' target='_blank' class='aom-lnk'>🏅 Label Employeur pro-Vélo</a>"
             + "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
-            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com’ employeur</a>"
-            + "</div>";
+            + "</div>" : "");
           axes.push({ ico: "🚆", titre: "Distance intermédiaire : vélo + train, transports en commun et covoiturage", contenu: midDetail, couleur: "#e8f5e9", bordure: "#388e3c" });
         }
 
@@ -2977,12 +3131,29 @@
             + (isCambraisis ? "<li><strong>Solimob</strong> : location courte durée de voiture (y compris électrique et sans permis) — spécifiquement actif sur votre territoire <a href='https://solimob.fr/' target='_blank' style='color:var(--v)'>→ solimob.fr</a></li>" : "")
             + "</ul>";
           covDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + (hdf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales HDF</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.passpasscovoiturage.fr/' target='_blank' class='aom-lnk-local'>🤝 PassPass Covoiturage HDF</a>"
+            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk-local'>🚗 Solimob — Cambrésis</a>" : "")
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk-local'>Kit de com’ employeur</a>"
+            + "</div></div>"
+            : cornouaille ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Cornouaille</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.ouestgo.fr/' target='_blank' class='aom-lnk-local'>🤝 OuestGo — covoiturage régulier gratuit</a>"
+            + "</div></div>"
+            : fougeres ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Fougères</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.ouestgo.fr/' target='_blank' class='aom-lnk-local'>🤝 OuestGo — covoiturage régulier gratuit</a>"
+            + "</div></div>"
+            : bretagne ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Bretagne</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.ouestgo.fr/' target='_blank' class='aom-lnk-local'>🤝 OuestGo — covoiturage régulier gratuit (Bretagne)</a>"
+            + "</div></div>"
+            : "")
+            + (!hdf && !cornouaille && !fougeres && !bretagne ? "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
             + "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
-            + "<a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank' class='aom-lnk'>⚡ Kit leasing social</a>"
-            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk'>🚗 Solimob</a>" : "")
             + (gare_rb_val === "oui" ? "<a href='https://www.sncf-connect.com/' target='_blank' class='aom-lnk'>🚂 Abonnement train SNCF</a>" : "")
-            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com’ employeur</a>"
-            + "</div>";
+            + "</div>" : "");
           axes.push({ ico: "🤝", titre: "Trajets longs + bas salaires : cap sur le covoiturage et les alternatives solidaires", contenu: covDetail, couleur: "#fff8e1", bordure: "#F08030" });
         }
 
@@ -3002,10 +3173,36 @@
             orgDetail += "<div style='font-size:.79rem;padding:7px 10px;background:rgba(21,101,192,.08);border-radius:6px;margin-bottom:8px;color:#1565c0'>ℹ️ Secteur en présentiel : le télétravail n'est pas applicable. La semaine de 4 jours et le covoiturage organisé restent des leviers puissants.</div>";
           }
           orgDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + (hdf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales HDF</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.passpasscovoiturage.fr/' target='_blank' class='aom-lnk-local'>🤝 PassPass Covoiturage HDF</a>"
+            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk-local'>Kit de com’ employeur</a>"
+            + "</div></div>"
+            : bordeaux ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Bordeaux</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://entreprendre.bordeaux-metropole.fr/accompagnement-plans-mobilite-employeurs' target='_blank' class='aom-lnk-local'>📋 Accompagnement Plan de mobilité — Bordeaux Métropole</a>"
+            + "</div></div>"
+            : lyon ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Lyon</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://mobilites.grandlyon.com/mobilite-durable-au-travail' target='_blank' class='aom-lnk-local'>📋 Agence des Mobilités Grand Lyon</a>"
+            + "</div></div>"
+            : nantes ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Nantes</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://pro.naolib.fr/#decouvertepro' target='_blank' class='aom-lnk-local'>📋 Packs Mobilité — Nantes Métropole</a>"
+            + "</div></div>"
+            : grenoble ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Grenoble</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.mobilites-m.fr/demarche-mpro' target='_blank' class='aom-lnk-local'>📋 Démarche M’PRO — accompagnement gratuit SMAG</a>"
+            + "</div></div>"
+            : idf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Île-de-France</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.iledefrance.fr/toutes-les-actualites/promobilite' target='_blank' class='aom-lnk-local'>📋 ProMobilité / MaMob — accompagnement gratuit IDF</a>"
+            + "</div></div>"
+            : "")
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
             + "<a href='https://www.francetravail.org/accueil/actualites/2023/la-semaine-de-4-jours-la-cle-de-lequilibre-entre-vie-personnelle-et-vie-professionnelle.html?type=article' target='_blank' class='aom-lnk'>📅 Semaine de 4 jours — France Travail</a>"
-            + "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
-            + "<a href='https://wind-rhodium-dc5.notion.site/Kit-mobilit-Employeur-des-outils-pratico-pratique-pour-sensibiliser-vos-salari-s-38b1d74b9822835eab7301dd00e820c8?pvs=74' target='_blank' class='aom-lnk'>📦 Kit de com’ employeur</a>"
-            + "</div>";
+            + (!hdf && !bordeaux && !lyon && !nantes && !grenoble && !idf ? "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
+            + "</div>" : "</div>");
           axes.push({ ico: "📅", titre: "Trajets longs + salaires hauts : leviers organisationnels et covoiturage", contenu: orgDetail, couleur: "#e3f2fd", bordure: "#1565c0" });
         }
 
@@ -3018,9 +3215,32 @@
             + (!estPresentiel ? "<li><strong>Accord de télétravail partiel</strong> : 1 jour/semaine réduit significativement les coûts de déplacement</li>" : "<li><strong>Semaine de 4 jours</strong> : réduction de 20 % des trajets sans changer l'organisation productive</li>")
             + "</ul>";
           midSalDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
-            + "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
-            + "<a href='https://2raventure.com/2026/08/17/leasing-social/' target='_blank' class='aom-lnk'>⚡ Kit leasing social</a>"
-            + "</div>";
+            + (hdf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales HDF</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.passpasscovoiturage.fr/' target='_blank' class='aom-lnk-local'>🤝 PassPass Covoiturage HDF</a>"
+            + "</div></div>"
+            : cornouaille ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Cornouaille</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.ouestgo.fr/' target='_blank' class='aom-lnk-local'>🤝 OuestGo — covoiturage gratuit</a>"
+            + "<a href='https://www.coralie-velos.fr/' target='_blank' class='aom-lnk-local'>🚲 Coralie Vélos — location VAE</a>"
+            + "</div></div>"
+            : fougeres ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Fougères</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.ouestgo.fr/' target='_blank' class='aom-lnk-local'>🤝 OuestGo — covoiturage gratuit</a>"
+            + "<a href='https://fougeres-agglo.bzh/mobilites-transports/velo/experimentation-velo-en-entreprise/' target='_blank' class='aom-lnk-local'>🚲 Prêt vélos — Fougères Agglomération</a>"
+            + "</div></div>"
+            : bretagne ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Bretagne</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.ouestgo.fr/' target='_blank' class='aom-lnk-local'>🤝 OuestGo — covoiturage gratuit (Bretagne)</a>"
+            + "</div></div>"
+            : simouv ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Valenciennois</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.simouv.fr/' target='_blank' class='aom-lnk-local'>🚌 Réseau Transvilles SIMOUV — gratuit</a>"
+            + "</div></div>"
+            : "")
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + (!hdf && !cornouaille && !fougeres && !bretagne && !simouv ? "<a href='https://employeursprocovoiturage.ademe.fr/strategie-covoiturage/' target='_blank' class='aom-lnk'>🤝 Employeurs Pro-Covoiturage ADEME</a>"
+            + "</div>" : "</div>");
           axes.push({ ico: "🚗", titre: "Trajets longs : covoiturage et alternatives selon le profil de l'effectif", contenu: midSalDetail, couleur: "#fce4ec", bordure: "#c2185b" });
         }
 
@@ -3033,9 +3253,35 @@
             + (isCambraisis ? "<li><strong>Solimob</strong> (Cambraisis) : location courte durée, vélo à assistance électrique (VAE), voiture sans permis électrique pour les salariés en situation précaire <a href='https://solimob.fr/' target='_blank' style='color:var(--v)'>→ solimob.fr</a></li>" : "")
             + "</ul>";
           absDetail += "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + (hdf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales HDF</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://employeursprocovoiturage.ademe.fr/centre-de-ressources-mobilite-durable-employeur/jai-un-projet-rh-ou-dorganisation-du-travail/' target='_blank' class='aom-lnk-local'>📋 Évolution RH et organisation — ADEME</a>"
+            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk-local'>🚗 Solimob — Cambrésis</a>" : "")
+            + "</div></div>"
+            : bordeaux ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Bordeaux</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://entreprendre.bordeaux-metropole.fr/accompagnement-plans-mobilite-employeurs' target='_blank' class='aom-lnk-local'>📋 Accompagnement RH mobilité — Bordeaux Métropole</a>"
+            + "</div></div>"
+            : lyon ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Lyon</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://mobilites.grandlyon.com/mobilite-durable-au-travail' target='_blank' class='aom-lnk-local'>📋 Agence des Mobilités Grand Lyon</a>"
+            + "</div></div>"
+            : nantes ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Nantes</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://pro.naolib.fr/#decouvertepro' target='_blank' class='aom-lnk-local'>📋 Packs Mobilité — Nantes Métropole</a>"
+            + "</div></div>"
+            : grenoble ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Grenoble</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.mobilites-m.fr/demarche-mpro' target='_blank' class='aom-lnk-local'>📋 Démarche M’PRO — accompagnement SMAG</a>"
+            + "</div></div>"
+            : idf ? "<div class='aom-local-wrap'><div class='aom-local-label'>📍 Ressources locales Île-de-France</div>"
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
+            + "<a href='https://www.iledefrance.fr/toutes-les-actualites/promobilite' target='_blank' class='aom-lnk-local'>📋 ProMobilité / MaMob — IDF</a>"
+            + "</div></div>"
+            : "")
+            + "<div style='display:flex;flex-wrap:wrap;gap:6px'>"
             + "<a href='https://www.heureux-cyclage.org/les-ateliers-en-france.html' target='_blank' class='aom-lnk'>🔧 Ateliers Heureux Cyclages</a>"
             + "<a href='https://www.mobiliteinclusive.com/cartographie-des-plateformes/' target='_blank' class='aom-lnk'>🗺️ Carte plateformes mobilité inclusive</a>"
-            + (isCambraisis ? "<a href='https://solimob.fr/' target='_blank' class='aom-lnk'>🚗 Solimob</a>" : "")
             + "</div>";
           axes.push({ ico: "🫲", titre: "Absentéisme + précarité mobilité : miser sur l'accompagnement individuel", contenu: absDetail, couleur: "#f3e5f5", bordure: "#9c27b0" });
         }
